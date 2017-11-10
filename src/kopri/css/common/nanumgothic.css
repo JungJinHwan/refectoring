@@ -1,0 +1,10 @@
+@charset "utf-8";
+
+@font-face{
+	font-family:'ngn';
+	font-stretch:normal;
+	font-style:normal;
+	src:url('/kopri/font/NanumBarunGothic.eot');
+	src:url('/kopri/font/NanumBarunGothic.eot?#iefix') format('embedded-opentype'),
+		url('/kopri/font/NanumBarunGothic.woff') format('woff')
+}

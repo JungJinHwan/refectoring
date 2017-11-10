@@ -1,0 +1,32 @@
+go{
+	"count": "3",
+	"summary": {
+		"title": " <span class='icon icon6'></span>",
+		"descript": [
+			"<p></p>"
+		]
+	},
+	"data": [
+		{
+			"number": "1",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "",
+			"alttext": ""
+
+		},
+		{
+			"number": "2",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "",
+			"alttext": ""
+
+		},
+		{
+			"number": "3",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "",
+			"alttext": ""
+
+		}
+	]
+}

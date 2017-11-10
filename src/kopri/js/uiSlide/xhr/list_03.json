@@ -1,0 +1,26 @@
+{
+	"count": "2",
+	"summary": {
+		"title": "중장비보관동 <span class='icon icon3'></span>",
+		"descript": [
+			"<p>기지내 보유장비의 효율적 보관 및 유지관리를 위하여 신축된 중장비보관동</p>", 
+			"<p>금번 신축된 중장비보관동은 432㎡로서 생활관동 다음으로 큰 건물로서 대형 장비의 보관이 용이</p>"
+		]
+	},
+	"data": [
+		{
+			"number": "1",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "중장비보관동",
+			"alttext": "중장비보관동 외관"
+
+		},
+		{
+			"number": "2",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "열병합설비",
+			"alttext": "생활관동에 난방열원을 제공하는 열병합설비"
+
+		}
+	]
+}

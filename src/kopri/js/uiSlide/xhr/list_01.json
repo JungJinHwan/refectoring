@@ -1,0 +1,69 @@
+{
+	"count": "9",
+	"summary": {
+		"title": "생활관동 <span class='icon icon1'></span>",
+		"descript": [
+			"<p>남극세종과학기지의 Land Mark 생활관동</p>", 
+			"<p>2009년 완공된 생활관동은 2층으로 건설되었고, 연면적 1,975 ㎡로서 기지에서 가장 큰 건물 생활관동은 건물내 난방열원으로 발전동에서 발생되는 폐열을 이용하는 친환경 건축물</p>",
+			"<p>생활관동 1층은 식당, 휴게실, 의무실 등 후생 복지공간으로 활용되고, 2층은 대장실, 총무실, 통신실 등 사무공간 외에 안락한 침실이 위치</p>"
+		]
+	},
+	"data": [
+		{
+			"number": "1",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "생활관동",
+			"alttext": "생활관동 외관"
+
+		},
+		{
+			"number": "2",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "주방(1층 내부)",
+			"alttext": "최신주방설비를 도입하고 청결한 환경의 주방"
+
+		},
+		{
+			"number": "3",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "식당(1층 내부)",
+			"alttext": "최대40명이 동시에 사용 가능한 식당 전경"
+		},
+		{
+			"number": "4",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "휴게실(1층 내부)",
+			"alttext": "독립된 휴게공간 확보로 안락한 쉼터 제공"
+		},
+		{
+			"number": "5",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "실내공간(1층 내부)",
+			"alttext": "넓은 실내공간(쾌적한 내부 복도 등)"
+		},
+		{
+			"number": "6",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "대장실(2층 내부)",
+			"alttext": "기지 대장실 전경"
+		},
+		{
+			"number": "7",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "통신실(2층 내부)",
+			"alttext": "남극의 기지를 문명세계와 연결시켜주는 통신실"
+		},
+		{
+			"number": "8",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "침실(2층 내부)",
+			"alttext": "생활관동 2층에는 총 18실의 침실이 있다."
+		},
+		{
+			"number": "9",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "내부공간(2층 내부)",
+			"alttext": "넓직한 내부공간(2층 중앙계단)"
+		}
+	]
+}

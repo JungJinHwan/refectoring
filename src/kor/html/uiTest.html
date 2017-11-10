@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,width=device-width">
+<meta name="author" content=""><!-- 작성자//메인은 사이트네임,서브는 각 컨텐츠 담당자  -->
+<meta name="keywords" content=""><!-- 키워드 //SEO검색 관련으로 인하여 삽입 // 각 컨텐츠 별로 추가 또는 컨텐츠타이틀 게시판view는 게시글 제목 -->
+
+<meta name="copyright" content="">
+
+<title>TEST </title>
+
+<link rel="stylesheet" href="/kor/css/common/common.css" type="text/css" media="all">
+
+<script src='/kor/js/jquery-1.12.4.min.js'></script>
+<script src='/kor/js/jquery-ui.min.js'></script>
+<script src='/kor/js/uiTest/uiTest.min.js'></script>
+
+</head>
+<body>
+
+<style>
+  #dropbox {
+  margin: auto;
+  width: 300px;
+  height: 300px;
+  border: 5px solid #3C2F2E;
+  -moz-border-radius: 15px; 
+  margin-top: 30px;
+}
+</style>
+
+<div id="dropbox"></div>
+
+<script type="text/javascript">
+
+
+  var dropBox = document.getElementById("dropbox");          
+  var dropImage = document.createElement("img");   
+
+  $(document).on("dragover drop", '#dropbox', function(event) {
+    event.preventDefault(); 
+
+    if(event.type != 'drop') {
+      return 0;
+    }
+    else{
+      var file = event.originalEvent.dataTransfer.files[0];      
+             
+      var imageType = /image.*/;
+      var textType = /text.*/;
+      var isImage;
+
+      if(file.type.match(imageType)){
+        isImage = true; 
+      }
+      else if(file.type.match(textType)){
+        isImage = false;
+      } 
+               
+      var reader = new FileReader();    
+
+      reader.onload = (function(aFile){return function(e) {         
+          var result = e.target.result;  
+          if(isImage){
+            dropImage.src = result;                                                                            
+            dropBox.appendChild(dropImage)
+           }
+           else{
+             dropBox.innerHTML = result;
+           }        
+          };
+        })(file);
+        
+      if(isImage){ 
+        reader.readAsDataURL(file); 
+      }
+      else { 
+        reader.readAsText(file,"EUC-KR"); 
+      }
+
+      console.log(reader.readAsDataURL(file));
+    }
+
+  });
+
+</script>
+
+  </body>
+</html>

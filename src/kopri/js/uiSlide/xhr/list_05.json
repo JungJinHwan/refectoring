@@ -1,0 +1,49 @@
+{
+	"count": "5",
+	"summary": {
+		"title": "보트창고동 <span class='icon icon5'></span>",
+		"descript": [
+			"<p>남극세종과학기지의 필수 교통수단인 고무보트를 보관하는 보트창고동</p>", 
+			"<p>기존의 보트창고동은 1998년 신축되었고 고무보트 2대를 보관할 수 있는 면적으로 내구성 저하와 신규 고무보트 저장공간 부족으로 철거</p>", 
+			"<p>신규 보트창고동은 최대 4대의 고무보트를 보관(137㎡)할 수 있으며 건물내 정비공간을 확보하여, 외부세계로의 유일한 교통수단인 고무보트를 효율적 관리</p>", 
+			"<p>신축 건물은 목재를 이용한 내부마감으로 기존 컨테이너 공간에 비해 쾌적하고 안락한 연구환경 조성</p>"
+		]
+	},
+	"data": [
+		{
+			"number": "1",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "보트창고동",
+			"alttext": "보트창고동 외관"
+
+		},
+		{
+			"number": "2",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "보트보관대",
+			"alttext": "고무보트 대치에2단으로 보관"
+
+		},
+		{
+			"number": "3",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "보트창고동 내부",
+			"alttext": "동시에 4대의 고무보트를 보관할 수 있는 보트창고동"
+
+		},
+		{
+			"number": "4",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "실내공간",
+			"alttext": "넓은 실내공간으로 기지 필수장비인 고무보트 유지관리 용이"
+
+		},
+		{
+			"number": "5",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "장비보관",
+			"alttext": "보트창고동내 고무보트 관련 장비보관"
+
+		}
+	]
+}

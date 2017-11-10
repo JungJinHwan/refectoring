@@ -1,0 +1,40 @@
+{
+	"count": "4",
+	"summary": {
+		"title": "대기빙하 연구동 <span class='icon icon4'></span>",
+		"descript": [
+			"<p>새로이 건축된 대기빙하연구동은 고층대기연구동(우, 46㎡)와 대기빙하연구동(좌, 61㎡) 두 개의 동으로 구성</p>", 
+			"<p>신축 건물은 목재를 이용한 내부마감으로 기존 컨테이너 공간에 비해 쾌적하고 안락한 연구환경 조성</p>"
+		]
+	},
+	"data": [
+		{
+			"number": "1",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "대기빙하 연구동",
+			"alttext": "대기빙하 연구동 외관"
+
+		},
+		{
+			"number": "2",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "대기빙하 관측동",
+			"alttext": "대기빙하 관측동 외관"
+
+		},
+		{
+			"number": "3",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "대기빙하 관측동 내부",
+			"alttext": "대기빙하 관측동 내부에 설치된 에어로졸 관측장비"
+
+		},
+		{
+			"number": "4",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "에어로졸 인렛",
+			"alttext": "에어로졸 인렛이 설치된 모습"
+
+		}
+	]
+}

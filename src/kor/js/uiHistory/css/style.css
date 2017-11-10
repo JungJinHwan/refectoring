@@ -1,0 +1,130 @@
+#uiHistory{width:100%}
+
+#uiHistory .uiHistory-holdGroup{overflow:hidden}
+
+#uiHistory .uiHistory-paging{position:relative;overflow:hidden;margin-bottom:30px;text-align:center}
+#uiHistory .uiHistory-paging .inner{position:relative;margin:0 auto}
+#uiHistory .uiHistory-paging .inner:after{content:'';display:block;clear:both}
+
+#uiHistory .uiHistory-paging button{float:left;position:relative;overflow:visible;width:85px;height:70px;font-size:18px;color:#666}
+#uiHistory .uiHistory-paging button:first-child{margin-left:0}
+#uiHistory .uiHistory-paging .year{position:absolute;bottom:45px;left:0;width:100%;letter-spacing:-1px}
+#uiHistory .uiHistory-paging .circle{position:absolute;top:50px;left:51.5%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:100%;border:3px solid #e6e4e0}
+#uiHistory .uiHistory-paging .circle:before,#uiHistory .uiHistory-paging .circle:after{content:'';position:absolute;top:50%}
+#uiHistory .uiHistory-paging .circle:before{right:50%;width:87px;height:2px;margin-top:-1px;background:#e4e2de}
+#uiHistory .uiHistory-paging .circle:after{left:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:100%;background:#827765}
+
+#uiHistory .uiHistory-paging button:first-child .circle:before{display:none}
+
+/*page button transition start*/
+#uiHistory .uiHistory-paging button,
+#uiHistory .uiHistory-paging .circle,
+#uiHistory .uiHistory-paging .circle:before,
+#uiHistory .uiHistory-paging .circle:after{transform:scale3d(1,1,1);-webkit-transition:all 100ms linear;transition:all 100ms linear}
+
+#uiHistory .uiHistory-paging button:hover .circle{width:38px;height:38px;margin:-19px 0 0 -19px;border-color:#f2cccc}
+#uiHistory .uiHistory-paging button:hover .circle:after{background:#be0100}
+
+#uiHistory .uiHistory-paging button.ov{font-weight:600;font-size:20px;color:#000}
+#uiHistory .uiHistory-paging button.ov .circle{width:38px;height:38px;margin:-19px 0 0 -19px;border-color:#f2cccc}
+#uiHistory .uiHistory-paging button.ov .circle:before,
+#uiHistory .uiHistory-paging button.ov .circle:after{background:#be0100}
+/*page button transition end*/
+
+#uiHistory .uiHistory-background{position:relative;width:100%;padding:70px 0 30px 50%;margin:0 auto;background:url(/kor/js/uiHistory/images/ui_history_bg.jpg) repeat-x 50% 0}
+
+#uiHistory .uiHistory-control{z-index:10;position:absolute;top:50%;left:0;right:0;width:100%;max-width:940px;margin:-100px auto 0}
+#uiHistory .uiHistory-control button{position:absolute;top:0;width:50px;height:94px;background:no-repeat 50% 50%}
+#uiHistory .uiHistory-control .prev{left:-90px;background-image:url(/kor/js/uiHistory/images/ui_history_control_prev.png)}
+#uiHistory .uiHistory-control .next{right:-90px;background-image:url(/kor/js/uiHistory/images/ui_history_control_right.png)}
+
+#uiHistory .uiHistory-animateGroup{position:relative;left:0;width:100000px}
+#uiHistory .uiHistory-animateGroup:after{content:"";display:block;clear:both}
+#uiHistory .uiHistory-item{float:left;position:relative;max-width:940px;margin:0 70px;text-align:left}
+
+#uiHistory .uiHistory-item .thumbnail{float:right;max-width:615px;height:445px;margin:0 0 20px 50px;overflow:hidden;border:3px solid #827765}
+#uiHistory .uiHistory-item .thumbnail .inner{width:300%;height:100%;margin-left:-100%;text-align:center}
+#uiHistory .uiHistory-item .thumbnail .inner img{height:100%}
+
+#uiHistory .uiHistory-item .pt{}
+#uiHistory .uiHistory-item .pt .date{margin-bottom:15px;padding-top:18px;font-family:'nmj';font-size:22px;font-style:italic;letter-spacing:-1px;background:url(/kor/js/uiHistory/images/ui_history_year.png) no-repeat 5px 0;color:#827765}
+#uiHistory .uiHistory-item .pt .subject{margin-bottom:45px;font-weight:600;font-family:'nmj';font-size:34px;letter-spacing:-1px;line-height:1.2}
+#uiHistory .uiHistory-item .pt .description{font-size:15px;text-align:justify}
+#uiHistory .uiHistory-item .pt .description .effect{clear:both;padding-top:20px;text-align:left;color:#767676}
+
+
+@media(max-width:1200px) {
+
+#uiHistory .uiHistory-control{max-width:800px}
+
+#uiHistory .uiHistory-item{max-width:800px}
+
+#uiHistory .uiHistory-item .pt .date{padding-top:14px;font-size:18px;background-size:14px auto}
+#uiHistory .uiHistory-item .pt .subject{margin-bottom:25px;font-size:24px}
+#uiHistory .uiHistory-item .pt .description{font-size:14px}
+
+#uiHistory .uiHistory-item .thumbnail{height:350px}
+
+}
+
+@media(max-width:1000px) {
+
+/*절반을 우측으로 밀고 첫번째 버튼의 절반만큼 좌측으로 당겨온다*/
+#uiHistory .uiHistory-paging{padding-left:50%}
+#uiHistory .uiHistory-paging .inner{margin-left:-73px}
+
+#uiHistory .uiHistory-background{height:auto;background-size:cover}
+
+#uiHistory .uiHistory-control{max-width:547px}
+
+#uiHistory .uiHistory-item{max-width:615px;padding-top:100px;margin:0 30px}
+#uiHistory .uiHistory-item .pt .title{position:absolute;top:0;left:0}
+#uiHistory .uiHistory-item .pt .subject br{display:none}
+#uiHistory .uiHistory-item .thumbnail{position:relative;left:0;right:0;float:none;margin:0 auto 25px;text-align:center;border-width:0}
+#uiHistory .uiHistory-item .thumbnail img{}
+#uiHistory .uiHistory-item .pt .description{clear:both}
+
+}
+
+@media(max-width:767px) {
+
+#uiHistory .uiHistory-control{max-width:630px}
+#uiHistory .uiHistory-control .prev{left:10px}
+#uiHistory .uiHistory-control .next{right:10px}
+
+#uiHistory .uiHistory-item{max-width:500px}
+#uiHistory .uiHistory-item .thumbnail .inner{position:absolute;top:0;left:0}
+
+}
+
+@media(max-width:640px) {
+
+#uiHistory .uiHistory-background{padding-top:45px}
+
+#uiHistory .uiHistory-control{max-width:none;margin-top:-290px}
+#uiHistory .uiHistory-item{max-width:320px;padding-top:0}
+#uiHistory .uiHistory-item .pt .title{position:static}
+#uiHistory .uiHistory-item .thumbnail{height:auto}
+#uiHistory .uiHistory-item .thumbnail .inner{position:static;width:auto;height:auto;margin:0 25px}
+#uiHistory .uiHistory-item .thumbnail .inner img{width:auto;height:auto;max-width:100%}
+
+}
+
+@media(max-width:479px) {
+
+#uiHistory .uiHistory-control{margin-top:-330px}
+#uiHistory .uiHistory-control .prev,
+#uiHistory .uiHistory-control .next{background-size:20px auto}
+#uiHistory .uiHistory-control .prev{left:0}
+#uiHistory .uiHistory-control .next{right:0}
+
+#uiHistory .uiHistory-item{max-width:280px}
+
+}
+
+@media(max-width:359px) {
+
+#uiHistory .uiHistory-control{margin-top:-360px}
+#uiHistory .uiHistory-item{max-width:250px}
+
+}

@@ -1,0 +1,42 @@
+{% config %}
+	{
+		"request": {
+			"css": "/kor/js/uiUploadMachine/css/style.css"
+		},
+		"loop": "#multi_upload_template_file_list",
+		"item": "#multi_upload_template_file_list .file_list_item",
+		"drop": "#multi_upload_template_file_drop",
+		"empty": "#multi_upload_template_file_isnot",
+		"del": "#multi_upload_template_file_action_deleted",
+		"submit": "#multi_upload_template_file_action_submit",
+		"action": "/upload"
+	}
+{% end config %}
+
+{% template %}
+<div id="multi_upload_template_file">
+
+	<div class="caption">멀티 파일 업로더 드래그 앤 드랍 프로토 타입 유아이</div>
+
+	<div id="multi_upload_template_file_drop">
+		<div id="multi_upload_template_file_list">
+			{% empty %}
+			<div id="multi_upload_template_file_isnot" class="file_list_item">파일이 없습니다.</div>
+			{% end empty %}
+
+			{% loop %}
+			<div class="file_list_item">
+				<div class="utils">
+					<span class="name">{{NAME}} ({{SIZE}} bytes) / {{MODIFIED}}</span>
+					<span class="date">{{DATE}}</span>
+				</div>
+
+				<button type="button" value="{{NAME}}" class="del" id="multi_upload_template_file_action_deleted">삭제</button>
+			</div>
+			{% end loop %}
+		</div>
+
+		<div class="file_list_submit"><button type="submit" id="multi_upload_template_file_action_submit">전송</button></div>
+	</div>	
+</div>
+{% end template %}

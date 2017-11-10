@@ -1,0 +1,36 @@
+
+
+#uiSlide{width:100%}
+
+#uiSlide *{box-sizing:border-box}
+
+#uiSlide .uiSlide-holdGroup{position:relative;overflow:hidden}
+
+#uiSlide .uiSlide-background{float:left;position:relative;width:60%;padding-top:39.25%;overflow:hidden;background:#000}
+
+#uiSlide .uiSlide-summary{margin-left:60%;padding-left:4%;text-align:left}
+#uiSlide .uiSlide-summary .title{padding:0 0 3% 0;margin-bottom:8%;line-height:160%;font-weight:700;font-size:30px;color:#1a2273}
+#uiSlide .uiSlide-summary .title:before{content:"";position:absolute;top:auto;bottom:-10%;left:0;width:45px;height:1px;background:#484e8f}
+#uiSlide .uiSlide-summary .title .icon{display:inline-block;height:43px;margin-left:15px;background:url(/site/kopri/images/sub02/sub02010102_icon.png) no-repeat 50% 50%}
+#uiSlide .uiSlide-summary .title .icon1{width:121px;background-position:0 0}
+#uiSlide .uiSlide-summary .title .icon2{}
+#uiSlide .uiSlide-summary .title .icon3{}
+#uiSlide .uiSlide-summary .title .icon4{}
+#uiSlide .uiSlide-summary .title .icon5{}
+#uiSlide .uiSlide-summary .title .icon6{}
+#uiSlide .uiSlide-summary .descript{}
+
+#uiSlide .uiSlide-animateGroup{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden}
+
+#uiSlide .uiSlide-item{position:relative;float:left;width:100%;height:100%;overflow:hidden;background:#000}
+#uiSlide .uiSlide-item .thumbnail{position:absolute;top:0;left:0;width:100%;height:100%;background-repeat:no-repeat;background-position:50% 50%;background-size:cover}
+#uiSlide .uiSlide-item .title{position:absolute;bottom:0;left:0;width:100%;padding:15px 20px;font-weight:500;font-size:18px;text-align:center;background:rgba(0,0,0,.7);color:#fff}
+#uiSlide .uiSlide-item .alttext{font-weight:400;font-size:15px}
+
+#uiSlide .uiSlide-control{z-index:10;position:absolute;bottom:55px;left:0;width:60%;text-align:center}
+#uiSlide .uiSlide-control button{position:absolute;top:0;width:50px;height:30px;font-size:14px;border-radius:2px;color:#fff}
+
+#uiSlide .uiSlide-control .prev{left:15px;background:#fff url(../images/control/ic_skip_previous_24px.svg) no-repeat 50% 50%;background-size:auto 24px}
+
+#uiSlide .uiSlide-control .next{right:15px;background:#fff url(../images/control/ic_skip_next_24px.svg) no-repeat 50% 50%;background-size:auto 24px}
+  

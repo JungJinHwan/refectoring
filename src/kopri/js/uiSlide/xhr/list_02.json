@@ -1,0 +1,45 @@
+{
+	"count": "5",
+	"summary": {
+		"title": "발전동 <span class='icon icon2'></span>",
+		"descript": [
+			"<p>남극세종과학기지의 심장역할을 수행하는 발전동</p>", 
+			"<p>기존의 발전동은 금번 도입된 열병합설비를 설치할 수 있는 공간이 부족하여 2009년 신축</p>",
+			"<p>발전동 내에는 발전기(275kw) 3대와 오수처리기 그리고 열병합 설비가 가동되고 있</p>"
+		]
+	},
+	"data": [
+		{
+			"number": "1",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "발전동",
+			"alttext": "발전동 외관"
+
+		},
+		{
+			"number": "2",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "열병합설비",
+			"alttext": "생활관동에 난방열원을 제공하는 열병합설비"
+
+		},
+		{
+			"number": "3",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "오수처리기",
+			"alttext": "남극환경보호를 위한 오수처리기"
+		},
+		{
+			"number": "4",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "발전기제어판",
+			"alttext": "발전기 제어판(GCP)"
+		},
+		{
+			"number": "5",
+			"thumbnail": "/kopri/js/uiSlide/images/go.jpg",
+			"title": "감시제어시스템",
+			"alttext": "기지내 각종 장비 및 설비의 가동상태를 표시해주는 감시제어시스템"
+		}
+	]
+}

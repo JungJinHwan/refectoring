@@ -1,8 +1,8 @@
 {
 	"data": {
-		"empty": "Complete Empty Template data binding",
-		"loop": "Complete loop Template data binding",
-		"button": "Complete button Template data binding",
-		"thumbnail": "Complete thumbnail Template data binding"
+		"empty": "Complete Empty Skin data binding",
+		"loop": "Complete loop Skin data binding",
+		"button": "Complete button Skin data binding",
+		"thumbnail": "Complete thumbnail Skin data binding"
 	}
 }

@@ -1,5 +1,19 @@
 'use strict';
 
+/*
+
+Just remove
+
+babel-loader/src/index.js
+
+Lines 119 to 122 in 43543b7
+     exists(fileSystem, loaderOptions.babelrc) 
+       ? loaderOptions.babelrc 
+       : resolveRc(fileSystem, path.dirname(filename)); 
+ } 
+
+*/
+
 import config from './config';
 
 import gulp from 'gulp';

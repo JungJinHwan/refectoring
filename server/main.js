@@ -2,19 +2,15 @@ import fs from 'fs';
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import bodyParser from 'body-parser';
-import articles from './routes/articles';
 import gutil from 'gulp-util';
 
 const app = express();
 
 app.use('/', express.static(__dirname + '/../dist'));
 
-
 app.get('/hello', (req, res) => {
     return res.send('Can you hear me?');
 });
-
-app.use('/articles', articles);
 
 app.use(fileUpload());
 

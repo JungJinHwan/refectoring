@@ -67,17 +67,6 @@ def 0.0.3 : 2017 11 08 정진환
 def 0.0.4 : 2017 11 10 정진환 => [ 드레그 드랍 비동기 멀티파일 업로드 에서 분리, 템플릿 파싱 모듈화 시작 ]
 	- 
 
-@ 알려진 문제점 
-	- fakepath, input.value 참조는 파일 이름 만 가져올 수 있다
-		# 해결 가능한 경우
-		  . 브라우저 설정 => 사용자 보안 사항에서 허용되어야 한다
-		  . SWF Uploader 사용
-		  .
-	- FileList.File 접근은 가능하지만 file 경로등을 가져올 수 없었다. 6 이 살아있을 시절엔 value 로 가져올수 있었 던거 같은데 -_-... 해봣던 기억이 있는데....
-	- 이미 생성된 FileList 의 File 들을 Process.store.push.apply(Process.store, files[i]) 로 배열에 담아 둘수 있었지만 input type=file 에 다시 담을 수 없었다
-
-
-
 
 @ 개발 가능성
 	- 간단한 콜백 사용으로 스킨 파일 config 블럭에서 내부 함수들을 Override 가능할 것 같으다.... 
@@ -85,7 +74,7 @@ def 0.0.4 : 2017 11 10 정진환 => [ 드레그 드랍 비동기 멀티파일 �
 
 */
 
-function _UMachine(args) {
+function _Templates(args) {
 
 	var SCOPE = this;
 
@@ -93,18 +82,14 @@ function _UMachine(args) {
 
 	SCOPE.option.rgxp = new RegExp('\{\%[a-zA-Z\u0020]+\%\}');
 	SCOPE.option.rgxp.end = new RegExp('[{%\u0020]+(end)');
+	SCOPE.option.rgxp.replace = new RegExp('[\s+{%}]', 'g');
 
-	SCOPE.setRender([ 
-		SCOPE.setStyleSheet, 
-		SCOPE.setDefault, 
-		SCOPE.setIndicator, 
-		SCOPE.onEvent 
-	]);
+	SCOPE.TemplateRenderer([ 'setStyleSheet', 'setDefault', 'setIndicator' ]);
 
 	return this
 }
 
-_UMachine.prototype.setRender = function (callback) {
+_Templates.prototype.TemplateRenderer = function (callback) {
 
 	var SCOPE = this;
 
@@ -148,8 +133,8 @@ _UMachine.prototype.setRender = function (callback) {
 		Data.config = JSON.parse(ParseString.config);
 
 		if(callback) {
-			for (var callNumber in callback) {
-				callback[callNumber].call(SCOPE);
+			for (var i=0; i<callback.length; i++) {
+				SCOPE.callback[i].call(SCOPE);
 
 			}
 
@@ -160,7 +145,7 @@ _UMachine.prototype.setRender = function (callback) {
 	return this;
 }
 
-_UMachine.prototype.setStyleSheet = function(args) {
+_Templates.prototype.setStyleSheet = function(args) {
 
 	var SCOPE = this;
 	var Data = SCOPE.option.data;
@@ -179,40 +164,13 @@ _UMachine.prototype.setStyleSheet = function(args) {
 	return this;
 }
 
-_UMachine.prototype.setDefault = function (args) {
+_Templates.prototype.setDefault = function (args) {
 
 	var SCOPE = this;
 	var Data = SCOPE.option.data;
-	var Process = SCOPE.option.process;
-
-	Process.form = document.createElement('form');
-	Process.form.id = 'processForm';
-	Process.form.action = Data.config.action;
-	Process.form.method = 'POST';
-	Process.form.enctype = 'multipart/form-data';
-
-	document.body.appendChild(Process.form);
-
-	$('#'+Process.form.id).ajaxForm({
-		success: function() {
-			alert('전송요');
-		}
-	});
-
-	Process.input = function (args) {
-		var el = document.createElement('input');
-			el.type = 'file';
-			el.name =  args || 'uploadFile';
-			el.multiple = true;
-
-		return el;
-	};
-
-	Process.store = [];
-	Process.deleted = [];
 };
 
-_UMachine.prototype.setIndicator = function () {
+_Templates.prototype.setIndicator = function () {
 
 	var SCOPE = this;
 	var Data = SCOPE.option.data;
@@ -245,154 +203,7 @@ _UMachine.prototype.setIndicator = function () {
 	return this;
 };
 
-_UMachine.prototype.onEvent = function (args) {
-
-	var SCOPE = this;
-	var Data = SCOPE.option.data;
-	var ParseString = SCOPE.option.parseString;
-	var Process = SCOPE.option.process;
-
-	var prevfiles = null;
-	
-	// 파일 드랍되면 처리
-	$DOCUMENT.on(
-		'dragover drop', Data.config.drop, 
-		function (event) {
-			event.preventDefault();
-
-			if(event.type != 'drop') {
-
-				return 0;
-			}
-			else{
-
-				var files = event.originalEvent.dataTransfer.files;
-				var filesLen = files.length;
-
-				var storeLen = Process.store ? Process.store.length : 0;
-
-				for (var i=0; i<filesLen; i++) {
-
-					if(storeLen){
-
-						for (var j=0; j<storeLen; j++) {
-							if (files[i].name == Process.store[j].name) {
-								alert('목록에 같은 파일이 이미 있습니다.');
-								return 0;
-								break;
-							}
-						}
-					}
-
-					var filesDate = files[i].lastModifiedDate.getFullYear()+
-						'-'+(files[i].lastModifiedDate.getMonth()+1)+
-						'-'+files[i].lastModifiedDate.getDate()+
-						':'+files[i].lastModifiedDate.getHours()+
-						':'+files[i].lastModifiedDate.getMinutes();
-
-					// config 에 지정된 loop 에 리스팅
-					var loop = ParseString.loop;
-						loop = loop.replace(/{{NAME}}/g, files[i].name);
-						loop = loop.replace(/{{SIZE}}/g, files[i].size);
-						loop = loop.replace(/{{MODIFIED}}/g, files[i].lastModified);
-						loop = loop.replace(/{{DATE}}/g, filesDate);
-
-					Process.setQuery(Data.config.loop, loop);
-				}
-
-				// 추가한 파일이 동일 한 파일인가 등의 검증의 용도로 사용하기 위해 저장
-				Process.store.push.apply(Process.store, files);
-
-				var inputFiles = Process.input();
-					inputFiles.files = files;
-
-				Process.form.appendChild(inputFiles);
-
-				prevfiles = files;
-			}
-		}
-	);
-
-	// 실제 올라갈 파일 갯수
-	var resultLen = function() {
-		var filesLen = Process.store.length;
-		var deletedLen = Process.deleted.length;
-
-		return filesLen - deletedLen;
-	};
-
-	// 삭제
-	$DOCUMENT.on(
-		'click', Data.config.del, 
-		function (event) {
-			event.preventDefault();
-
-			var t = $(this);
-			var index = $(Data.config.del).index(t);
-			var deleteKey = t.val();
-
-			Process.deleted.push(deleteKey);
-			// 중복 요소 삭제 처리
-			Process.deleted = SCOPE.removeDuplicates(Process.deleted);
-
-			$(Data.config.item).eq(index).remove();
-
-			if(!resultLen()){
-				Process.setQuery(Data.config.loop, ParseString.empty);
-			}
-		}
-	);
-
-	// 업로드 보내기
-	$DOCUMENT.on(
-		'click', Data.config.submit,
-		function (event) {
-			event.preventDefault();
-
-			var t = $(this);
-			
-			if(resultLen() > 0){
-
-				if(confirm(resultLen()+'개의 파일을 업로드 하시겠습니까?')) {
-
-					$('#'+Process.form.id).submit();
-
-					return 0;
-				}
-			}
-			else{
-
-				alert('준비된 파일이 없습니다');
-
-				return 0;
-			}
-		}
-	);
-
-	return this;
-};
-
-_UMachine.prototype.removeDuplicates = function (arr) {
-
-	var i,
-		len = arr.length,
-		out = [],
-		obj = {};
-
-	for (i=0; i<len; i++) {
-
-		obj[arr[i]] = 0;
-	}
-
-	for (i in obj) {
-
-		out.push(i);
-	}
-
-	return out;
-}
-
-_UMachine.prototype.getRequester = function (args, callback) {
+_Templates.prototype.getRequester = function (args, callback) {
 
 	return $.ajax({
 		type: args.type,
@@ -406,9 +217,9 @@ _UMachine.prototype.getRequester = function (args, callback) {
 	});
 };
 
-window.UMachine = new _UMachine({
+window.UMachine = new _Templates({
 
-	parent: '#uiUploadMachine',
+	parent: '#templates',
 	data: {
 		request: {
 			type: 'GET',
@@ -418,8 +229,7 @@ window.UMachine = new _UMachine({
 		}
 	},
 	parseString: {},
-	indicate: {},
-	process: {}
+	indicate: {}
 
 });
 

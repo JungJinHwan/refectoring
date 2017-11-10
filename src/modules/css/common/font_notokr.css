@@ -1,0 +1,27 @@
+@charset "utf-8";
+
+@font-face {
+  font-family: 'ntk';
+  font-stretch:normal;
+  font-style:normal;
+  font-weight: 400;
+  src: url(/kor/font/notokr-regular.eot);
+  src: url(/kor/font/notokr-regular.eot?#iefix) format('embedded-opentype'),
+       url(/kor/font/notokr-regular.woff2) format('woff2'),
+       url(/kor/font/notokr-regular.woff) format('woff'),
+       url(/kor/font/notokr-regular.ttf) format('truetype');
+}
+
+
+@font-face {
+  font-family: 'ntk';
+  font-stretch:normal;
+  font-style:normal;
+  font-weight: 700;
+  src: url(/kor/font/notokr-bold.eot);
+  src: url(/kor/font/notokr-bold.eot?#iefix) format('embedded-opentype'),
+       url(/kor/font/notokr-bold.woff2) format('woff2'),
+       url(/kor/font/notokr-bold.woff) format('woff'),
+       url(/kor/font/notokr-bold.ttf) format('truetype');
+}
+ 

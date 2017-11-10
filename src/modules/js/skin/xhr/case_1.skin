@@ -1,0 +1,68 @@
+{% config %}
+
+{
+	"request": {
+		"css": "/modules/js/skin/css/style.css",
+		"json": "/modules/js/skin/xhr/data.json"
+
+	},
+	"indicate": {
+		"skin": "#txt",
+		"empty": ".emptyskin",
+		"loop": ".loopskin",
+		"button": ".buttonskin",
+		"thumbnail": ".thumbnailskin"
+
+	}
+}
+
+{% end config %}
+
+{% skin %}
+<br>
+<h1>UI 템플릿 렌더러</h1>
+<br>
+<div class="skin">
+
+	<div class="emptyskin">
+
+		{% empty %}
+		<h1>empty</h1>
+		<p>bind data = {{empty}}</p>
+		{% end empty %}
+
+	</div>
+<hr>
+
+	<div class="loopskin">
+
+		{% loop %}
+		<h1>loop</h1>
+		<p>bind data = {{loop}}</p>
+		{% end loop %}
+
+	</div>	
+<hr>
+
+	<div class="buttonskin">
+
+		{% button %}
+		<h1>button</h1>
+		<p>bind data = {{button}}</p>
+		{% end button %}
+
+	</div>
+<hr>
+
+	<div class="thumbnailskin">
+	
+		{% thumbnail %}
+		<h1>thumbnail</h1>
+		<p>bind data = {{thumbnail}}</p>
+		{% end thumbnail %}
+
+	</div>
+
+</div>
+
+{% end skin %}

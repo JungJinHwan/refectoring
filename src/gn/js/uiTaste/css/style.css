@@ -1,0 +1,155 @@
+
+#wrap{overflow-x:hidden}
+
+#top_layout{z-index:100;position:relative;height:120px;background:rgba(0,0,0,.7)}
+
+#foot_layout{height:195px;background-color:#333}
+
+#txt{max-width:1300px;margin:0 auto}
+
+@media(max-width:1200px) {
+#txt{max-width:1000px}
+
+}
+
+@media(max-width:1000px) {
+#text{max-width:none;padding:0 20px}
+}
+
+@media(max-width:767px) {
+#text{padding:0 10px}
+}
+
+#uiTaste{position:relative;width:100%;height:780px;text-align:center}
+#uiTaste ul{}
+#uiTaste ul li{display:inline-block;margin:0 10px}
+#uiTaste ul li button{position:relative;width:195px;height:195px;border-radius:100%;background:no-repeat;background-size:auto 100%}
+#uiTaste ul li button span{display:none;z-index:1;position:relative;line-height:120%}
+#uiTaste ul li button span.clip{z-index:2;position:absolute;top:-23px;left:0;width:100%;height:53px;background:url(/gn/js/uiTaste/images/common/clip.png) no-repeat 50% 50%;background-size:auto 100%}
+#uiTaste ul li button span.mask{position:absolute;top:0;left:0;width:98%;height:98%;border-radius:100%;background-color:#0099a3;opacity:0.85}
+#uiTaste ul li button span.en{padding:8px 20px;margin-top:-20px;line-height:1;font-weight:600;font-size:14px;border-radius:25px;background-color:#fff;color:#008491}
+#uiTaste ul li button span.kr{display:block;margin-top:10px;font-size:20px;color:#fff}
+
+@media(min-width:0px) {
+/* 모던 브라우저 및 IE9 이상일때 */
+#uiTaste ul li button:before,
+#uiTaste ul li button:after{content:'';z-index:2;position:absolute;width:22%;height:1px;background-color:#fff;opacity:0}
+
+#uiTaste ul li button:before{top:18.5%;right:18.5%}
+#uiTaste ul li button:after{bottom:18.5%;left:18.5%}
+
+/* transform */
+#uiTaste ul li button:before,
+#uiTaste ul li button:after{transform:rotate(125deg)}
+
+#uiTaste ul li button span{opacity:0}
+
+}
+
+#uiTaste ul li button.ov{}
+#uiTaste ul li button.ov span{display:inline-block;opacity:1}
+#uiTaste ul li button.ov span.kr{display:block}
+#uiTaste ul li button.ov:before,
+#uiTaste ul li button.ov:after{display:block;opacity:1}
+
+#uiTaste .uiTaste-group{z-index:10;position:absolute;width:100%;height:100%;top:0;left:0;background:50% 50%;background-size:auto 100%}
+#uiTaste .uiTaste-group .inner{padding-top:225px;vertical-align:middle;background:no-repeat 50% 50px}
+
+#uiTaste .uiTaste-group .uiTaste-step{margin-bottom:15px;background:no-repeat 50% 50%;background-size:auto 100%}
+#uiTaste .uiTaste-group .uiTaste-title{margin-bottom:75px;background:no-repeat 50% 50%;background-size:auto 100%}
+
+#uiTaste .uiTaste-control{margin-top:90px}
+#uiTaste .uiTaste-control button{display:block;height:55px;margin:0 auto;background:no-repeat 50% 50%;background-size:auto 100%}
+#uiTaste .uiTaste-control .next{width:230px;background-image:url(/gn/js/uiTaste/images/common/button_next.png)}
+#uiTaste .uiTaste-control .result{width:270px;background-image:url(/gn/js/uiTaste/images/common/button_result.png)}
+
+#uiTaste #uiTasteStep01{background-image:url(/gn/js/uiTaste/images/01/bg.jpg)}
+#uiTaste #uiTasteStep01 .inner{background-image:url(/gn/js/uiTaste/images/common/bg_line.png)}
+#uiTaste #uiTasteStep01 .uiTaste-step{height:67px;background-image:url(/gn/js/uiTaste/images/01/step_text.png)}
+#uiTaste #uiTasteStep01 .uiTaste-title{height:70px;background-image:url(/gn/js/uiTaste/images/01/step_title.png)}
+#uiTaste #uiTasteStep01 ul li .tags-01-0{background-image:url(/gn/js/uiTaste/images/01/thumb_01.png)}
+#uiTaste #uiTasteStep01 ul li .tags-01-1{background-image:url(/gn/js/uiTaste/images/01/thumb_02.png)}
+#uiTaste #uiTasteStep01 ul li .tags-01-2{background-image:url(/gn/js/uiTaste/images/01/thumb_03.png)}
+#uiTaste #uiTasteStep01 ul li .tags-01-3{background-image:url(/gn/js/uiTaste/images/01/thumb_04.png)}
+
+#uiTaste #uiTasteStep02{display:none;background-image:url(/gn/js/uiTaste/images/02/bg.jpg)}
+#uiTaste #uiTasteStep02 .inner{background-image:url(/gn/js/uiTaste/images/common/bg_line.png)}
+#uiTaste #uiTasteStep02 .uiTaste-step{height:72px;background-image:url(/gn/js/uiTaste/images/02/step_text.png)}
+#uiTaste #uiTasteStep02 .uiTaste-title{height:80px;background-image:url(/gn/js/uiTaste/images/02/step_title.png)}
+#uiTaste #uiTasteStep02 ul li .tags-02-0{background-image:url(/gn/js/uiTaste/images/02/thumb_01.png)}
+#uiTaste #uiTasteStep02 ul li .tags-02-1{background-image:url(/gn/js/uiTaste/images/02/thumb_02.png)}
+#uiTaste #uiTasteStep02 ul li .tags-02-2{background-image:url(/gn/js/uiTaste/images/02/thumb_03.png)}
+#uiTaste #uiTasteStep02 ul li .tags-02-3{background-image:url(/gn/js/uiTaste/images/02/thumb_04.png)}
+#uiTaste #uiTasteStep02 ul li .tags-02-4{background-image:url(/gn/js/uiTaste/images/02/thumb_05.png)}
+
+#uiTaste #uiTasteStep03{display:none;background-image:url(/gn/js/uiTaste/images/03/bg.jpg)}
+#uiTaste #uiTasteStep03 .inner{background-image:url(/gn/js/uiTaste/images/common/bg_line.png)}
+#uiTaste #uiTasteStep03 .uiTaste-step{height:86px;background-image:url(/gn/js/uiTaste/images/03/step_text.png)}
+#uiTaste #uiTasteStep03 .uiTaste-title{height:78px;background-image:url(/gn/js/uiTaste/images/03/step_title.png)}
+#uiTaste #uiTasteStep03 ul li .tags-03-0{background-image:url(/gn/js/uiTaste/images/03/thumb_01.png)}
+#uiTaste #uiTasteStep03 ul li .tags-03-1{background-image:url(/gn/js/uiTaste/images/03/thumb_02.png)}
+#uiTaste #uiTasteStep03 ul li .tags-03-2{background-image:url(/gn/js/uiTaste/images/03/thumb_03.png)}
+#uiTaste #uiTasteStep03 ul li .tags-03-3{background-image:url(/gn/js/uiTaste/images/03/thumb_04.png)}
+#uiTaste #uiTasteStep03 ul li .tags-03-4{background-image:url(/gn/js/uiTaste/images/03/thumb_05.png)}
+
+@media(max-width:1000px) {
+#uiTaste{height:1000px}
+#uiTaste ul{margin:0 auto}
+#uiTaste ul li{margin:7px 5px}
+
+#uiTaste .uiTaste-group .inner{padding-top:165px;background-position:0 -10000px}
+
+#uiTaste #uiTasteStep01 ul{max-width:420px}
+#uiTaste #uiTasteStep02 ul{max-width:630px}
+#uiTaste #uiTasteStep03 ul{max-width:630px}
+
+#uiTaste .uiTaste-control{margin-top:50px}
+
+}
+
+@media(max-width:767px) {
+#uiTaste{height:750px}
+
+#uiTaste ul li button{width:150px;height:150px}
+#uiTaste ul li button span.clip{top:-16px;height:35px}
+#uiTaste ul li button span.en{top:10px;padding:3px 15px;font-size:12px}
+#uiTaste ul li button span.kr{margin-top:5px;font-size:16px}
+
+#uiTaste .uiTaste-group .uiTaste-title{margin-bottom:30px}
+
+#uiTaste #uiTasteStep01 .uiTaste-title{background-image:url(/gn/js/uiTaste/images/01/step_title_mo.png)}
+#uiTaste #uiTasteStep02 .uiTaste-title{background-image:url(/gn/js/uiTaste/images/02/step_title_mo.png)}
+#uiTaste #uiTasteStep03 .uiTaste-title{background-image:url(/gn/js/uiTaste/images/03/step_title_mo.png)}
+
+#uiTaste .uiTaste-control .next,
+#uiTaste .uiTaste-control .result{height:35px}
+
+}
+
+@media(max-width:500px) {
+#uiTaste{height:600px}
+
+#uiTaste ul li button span.en{display:none}
+#uiTaste ul li button span.kr{margin-top:0;font-size:14px}
+
+#uiTaste ul li button{width:90px;height:90px}
+#uiTaste ul li button span.clip{top:-16px;height:35px}
+
+#uiTaste #uiTasteStep01 ul{max-width:280px}
+#uiTaste #uiTasteStep02 ul{max-width:400px}
+#uiTaste #uiTasteStep03 ul{max-width:400px}
+
+}
+
+
+/* ANIMATE */
+#uiTaste ul li button:before,
+#uiTaste ul li button:after{transition:all 150ms ease-out}
+
+#uiTaste ul li button:before,
+#uiTaste ul li button:after{width:0%}
+
+#uiTaste ul li button.ov:before,
+#uiTaste ul li button.ov:after{width:22%}
+
+

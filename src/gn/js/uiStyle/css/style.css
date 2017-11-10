@@ -1,0 +1,28 @@
+#wrap{overflow-x:hidden}
+
+#top_layout{z-index:100;position:relative;height:120px;background:rgba(0,0,0,.7)}
+
+#foot_layout{height:195px;background-color:#333}
+
+#txt{max-width:1300px;margin:0 auto}
+
+.figure_grap{position:relative;width:100%;overflow:hidden}
+.figure_grap .figure_obj{position:relative;width:600%;height:100%;overflow:hidden}
+.figure_grap .figure_obj .uibodo{float:left;width:16.66%;height:100%;overflow:hidden}
+
+.figure_grap .thm_figure{position:relative;float:left;width:47.69%;height:370px}
+.figure_grap .thm_figure .grap{height:100%}
+
+.figure_grap .grap .obj{position:relative;height:100%}
+.figure_grap .grap .obj .item{display:none;width:100%;height:100%;overflow:hidden;background:#f00;text-align:center}
+.figure_grap .grap .obj .item:first-child{display:block}
+
+.figure_grap .item .inner{width:300%;height:100%;margin-left:-100%}
+.figure_grap .item .inner img{height:100%}
+
+.figure_grap .control{}
+.figure_grap .control button{position:absolute;top:50%;width:50px;height:50px;margin-top:-25px;background:#d4d4d4}
+.figure_grap .control .prev{left:15px}
+.figure_grap .control .next{right:15px}
+
+.figure_grap .thm_caption{margin-left:52.30%}

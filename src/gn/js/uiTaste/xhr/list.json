@@ -1,0 +1,32 @@
+{
+	"count": "3",
+	"data": [{
+		"step": "01",
+		"tags": [
+			{"code": "W0101", "kr": "봄", "en": "SPRING" },
+			{"code": "W0102", "kr": "여름", "en": "SUMMER" },
+			{"code": "W0103", "kr": "가을", "en": "FALL" },
+			{"code": "W0104", "kr": "겨울", "en": "WINTER" }
+		]
+	},
+	{
+		"step": "02",
+		"tags": [
+			{"code": "W0201", "kr": "혼자", "en": "ALONE" },
+			{"code": "W0202", "kr": "연인", "en": "COUPLE" },
+			{"code": "W0203", "kr": "친구", "en": "FRIEND" },
+			{"code": "W0204", "kr": "가족", "en": "FAMILY" },
+			{"code": "W0205", "kr": "모임", "en": "GROUP" }
+		]
+	},
+	{
+		"step": "03",
+		"tags": [
+			{"code": "W0301", "kr": "해수욕<br> 해양 레포츠", "en": "LEPORTS"},
+			{"code": "W0302", "kr": "트래킹 등산", "en": "TRACKING"},
+			{"code": "W0303", "kr": "문화탐방", "en": "CULTURE"},
+			{"code": "W0304", "kr": "체험", "en": "EXPERIENCE"},
+			{"code": "W0305", "kr": "휴식", "en": "REST"}
+		]
+	}]
+}

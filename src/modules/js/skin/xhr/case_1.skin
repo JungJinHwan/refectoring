@@ -13,6 +13,13 @@
 		"button": ".buttonskin",
 		"thumbnail": ".thumbnailskin"
 
+	},
+	"override": {
+		"htmlAppend": "
+
+			console.log(arguments,'Override htmlAppend');
+
+		"
 	}
 }
 

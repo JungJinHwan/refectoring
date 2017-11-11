@@ -8,7 +8,7 @@
   font-family: 'nmj';
   font-style: normal;
   font-weight: 400;
-  src: url(/kor/font/NanumMyeongjo.eot);
-  src: url(/kor/font/NanumMyeongjo.eot?#iefix) format('embedded-opentype'),
-       url(/kor/font/NanumMyeongjo.woff) format('woff');
+  src: url(/modules/font/NanumMyeongjo.eot);
+  src: url(/modules/font/NanumMyeongjo.eot?#iefix) format('embedded-opentype'),
+       url(/modules/font/NanumMyeongjo.woff) format('woff');
 }

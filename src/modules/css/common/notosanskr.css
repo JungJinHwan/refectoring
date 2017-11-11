@@ -1,45 +1,45 @@
 /*
-* Noto Sans KR (korean) http://www.google.com/fonts/earlyaccess
+* Noto Sans KR (modulesean) http://www.google.com/fonts/earlyaccess
  */
 @font-face {
   font-family: 'nsk';
   font-style: normal;
   font-weight: 100;
-  src: url(/kor/font/NotoSansKR-Thin.woff) format('woff'),
-       url(/kor/font/NotoSansKR-Thin.otf) format('opentype');
+  src: url(/modules/font/NotoSansKR-Thin.woff) format('woff'),
+       url(/modules/font/NotoSansKR-Thin.otf) format('opentype');
 }
 @font-face {
   font-family: 'nsk';
   font-style: normal;
   font-weight: 300;
-  src: url(/kor/font/NotoSansKR-Light.woff) format('woff'),
-       url(/kor/font/NotoSansKR-Light.otf) format('opentype');
+  src: url(/modules/font/NotoSansKR-Light.woff) format('woff'),
+       url(/modules/font/NotoSansKR-Light.otf) format('opentype');
 }
 @font-face {
   font-family: 'nsk';
    font-style: normal;
    font-weight: 400;
-   src: url(/kor/font/NotoSansKR-Regular.woff) format('woff'),
-        url(/kor/font/NotoSansKR-Regular.otf) format('opentype');
+   src: url(/modules/font/NotoSansKR-Regular.woff) format('woff'),
+        url(/modules/font/NotoSansKR-Regular.otf) format('opentype');
  }
 @font-face {
   font-family: 'nsk';
    font-style: normal;
    font-weight: 500;
-   src: url(/kor/font/NotoSansKR-Medium.woff) format('woff'),
-        url(/kor/font/NotoSansKR-Medium.otf) format('opentype');
+   src: url(/modules/font/NotoSansKR-Medium.woff) format('woff'),
+        url(/modules/font/NotoSansKR-Medium.otf) format('opentype');
  }
 @font-face {
   font-family: 'nsk';
    font-style: normal;
    font-weight: 700;
-   src: url(/kor/font/NotoSansKR-Bold.woff) format('woff'),
-        url(/kor/font/NotoSansKR-Bold.otf) format('opentype');
+   src: url(/modules/font/NotoSansKR-Bold.woff) format('woff'),
+        url(/modules/font/NotoSansKR-Bold.otf) format('opentype');
  }
 @font-face {
   font-family: 'nsk';
    font-style: normal;
    font-weight: 900;
-   src: url(/kor/font/NotoSansKR-Black.woff) format('woff'),
-        url(/kor/font/NotoSansKR-Black.otf) format('opentype');
+   src: url(/modules/font/NotoSansKR-Black.woff) format('woff'),
+        url(/modules/font/NotoSansKR-Black.otf) format('opentype');
  }

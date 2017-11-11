@@ -2,50 +2,13 @@
 
 @ 개발노트
 
-def 0.0.1 : 2017 11 03 정진환 
-	- 스킨 개념, html 조각을 필요한 형태로 코딩 후 데이터가 들어갈 곳을 지정 약속어 형태로 데이터 바인딩
-		# UpperCase 만 사용
-		# {{약속어}} => {{TITLE}}
-		#
-
-	- {% abc %} 형태로 지시자 활용
-		#
-		# {% loop %}
-		#   // 지시구간 블럭 선언
-		# 	<li>{{PATH}}{{DATE}}</li>
-		# {% end loop %}
-		#
-
-	- ajax 요청을 담당하는 메서드를 만들고 이 메서드는 요청 결과를 담은 객체를 반환한다. 변수에 담아 요청하면 '.done', '.complete' 등 재요청 없이 추가 사용이 가능
-
-def 0.0.2 : 2017 11 06 정진환
-	- 소소한 설정 선언
-		# {% config %}
-		# 	{
-		# 		"loop": "#multi_upload_template_file_list"
-		#       // loop 
-		# 	}
-		# {% end config %}
-		#
-		# '{% [a-zA-Z] %}' 블럭 선언 후 처음 등장하는 공백없는 영문자를 지시자로 사용
-		# 지시구간 끝 선언은 {% end %} 로 충분하지만 명확한 이해를 위해 다음과 같이 약속
-		# {% loop %}
-		# 	[ ... ]
-		# {% end loop %}
-		#
-
-	- 실행 후 쓸모 없어진 객체 삭제 : delete 하면 연결만 끊길 뿐, null 혹은 undefined 로 비운후 delete
-		# this.option.indicate = null;
-		# delete this.option.indicate;
-		# 
-
-def 0.0.3 : 2017 11 10 정진환 => [ 드레그 드랍 비동기 멀티파일 업로드 에서 분리, 템플릿 파싱 모듈화 시작 ]
-	- config.indicate 에 담아놓은 
-
+def 0.0.1 : 2017 11 10 정진환 => [ 드레그 드랍 비동기 멀티파일 업로드 에서 분리, 템플릿 파싱 모듈화 시작 ]
 
 @ 개발 가능성
 	- 간단한 콜백 사용으로 스킨 파일 config 블럭에서 내부 함수들을 Override 가능할 것 같으다.... 
-
+		# json 에 text 로 기록한 함수를 가져와서 실행 가능하도록 만들기는 했는데 
+		# 
+		#
 
 */
 
@@ -66,7 +29,6 @@ function _Skin(args) {
 _Skin.prototype.SkinParser = function (callback) {
 
 	var SCOPE = this;
-
 	var Data = SCOPE.option.data;
 	var Reg = SCOPE.option.rgxp;
 	var indicate = SCOPE.option.indicate;
@@ -156,6 +118,13 @@ _Skin.prototype.setDefault = function (args) {
 	var SCOPE = this;
 	var Data = SCOPE.option.data;
 
+	// 함수 덮어 쓰기가 가능하다
+	var Override = SCOPE.option.data.config.override;
+
+	var htmlAppend = new Function('return function() {'+Override.htmlAppend+'}')();
+
+	htmlAppend('arguments1','arguments2', 'arguments3');
+
 	return this;
 };
 
@@ -166,19 +135,19 @@ _Skin.prototype.setBind = function (args) {
 	var ParseData = SCOPE.option.parseData;
 	var Process = SCOPE.option.process;
 
-	Process.bindKey = function(key) {
+	Process.keyBind = function(key) {
 
 		return new RegExp('\{\{'+key+'\}\}', 'gi');
 	}
 
-	Process.setBind = function (key, parsed) {
+	Process.dataBind = function (key, parsed) {
 
-		return ParseString[key].replace(Process.bindKey(key), parsed);
+		return ParseString[key].replace(Process.keyBind(key), parsed);
 	};
 
 	for (var key in ParseData.data) {
 
-		ParseString[key] = Process.setBind(key, ParseData.data[key]);
+		ParseString[key] = Process.dataBind(key, ParseData.data[key]);
 	}
 
 	return this;
@@ -191,7 +160,7 @@ _Skin.prototype.setAppend = function (args) {
 	var ParseString = SCOPE.option.parseString;
 	var Process = SCOPE.option.process;
 
-	Process.setAppend = function (node, parsed) {
+	Process.htmlAppend = function (node, parsed) {
 
 		document.querySelector(node).innerHTML = parsed;
 
@@ -199,7 +168,8 @@ _Skin.prototype.setAppend = function (args) {
 	};
 
 	for (var key in Data.config.indicate) {
-		Process.setAppend(Data.config.indicate[key], ParseString[key]);
+
+		Process.htmlAppend(Data.config.indicate[key], ParseString[key]);
 	}
 
 	SCOPE.option.indicate = null;

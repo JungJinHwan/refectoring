@@ -8,25 +8,9 @@ def 0.0.2 : 2017 11 12 정진환
 	- skin 파일의 config 블록에 로직 등록 가능 
 		# json 으로 파싱 해오는 config 블럭에 text 로 기록한 로직을 가져와서 실행 가능하도록 new Function 을 사용해서 *(1)컨버전
 		# skin 파일 config 블록 override 에 로직만 등록하고 함수는 내부에서 new Function 으로 만들어지기 때문에 arguments 를 사용해서 외부 로직으로 내부 data 연결이 가능 
+		# override : { key : value } 형태 를 취하고 내부 로직에서 객체 키를 가져오는 for in 문으로 기 등록된 객체를 재정의 한다
+		# 
 		#
-
-def 0.0.3 : 2017 11 13 정진환
-	- override 대상을 데이터 호출 가공이 끝난 후 바인딩 처리용으로 사용중인 process 객체로 한정하고 진행
-	- 다음의 형태 를 취하고 내부 로직에서 객체 키를 가져오는 for in 문으로 기 등록된 객체를 재정의 한다
-		# "override": { 
-		# 	"key": {
-		#		"arguments": "받아올 인자 작성",
-		#		"logics": "로직 작성"
-		# 	}
-		# }
-		# 
-	- 현재버전에서 override 대상 process 자식 객체는 dataBind, htmlAppend 두가지 뿐이다.
-	- override 대상을 .call 로 호출하여 scope 를 유지 시킨다, 외부에서 내부에 접근 가능하게 되므로 모든 객체와 메서드의 접근과 수정, 실행이 가능하다.
-	- config override logics escape 방법
-		# JSON.strigify 로 1차 파싱 되어 오고 JSON.parse 로 json 객체로 변환되는 과정에서 escape 처리 하기위해서는 
-		# \n => \\n,
-		# str='<p style="color:#c8c8c8"><p>' => str='<p style=\"color:#c8c8c8\"><p>'
-		# 
 
 --------------------
 
@@ -41,11 +25,6 @@ def 0.0.3 : 2017 11 13 정진환
 
 function _Skin(args) {
 
-	args.parseString = {},
-	args.parseData = {},
-	args.indicate = {},
-	args.process = {}
-
 	var SCOPE = this;
 
 	SCOPE.option = args;
@@ -53,20 +32,7 @@ function _Skin(args) {
 	SCOPE.option.rgxp = new RegExp('\{\%[a-zA-Z\u0020]+\%\}');
 	SCOPE.option.rgxp.end = new RegExp('[{%\u0020]+(end)');
 
-	var Data = SCOPE.option.data;
-
-	var doc = document;
-	var GET_ELEMENT_POSITION = doc.getElementsByTagName('script')[0];
-
-	var MAKE_ELEMENT = doc.createElement("link");
-
-	MAKE_ELEMENT.id = 'uiUploadMachineStyle';
-	MAKE_ELEMENT.rel = 'stylesheet';
-	MAKE_ELEMENT.href = Data.styleSheet;
-
-	GET_ELEMENT_POSITION.parentNode.insertBefore(MAKE_ELEMENT, GET_ELEMENT_POSITION);
-
-	SCOPE.SkinParser([ 'setDefault', 'setBind', 'setAppend' ]);
+	SCOPE.SkinParser([ 'setStyleSheet', 'setDefault', 'setBind', 'setAppend' ]);
 
 	return this
 }
@@ -138,6 +104,25 @@ _Skin.prototype.SkinParser = function (callback) {
 	return this;
 }
 
+_Skin.prototype.setStyleSheet = function(args) {
+
+	var SCOPE = this;
+	var Data = SCOPE.option.data;
+
+	var doc = document;
+	var GET_ELEMENT_POSITION = doc.getElementsByTagName('script')[0];
+
+	var MAKE_ELEMENT = doc.createElement("link");
+
+	MAKE_ELEMENT.id = 'uiUploadMachineStyle';
+	MAKE_ELEMENT.rel = 'stylesheet';
+	MAKE_ELEMENT.href = Data.config.request.css;
+
+	GET_ELEMENT_POSITION.parentNode.insertBefore(MAKE_ELEMENT, GET_ELEMENT_POSITION);
+
+	return this;
+}
+
 _Skin.prototype.setDefault = function (args) {
 
 	var SCOPE = this;
@@ -147,7 +132,7 @@ _Skin.prototype.setDefault = function (args) {
 
 	for (var key in Override) {
 
-		Override[key] = new Function('return function('+Override[key].arguments+') {'+Override[key].logics+' return this;}')();
+		Override[key] = new Function('return function() {'+Override[key]+' return this;}')();
 	}
 
 	return this;
@@ -198,7 +183,7 @@ _Skin.prototype.setAppend = function (args) {
 
 	for (var key in Data.config.indicate) {
 
-		Process.htmlAppend.call(SCOPE, Data.config.indicate[key], ParseString[key]);
+		Process.htmlAppend(Data.config.indicate[key], ParseString[key]);
 	}
 
 	SCOPE.option.indicate = null;
@@ -224,13 +209,16 @@ _Skin.prototype.getRequester = function (args, callback) {
 window.Skin = new _Skin({
 
 	data: {
-		styleSheet: '/modules/js/skin/css/style.css',
 		request: {
 			type: 'GET',
 			url: '/modules/js/skin/xhr/case_1.skin',
 			dataType: 'html',
 			data: {}
 		}
-	}
+	},
+	parseString: {},
+	parseData: {},
+	indicate: {},
+	process: {}
 
 });

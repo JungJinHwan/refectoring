@@ -2,6 +2,7 @@
 
 {
 	"request": {
+		"css": "/modules/js/skin/css/style.css",
 		"json": "/modules/js/skin/xhr/data.json"
 
 	},
@@ -14,31 +15,11 @@
 
 	},
 	"override": {
-		"htmlAppend": {
-			"arguments": "node, parsed",
-			"logics": "
-				/* 리스트용 사용자 함수 예제 */
-				if (node === '.loopskin') {
+		"htmlAppend": "
 
-					var parseData = this.option.parseData.data;
+			console.log(arguments,'Override htmlAppend');
 
-					parsed = '<h1>loop</h1>\\n<ul>';
-
-					for (var i=0; i<parseData['loop'].length; i++ ) {
-
-						parsed += '\\n'+
-							'<li style=\"margin-top:10px\">'+
-								'<span>['+i+'] '+parseData['loop'][i].title+'</span><br>'+
-								'<span>'+parseData['loop'][i].descript+'</span>'+
-							'</li>';
-					}			
-
-					parsed += '</ul>';
-				}
-
-				document.querySelector(node).innerHTML = parsed;
-			"
-		}
+		"
 	}
 }
 
@@ -63,7 +44,8 @@
 	<div class="loopskin">
 
 		{% loop %}
-		{{loop}}
+		<h1>loop</h1>
+		<p>bind data = {{loop}}</p>
 		{% end loop %}
 
 	</div>	

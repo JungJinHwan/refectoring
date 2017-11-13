@@ -1,7 +1,48 @@
 {
 	"data": {
 		"empty": "Complete Empty Skin data binding",
-		"loop": "Complete loop Skin data binding",
+		"loop": [
+			{
+				"title": "loop 1 title text",
+				"descript": "Complete loop 1 Skin data binding"
+			},
+			{
+				"title": "loop 2 title text",
+				"descript": "Complete loop 2 Skin data binding"
+			},
+			{
+				"title": "loop 3 title text",
+				"descript": "Complete loop 3 Skin data binding"
+			},
+			{
+				"title": "loop 4 title text",
+				"descript": "Complete loop 4 Skin data binding"
+			},
+			{
+				"title": "loop 5 title text",
+				"descript": "Complete loop 5 Skin data binding"
+			},
+			{
+				"title": "loop 6 title text",
+				"descript": "Complete loop 6 Skin data binding"
+			},
+			{
+				"title": "loop 7 title text",
+				"descript": "Complete loop 7 Skin data binding"
+			},
+			{
+				"title": "loop 8 title text",
+				"descript": "Complete loop 8 Skin data binding"
+			},
+			{
+				"title": "loop 9 title text",
+				"descript": "Complete loop 9 Skin data binding"
+			},
+			{
+				"title": "loop 10 title text",
+				"descript": "Complete loop 10 Skin data binding"
+			}
+		],
 		"button": "Complete button Skin data binding",
 		"thumbnail": "Complete thumbnail Skin data binding"
 	}

@@ -1,0 +1,14 @@
+/* 
+ * Nanum Square Web Fonts
+ * https://github.com/hiun/NanumSquare
+ * Copyright (c) 2010, NAVER Corporation (http://www.nhncorp.com) 
+ */
+ 
+@font-face {
+  font-family: 'nmj';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/modules/font/NanumMyeongjo.eot);
+  src: url(/modules/font/NanumMyeongjo.eot?#iefix) format('embedded-opentype'),
+       url(/modules/font/NanumMyeongjo.woff) format('woff');
+}

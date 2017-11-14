@@ -4,7 +4,7 @@
 	font-family:'ngn';
 	font-stretch:normal;
 	font-style:normal;
-	src:url('/modules/font/NanumBarunGothic.eot');
-	src:url('/modules/font/NanumBarunGothic.eot?#iefix') format('embedded-opentype'),
-		url('/modules/font/NanumBarunGothic.woff') format('woff')
+	src:url('/hanbat-iucf-2017/font/NanumBarunGothic.eot');
+	src:url('/hanbat-iucf-2017/font/NanumBarunGothic.eot?#iefix') format('embedded-opentype'),
+		url('/hanbat-iucf-2017/font/NanumBarunGothic.woff') format('woff')
 }

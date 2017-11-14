@@ -4,7 +4,7 @@ function _uiSceneShift (args) {
 	// default
 	args.request = {
 		type: 'GET',
-		url: '/hanbat-iucf-2017/js/uiSceneShift/xhr/data.json',
+		url: '/js/linc/uiSceneShift/xhr/data.json',
 		dataType: 'json',
 		data: {}
 	},
@@ -42,6 +42,17 @@ function _uiSceneShift (args) {
 	var SCOPE = this;
 
 	SCOPE.option = args;
+
+	var GET_DOC = document;
+	var GET_TARGET_POSITION = GET_DOC.getElementsByTagName('script')[0];
+	var MAKE_ELEMENT = GET_DOC.createElement("link");
+
+	MAKE_ELEMENT.id = 'uiSceneShift';
+	MAKE_ELEMENT.rel = 'stylesheet';
+	MAKE_ELEMENT.href = '/js/linc/uiSceneShift/css/style.css';
+
+	GET_TARGET_POSITION.parentNode.insertBefore(MAKE_ELEMENT, GET_TARGET_POSITION);
+
 
 	SCOPE.dataParser([ 'setDefault', 'setBind', 'setAppend', 'setCount', 'onPlayAuto' ]);
 
@@ -256,9 +267,6 @@ _uiSceneShift.prototype.setMovement = function (args) {
 	var Data = SCOPE.option.data;
 	var Indicate = SCOPE.option.indicate;
 
-	var items = $(Indicate.items);
-	var itemsLen = items.length;
-
 	// count
 	if (args === 'prev') {
 		Data.count--;
@@ -300,6 +308,9 @@ _uiSceneShift.prototype.setMovement = function (args) {
 		SCOPE.setAppend();
 	}
 
+	var items = $(Indicate.items);
+	var itemsLen = items.length;
+
 	$(Indicate.parent+'-list .list').stop(1, 0).animate({
 		'left': Data.offset[function() {
 
@@ -308,19 +319,19 @@ _uiSceneShift.prototype.setMovement = function (args) {
 			if(Data.break) {
 
 				if(Data.firstPrev) { 
-					result = Data.responsed[Data.index].list.length - Data.break;
-
+					result = itemsLen - Data.break;
 					// console.log('index: '+Data.index, 'itemlength: '+Data.responsed[Data.index].list.length, 'break: '+Data.break, 'result: '+result );
 				}
 				else {
-					result = Data.count-1 > 1 ? (Data.count-1)-1 : 0;
 
-	               if(Data.count-1 > ( itemsLen - Data.break )) {
-	                   result = itemsLen - Data.break;
-	               }
+	            	if(Data.count-1 > ( itemsLen - Data.break )) {
+	            		result = itemsLen - Data.break;
+	            	}
+	            	else{
+	            		result = Data.count-1 > 1 ? (Data.count-1)-1 : 0;
+	            	}
 				}
 			}
-
 
 			return result;
 		}()]*-1

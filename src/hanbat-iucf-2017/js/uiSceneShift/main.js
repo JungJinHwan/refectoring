@@ -1,44 +1,6 @@
 
 function _uiSceneShift (args) {
 
-	// default
-	args.request = {
-		type: 'GET',
-		url: '/js/linc/uiSceneShift/xhr/data.json',
-		dataType: 'json',
-		data: {}
-	},
-	args.indicate = {
-		parent: '#uiSceneShift',
-		buttons: '#uiSceneShift-category button',
-		controls: '#uiSceneShift-control button',
-		play: '#uiSceneShift-control .play',
-		stop: '#uiSceneShift-control .stop',
-		items: '#uiSceneShift-list .item'
-
-	},
-	args.data = {
-		category: [
-			{	
-				category: 0,
-				name: '대학체제개편',
-			},
-			{	
-				category: 1,
-				name: '교육지원',
-			},
-			{	
-				category: 2,
-				name: '기업지원',
-			},
-			{	
-				category: 3,
-				name: '지역사회혁신지원'
-			}
-		]
-	},
-	args.event = {};
-
 	var SCOPE = this;
 
 	SCOPE.option = args;
@@ -49,10 +11,9 @@ function _uiSceneShift (args) {
 
 	MAKE_ELEMENT.id = 'uiSceneShift';
 	MAKE_ELEMENT.rel = 'stylesheet';
-	MAKE_ELEMENT.href = '/js/linc/uiSceneShift/css/style.css';
+	MAKE_ELEMENT.href = SCOPE.option.css;
 
 	GET_TARGET_POSITION.parentNode.insertBefore(MAKE_ELEMENT, GET_TARGET_POSITION);
-
 
 	SCOPE.dataParser([ 'setDefault', 'setBind', 'setAppend', 'setCount', 'onPlayAuto' ]);
 
@@ -65,14 +26,16 @@ function _uiSceneShift (args) {
 			clearTimeout(rtime);
 			rtime = setTimeout(function() {
 				// 데이터 파싱을 두번 할 필요 없잖아?
+				SCOPE.option.status = { resize: true  };
+				
 				SCOPE.setDefault('resize', [ 'setBind', 'setAppend', 'setCount', 'onPlayAuto' ]);
 
+				SCOPE.option.status.resize = false;
 
 			}, 100);
 
 			rw = rw || t.width(), rh = rh || t.height();
 		}
-
 	});
 
 	return this;
@@ -119,9 +82,12 @@ _uiSceneShift.prototype.setDefault = function (args, callback) {
 	
 	var SCOPE = this;
 	var Data = SCOPE.option.data;
+	var Status = SCOPE.option.status;
 	var Indicate = SCOPE.option.indicate;
 
 	Data.index = 0, Data.oldIndex = 0, Data.count = 1;
+
+	Status.mo = ClientWidth()<Data.mo;
 
 	$(Indicate.parent+'-list').css({
 		'width': function () {
@@ -132,7 +98,6 @@ _uiSceneShift.prototype.setDefault = function (args, callback) {
 		}()
 
 	});
-
 
 	if(callback) {
 		for (var i=0; i<callback.length; i++) {
@@ -174,7 +139,7 @@ _uiSceneShift.prototype.setBind = function (args) {
 }
 
 _uiSceneShift.prototype.setAppend = function (args) {
-	
+
 	var SCOPE = this;
 	var Data = SCOPE.option.data;
 	var Indicate = SCOPE.option.indicate;
@@ -188,10 +153,9 @@ _uiSceneShift.prototype.setAppend = function (args) {
 	var str_list = '<div class="list">';
 	for (var i=0; i<list.length; i++) {
 
-		str_list += '<div data-catrgory="'+list[i].category+'" class="item">';
+		str_list += '<div data-catrgory="'+list[i].category+'" class="item'+( i ? '' : ' ov' )+'">';
 		str_list += '<a target="'+list[i].target+'" href="'+list[i].href+'">';
-		// str += '<span class="icon icon_'+Data.responsed[i].category+'_'+Data.responsed[i].index+'"></span>';
-		str_list += '<span class="icon icon_'+list[i].category+'_0"></span>';
+		str_list += '<span class="icon icon_'+list[i].category+'_'+list[i].index+'"></span>';
 		str_list += '<strong class="title">'+list[i].title+'</strong>';
 		str_list += '</a>';
 		str_list += '</div>';
@@ -203,6 +167,13 @@ _uiSceneShift.prototype.setAppend = function (args) {
 
 	var items = $(Indicate.items);
 	var itemsLen = items.length;
+
+	var list = $(Indicate.parent+'-list');	
+
+	if (list.hasClass('false')) {
+		list.removeClass('false');
+
+	}
 
 	// 각 슬라이드 이동할 거리 구함
 	Data.offset = function() {
@@ -236,6 +207,10 @@ _uiSceneShift.prototype.setAppend = function (args) {
 
 	}();
 
+	if (!Data.break) { 
+		list.addClass('false');
+	}
+
 	// console.log(Data.offset, Data.clientBlock, Data.break);
 
 	SCOPE.onInBound();
@@ -251,8 +226,7 @@ _uiSceneShift.prototype.setCount = function (args) {
 
 	var list = Data.responsed[Data.index].list;
 
-	$(Indicate.items)
-		.removeClass("ov").eq(Data.count-1).addClass("ov");
+	$(Indicate.items).removeClass("ov").eq(Data.count-1).addClass("ov");
 
 	var str_count = '<span class="chCount">' + ( args || Data.count ) + '</span> / ' + list.length;
 
@@ -265,7 +239,14 @@ _uiSceneShift.prototype.setMovement = function (args) {
 
 	var SCOPE = this;
 	var Data = SCOPE.option.data;
+	var Status = SCOPE.option.status;
 	var Indicate = SCOPE.option.indicate;
+
+	var lastItems = $(Indicate.items).last();
+
+	if (lastItems.is(':animated')) {
+		return 'animated';
+	}
 
 	// count
 	if (args === 'prev') {
@@ -281,8 +262,9 @@ _uiSceneShift.prototype.setMovement = function (args) {
 		Data.index++;
 		Data.count = 1;
 
-		if (Data.index == 4) {
+		if (Data.index == Data.responsed.length) {
 			Data.index = 0;
+			Status.returnNext = true;
 		}
 	}
 	if (Data.count == 0) {
@@ -298,10 +280,10 @@ _uiSceneShift.prototype.setMovement = function (args) {
 
 	// 끝에서 되돌아올 때 스위치로 사용
 	if (Data.oldIndex > Data.index) {
-		Data.firstPrev = true;
+		Status.firstPrev = true;
 	}
 	else{
-		Data.firstPrev = false;	
+		Status.firstPrev = false;	
 	}
 
 	if (Data.oldIndex != Data.index) {
@@ -316,27 +298,37 @@ _uiSceneShift.prototype.setMovement = function (args) {
 
 			var result = 0;
 
-			if(Data.break) {
+			// 끝에서 처음으로 돌아갈때
+			if (Status.returnNext) {
+				Status.returnNext = false;
+				return 0;
+			}
 
-				if(Data.firstPrev) { 
+			// 상태가 작은 화면일 때
+			if (Status.mo) {
+				return Data.count-1;
+			}
+
+			if (Data.break) {
+
+				if(Status.firstPrev) { 
 					result = itemsLen - Data.break;
-					// console.log('index: '+Data.index, 'itemlength: '+Data.responsed[Data.index].list.length, 'break: '+Data.break, 'result: '+result );
 				}
 				else {
 
-	            	if(Data.count-1 > ( itemsLen - Data.break )) {
-	            		result = itemsLen - Data.break;
-	            	}
-	            	else{
-	            		result = Data.count-1 > 1 ? (Data.count-1)-1 : 0;
-	            	}
+					if(Data.count-1 > ( itemsLen - Data.break )) {
+						result = itemsLen - Data.break;
+					}
+					else{
+						result = Data.count-1 > 1 ? (Data.count-1)-1 : 0;
+					}
 				}
 			}
 
 			return result;
 		}()]*-1
 
-	}, 600, 'easeOutCubic');
+	}, Status.firstPrev ? 0 : 600, 'easeOutCubic');
 
 	
 	SCOPE.setCount();
@@ -350,20 +342,26 @@ _uiSceneShift.prototype.onInBound = function (args) {
 
 	var SCOPE = this;
 	var Data = SCOPE.option.data;
+	var Status = SCOPE.option.status;
 	var Indicate = SCOPE.option.indicate;
 
 	// oldIndex 와 index 가 다를때 append 가 실행되기 때문에 scene 진입시 서로 같은 값을 가지도록
 	Data.oldIndex = Data.index;
 
+	if (Status.resize) {
+		return 'resize'+ $WINDOW.width();
+	}
+
 	var items = $(Indicate.items);
 	var itemsLen = items.length;
 
 	for (var i=0; i<itemsLen; i++) {
+
 		items.eq(i).css({ 
 			'opacity': '0',
-			'margin-left': '10px'
+			'margin-left': i ? '10px' : '0px'
 
-		}).delay(30*i).animate({
+		}).delay(( i ? 30*i : 150 )).animate({
 			'opacity': '1',
 			'margin-left': '0px'
 
@@ -386,6 +384,8 @@ _uiSceneShift.prototype.onChangeList = function (args, callback) {
 	Data.index = args;
 
 	clearInterval(Event.auto);
+
+	$(Indicate.play).show(), $(Indicate.stop).hide();
 
 	if(callback) {
 		for (var i=0; i<callback.length; i++) {
@@ -442,4 +442,40 @@ _uiSceneShift.prototype.onPlayAuto = function () {
 	return this;	
 };
 
-window.SCENESHIFT = new _uiSceneShift({/* user only */});
+window.SCENESHIFT = new _uiSceneShift({
+	css: '/hanbat-iucf-2017/js/uiSceneShift/css/style.css',
+	request:{
+		type: 'GET',
+		url: '/hanbat-iucf-2017/js/uiSceneShift/xhr/data.json',
+		dataType: 'json',
+		data: {}
+	},
+	indicate:{
+		parent: '#uiSceneShift',
+		buttons: '#uiSceneShift-category button',
+		controls: '#uiSceneShift-control button',
+		play: '#uiSceneShift-control .play',
+		stop: '#uiSceneShift-control .stop',
+		items: '#uiSceneShift-list .item'
+
+	},
+	data:{
+		mo: 768,
+		category: [
+			{	
+				category: 0,
+				name: '교육지원',
+			},
+			{	
+				category: 1,
+				name: '기업지원',
+			},
+			{	
+				category: 2,
+				name: '지역사회혁신지원'
+			}
+		]
+	},
+	event:{},
+	status: {}
+});

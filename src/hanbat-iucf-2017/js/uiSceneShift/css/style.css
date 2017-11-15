@@ -42,8 +42,13 @@ header,footer,section,article,nav,aside{display:block}
 
 #txt{margin:0 auto}
 
-#uiSceneShift{position:relative;overflow:hidden;background:#215b91}
+#uiSceneShift{z-index:10;position:relative;background:#215b91}
+#uiSceneShift .bgGroup{position:absolute;width:100%;height:100%;background-size:100% auto}
+#uiSceneShift .leftBg{bottom:0;left:0;width:600px;background:url(/hanbat-iucf-2017/js/uiSceneShift/images/bg_left.png) no-repeat 0 100%}
+#uiSceneShift .rightBg{top:0;right:0;width:558px;background:url(/hanbat-iucf-2017/js/uiSceneShift/images/bg_right.png) no-repeat 0 0}
+
 #uiSceneShift .inner{position:relative;max-width:1340px;height:700px;padding-top:75px;margin:0 auto}
+#uiSceneShift .inner:after{content:"";position:absolute;top:-131px;right:-100px;width:209px;height:162px;background:url(/hanbat-iucf-2017/js/uiSceneShift/images/cheap.png) no-repeat 0 0}
 #uiSceneShift .sectionTitle{display:block;height:61px;background:url(/hanbat-iucf-2017/js/uiSceneShift/images/title3.png) no-repeat 50% 50%;background-size:auto 100%}
 
 #uiSceneShift-category{width:220px;padding-top:45px}
@@ -57,6 +62,7 @@ header,footer,section,article,nav,aside{display:block}
 	position:absolute;top:50%;right:20px;
 	width:21px;height:21px;margin-top:-11px;
 	background:url(/hanbat-iucf-2017/js/uiSceneShift/images/category_icon.png) no-repeat;
+	background-size:auto 100%;
 }
 #uiSceneShift-category button.ov,
 #uiSceneShift-category button:hover{border-color:#fff}
@@ -83,15 +89,79 @@ header,footer,section,article,nav,aside{display:block}
 	transition:background-color 150ms ease-in-out
 }
 #uiSceneShift-list .item a:after{content:'';position:absolute;top:0;right:0;border:8px solid transparent;border-top-color:#215B91;border-right-color:#215B91}
-#uiSceneShift-list .item .title{display:block;font-weight:400;line-height:130%;font-size:22px;color:#333}
+#uiSceneShift-list .item .title{display:block;font-weight:700;line-height:130%;font-size:22px;color:#333}
 
-#uiSceneShift-list .item .icon{display:block;width:98px;height:98px;margin:50px auto 30px;background:no-repeat 0 0;background-size:auto 100%}
-#uiSceneShift-list .item .icon_0_0{background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/0/icon_0_0.png)}
-#uiSceneShift-list .item .icon_1_0{background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/1/icon_1_0.png)}
-#uiSceneShift-list .item .icon_2_0{background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/2/icon_2_0.png)}
-#uiSceneShift-list .item .icon_3_0{background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/3/icon_3_0.png)}
+#uiSceneShift-list .item .icon{display:block;margin:50px auto 30px;background:no-repeat 0 0;background-size:auto 100%}
+
+#uiSceneShift-list .item .icon_0_0{width:103px;height:88px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/0/icon_0_0.png)}
+#uiSceneShift-list .item .icon_0_1{width:98px;height:98px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/0/icon_0_1.png)}
+#uiSceneShift-list .item .icon_0_2{width:98px;height:102px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/0/icon_0_2.png)}
+#uiSceneShift-list .item .icon_0_3{width:83px;height:99px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/0/icon_0_3.png)}
+#uiSceneShift-list .item .icon_0_4{width:96px;height:86px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/0/icon_0_4.png)}
+#uiSceneShift-list .item .icon_0_5{width:79px;height:89px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/0/icon_0_5.png)}
+
+#uiSceneShift-list .item .icon_1_0{width:81px;height:92px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/1/icon_1_0.png)}
+#uiSceneShift-list .item .icon_1_1{width:91px;height:88px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/1/icon_1_1.png)}
+#uiSceneShift-list .item .icon_1_2{width:83px;height:90px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/1/icon_1_2.png)}
+#uiSceneShift-list .item .icon_1_3{width:83px;height:93px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/1/icon_1_3.png)}
+#uiSceneShift-list .item .icon_1_4{width:70px;height:102px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/1/icon_1_4.png)}
+#uiSceneShift-list .item .icon_1_5{width:92px;height:83px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/1/icon_1_5.png)}
+#uiSceneShift-list .item .icon_1_6{width:85px;height:82px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/1/icon_1_6.png)}
+
+#uiSceneShift-list .item .icon_2_0{width:99px;height:102px;background-image:url(/hanbat-iucf-2017/js/uiSceneShift/images/2/icon_2_0.png)}
 
 #uiSceneShift-list .item.ov{margin-top:-20px}
 #uiSceneShift-list .item.ov a{background-color:#56a3ed}
 #uiSceneShift-list .item.ov .icon{background-position:100% 0}
 #uiSceneShift-list .item.ov .title{color:#fff}
+
+@media (max-width:1400px) {
+#uiSceneShift .inner{margin:0 20px}
+
+}
+
+@media (max-width:1100px) {
+#uiSceneShift .inner{height:600px}
+
+#uiSceneShift-category button{height:52px;font-size:16px}
+#uiSceneShift-category button .icon{width:16px;height:16px;margin-top:-9px}
+
+#uiSceneShift-list{left:300px;height:260px}
+#uiSceneShift-list .item{width:240px}
+#uiSceneShift-list .item .title{font-size:18px}
+
+#uiSceneShift-control{margin-top:35px}
+}
+
+@media (max-width:1000px) {
+#uiSceneShift .inner{padding-top:45px}
+
+#uiSceneShift-category{width:100%;text-align:center}
+#uiSceneShift-category button{display:inline-block;width:auto;padding-right:45px;margin-left:5px}
+#uiSceneShift-category button:first-child{margin-left:0}
+#uiSceneShift-category button .icon{right:10px}
+
+#uiSceneShift-control{position:absolute;top:500px;width:100%}
+
+#uiSceneShift-list{top:230px;left:0}
+
+/* 화면을 넘어가지않을 때 */
+#uiSceneShift-list.false{padding-left:0}
+#uiSceneShift-list.false .list{width:100%;margin-left:0;text-align:center}
+#uiSceneShift-list.false .list .item{float:none;display:inline-block}
+#uiSceneShift-list.false .list .item a{margin:0 auto}
+
+}
+
+@media (max-width:767px) {
+#uiSceneShift .inner{height:780px;margin:0}
+
+#uiSceneShift-category{width:auto;margin:0 20px}
+#uiSceneShift-category button{display:block;width:100%;padding-right:0}
+
+#uiSceneShift-control{position:absolute;top:650px}
+
+#uiSceneShift-list{position:relative;top:0;left:0;padding-left:50%;margin:30px auto 0}
+#uiSceneShift-list .list{position:relative;margin-left:-106px}
+
+}

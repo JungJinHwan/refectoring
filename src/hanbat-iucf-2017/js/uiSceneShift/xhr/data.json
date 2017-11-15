@@ -4,37 +4,6 @@
 			{
 				"index": "0",
 				"category": "0",
-				"title": "산학일체<br> 허브시스템(대내)",
-				"img": "/",
-				"href": "/html/linc/info/info_020101.html",
-				"target": "_self"
-
-			},
-			{
-				"index": "1",
-				"category": "0",
-				"title": "산학일체<br> 허브시스템(대외)",
-				"img": "/",
-				"href": "/html/linc/info/info_020102.html",
-				"target": "_self"
-
-			},
-			{
-				"index": "2",
-				"category": "0",
-				"title": "친화형 학사제도 구축 ",
-				"img": "/",
-				"href": "/html/linc/info/info_020103.html",
-				"target": "_self"
-
-			}
-		]
-	},
-	{
-		"list": [
-			{
-				"index": "0",
-				"category": "1",
 				"title": "현장실습",
 				"img": "/",
 				"href": "/html/linc/info/info_020201.html",
@@ -43,7 +12,7 @@
 			},
 			{
 				"index": "1",
-				"category": "1",
+				"category": "0",
 				"title": "창업교육",
 				"img": "/",
 				"href": "/html/linc/info/info_020202.html",
@@ -52,7 +21,7 @@
 			},
 			{
 				"index": "2",
-				"category": "1",
+				"category": "0",
 				"title": "캡스톤디자인",
 				"img": "/",
 				"href": "/html/linc/info/info_020203.html",
@@ -61,7 +30,7 @@
 			},
 			{
 				"index": "3",
-				"category": "1",
+				"category": "0",
 				"title": "산업선도형융합전공",
 				"img": "/",
 				"href": "/html/linc/info/info_020204.html",
@@ -70,7 +39,7 @@
 			},
 			{
 				"index": "4",
-				"category": "1",
+				"category": "0",
 				"title": "인문학의 산학협력",
 				"img": "/",
 				"href": "/html/linc/info/info_020205.html",
@@ -79,7 +48,7 @@
 			},
 			{
 				"index": "5",
-				"category": "1",
+				"category": "0",
 				"title": "산업체 재작자교육 지원",
 				"img": "/",
 				"href": "/html/linc/info/info_020206.html",
@@ -92,7 +61,7 @@
 		"list": [
 			{
 				"index": "0",
-				"category": "2",
+				"category": "1",
 				"title": "가족회사",
 				"img": "/",
 				"href": "/html/linc/info/info_020301.html",
@@ -101,7 +70,7 @@
 			},
 			{
 				"index": "1",
-				"category": "2",
+				"category": "1",
 				"title": "공용장비",
 				"img": "/",
 				"href": "/html/linc/info/info_020302.html",
@@ -110,7 +79,7 @@
 			},
 			{
 				"index": "2",
-				"category": "2",
+				"category": "1",
 				"title": "기술지도 및 애로기술",
 				"img": "/",
 				"href": "/html/linc/info/info_020303.html",
@@ -119,7 +88,7 @@
 			},
 			{
 				"index": "3",
-				"category": "2",
+				"category": "1",
 				"title": "산학협력협의체",
 				"img": "/",
 				"href": "/html/linc/info/info_020304.html",
@@ -128,7 +97,7 @@
 			},
 			{
 				"index": "4",
-				"category": "2",
+				"category": "1",
 				"title": "상품화지원",
 				"img": "/",
 				"href": "/html/linc/info/info_020305.html",
@@ -137,7 +106,7 @@
 			},
 			{
 				"index": "5",
-				"category": "2",
+				"category": "1",
 				"title": "기술개발과제",
 				"img": "/",
 				"href": "/html/linc/info/info_020306.html",
@@ -146,7 +115,7 @@
 			},
 			{
 				"index": "6",
-				"category": "2",
+				"category": "1",
 				"title": "글로벌 산학협력 지원",
 				"img": "/",
 				"href": "/html/linc/info/info_020307.html",
@@ -159,7 +128,7 @@
 		"list": [
 			{
 				"index": "0",
-				"category": "3",
+				"category": "2",
 				"title": "지역사회공헌",
 				"img": "/",
 				"href": "/html/linc/info/info_020401.htm",

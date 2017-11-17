@@ -21,12 +21,18 @@ def 0.0.3 : 2017 11 13 정진환
 		# }
 		# 
 	- 현재버전에서 override 대상 process 자식 객체는 dataBind, htmlAppend 두가지 뿐이다.
-	- override 대상을 .call 로 호출하여 scope 를 유지 시킨다, 외부에서 내부에 접근 가능하게 되므로 모든 객체와 메서드의 접근과 수정, 실행이 가능하다.
+	- override 대상을 .call 로 호출하여 scope(this) 를 전달한다, 외부에서 내부에 접근 가능하게 되므로 모든 객체와 메서드의 접근과 수정, 실행이 가능하다.
 	- config override logics escape 방법
 		# JSON.strigify 로 1차 파싱 되어 오고 JSON.parse 로 json 객체로 변환되는 과정에서 escape 처리 하기위해서는 
 		# \n => \\n,
 		# str='<p style="color:#c8c8c8"><p>' => str='<p style=\"color:#c8c8c8\"><p>'
 		# 
+
+def 0.0.4 : 2017 11 16 정진환
+	- 반복할 대상을 수동 선택 해야했던 방식에서 배열인지 확인하여 반복 
+		# Process.dataBind 에 들어온 parsed 인자가 배열이면 배열이 가지고 있는 객체의 자식 객체를 가지고 데이터 바인딩
+		#
+
 
 --------------------
 
@@ -41,17 +47,25 @@ def 0.0.3 : 2017 11 13 정진환
 
 function _Skin(args) {
 
+	// 사용자에게 제공 할 필요가 없는 객체
 	args.parseString = {},
 	args.parseData = {},
 	args.indicate = {},
-	args.process = {}
+	args.process = {},
+	args.status = {}
 
 	var SCOPE = this;
 
 	SCOPE.option = args;
 
-	SCOPE.option.rgxp = new RegExp('\{\%[a-zA-Z\u0020]+\%\}');
-	SCOPE.option.rgxp.end = new RegExp('[{%\u0020]+(end)');
+	// 자바스크립트는 알아서 객체 생성 해주죠, 참쉽죠?
+	SCOPE.option.rgxp = /\{\%[a-zA-Z\u0020]+\%\}/;
+	SCOPE.option.rgxp.end = /\{\%[\u0020]+(end)/;
+	SCOPE.option.rgxp.remove = /[\s+{%}]/g;
+	SCOPE.option.rgxp.tail = /\%\}/g;
+	SCOPE.option.rgxp.if = /\{\%[a-zA-Z\u0020]+\{[a-zA-Z\"\:\u0020]+\[[\"\,a-zA-Z\u0020]+\][\u0020\}]+\%\}/;
+	SCOPE.option.rgxp.if.range = /\{\%[\u0020][a-zA-Z]+\s[a-zA-Z]+/g;
+	SCOPE.option.rgxp.if.remove = /\{\%[\u0020]+(if\s)/g;
 
 	var Data = SCOPE.option.data;
 
@@ -66,7 +80,7 @@ function _Skin(args) {
 
 	GET_ELEMENT_POSITION.parentNode.insertBefore(MAKE_ELEMENT, GET_ELEMENT_POSITION);
 
-	SCOPE.SkinParser([ 'setDefault', 'setBind', 'setAppend' ]);
+	SCOPE.SkinParser([ 'setDefault', 'setMaybe', 'setBind', 'setAppend' ]);
 
 	return this
 }
@@ -79,21 +93,41 @@ _Skin.prototype.SkinParser = function (callback) {
 	var indicate = SCOPE.option.indicate;
 	var ParseString = SCOPE.option.parseString;
 	var ParseData = SCOPE.option.parseData;
+	var Process = SCOPE.option.process;
+	var Status = SCOPE.option.status;
 
 	// 템플릿 요청
 	SCOPE.getRequester(Data.request, function (res) {
 
 		var Skin = res.split('\n');
 
+		var id = '';
+
 		for (var tempNum in Skin) {
 
-			if(Reg.test(Skin[tempNum])) {
+			Status.isMaybe = Reg.if.test(Skin[tempNum]);
 
-				if(!Boolean(Skin[tempNum].match(Reg.end))) {
-					var id = Skin[tempNum].replace(/[\s+{%}]/g,'');
+			if (Reg.test(Skin[tempNum]) || Status.isMaybe) {
+
+				if (!Reg.end.test(Skin[tempNum])) {
+
+					if (Status.isMaybe) {
+						id = 'if';
+
+						Process.if = {
+							order: $.trim(Skin[tempNum].match(Reg.if.range)[0].replace(Reg.if.remove, '')),
+							attr: JSON.parse($.trim(Skin[tempNum].replace(Reg.if.range, '').replace(Reg.tail, '')))
+						}
+					}
+					else{
+						id = Skin[tempNum].replace(Reg.remove,'');
+					}
+
 					indicate[id] = '';
 				}
-				else{
+				else {
+					// end 
+					id =  $.trim(Skin[tempNum].replace(Reg.remove,'')).replace(/^end/, '');
 
 					indicate[id] = null;
 					delete indicate[id];
@@ -104,7 +138,7 @@ _Skin.prototype.SkinParser = function (callback) {
 				var keylen = Object.keys(indicate).length;
 				var lastKey = Object.keys(indicate)[keylen-1];
 
-				if(!ParseString[lastKey]) {
+				if (!ParseString[lastKey]) {
 					ParseString[lastKey] = '';
 				}
 
@@ -124,7 +158,7 @@ _Skin.prototype.SkinParser = function (callback) {
 
 			ParseData.data = res.data;
 
-			if(callback) {
+			if (callback) {
 				for (var i=0; i<callback.length; i++) {
 					SCOPE[callback[i]].call(SCOPE);
 
@@ -142,12 +176,16 @@ _Skin.prototype.setDefault = function (args) {
 
 	var SCOPE = this;
 
-	// 함수 덮어 쓰기가 가능하다
+	// 함수 재정의(Override)가 가능하다
 	var Override = SCOPE.option.data.config.override;
 
 	for (var key in Override) {
 
-		Override[key] = new Function('return function('+Override[key].arguments+') {'+Override[key].logics+' return this;}')();
+		Override[key] = new Function(
+			'return function ('+Override[key].arguments+') {'+
+				Override[key].logics+
+			'}'
+		)();
 	}
 
 	return this;
@@ -164,7 +202,7 @@ _Skin.prototype.setBind = function (args) {
 
 	Process.keyBind = function(key) {
 
-		return new RegExp('\{\{'+key+'\}\}', 'gi');
+		return new RegExp('\{\{'+key+'\}\}', 'g');
 	}
 
 	Process.dataBind = Override.dataBind || function (key, parsed) {
@@ -174,7 +212,11 @@ _Skin.prototype.setBind = function (args) {
 
 	for (var key in ParseData.data) {
 
-		ParseString[key] = Process.dataBind(key, ParseData.data[key]);
+		ParseString[key] = Process.dataBind.call(
+				SCOPE, 
+				args.key || key, 
+				args.parsed || ParseData.data[key]
+			);
 	}
 
 	return this;
@@ -207,6 +249,29 @@ _Skin.prototype.setAppend = function (args) {
 	return this;
 };
 
+_Skin.prototype.setMaybe = function (args) {
+
+	var SCOPE = this;
+	var ParseData = SCOPE.option.parseData;
+	var ParseString = SCOPE.option.parseString;
+	var Process = SCOPE.option.process;
+
+	var key = Object.keys(Process.if.attr)[0];
+
+	switch (Process.if.order) {
+		case 'not': break;
+		default : 
+			var err = 'Skin Error ( '+Process.if.order +' ) 해당 조건식 명령은 사용할 수 없습니다';
+			document.write(err); 
+			throw err;
+		break;
+	}
+
+	console.log(ParseData.data[key]);
+
+	return this;
+};
+
 _Skin.prototype.getRequester = function (args, callback) {
 
 	return $.ajax({
@@ -222,7 +287,7 @@ _Skin.prototype.getRequester = function (args, callback) {
 };
 
 window.Skin = new _Skin({
-
+	/* user only */
 	data: {
 		styleSheet: '/modules/js/skin/css/style.css',
 		request: {

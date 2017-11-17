@@ -7,36 +7,41 @@
 	},
 	"indicate": {
 		"skin": "#txt",
-		"empty": ".emptyskin",
+		"normal": ".normalskin",
 		"loop": ".loopskin",
 		"button": ".buttonskin",
 		"thumbnail": ".thumbnailskin"
 
 	},
 	"override": {
-		"htmlAppend": {
-			"arguments": "node, parsed",
+		"dataBind": {
+			"arguments": "key, parsed",
 			"logics": "
-				/* 리스트용 사용자 함수 예제 */
-				if (node === '.loopskin') {
 
-					var parseData = this.option.parseData.data;
+				/* 내부함수 재정의 예제 */
 
-					parsed = '<h1>loop</h1>\\n<ul>';
+				var ParseString = this.option.parseString;
+				var Process = this.option.process;
 
-					for (var i=0; i<parseData['loop'].length; i++ ) {
+				if (Array.isArray(parsed)) {
 
-						parsed += '\\n'+
-							'<li style=\"margin-top:10px\">'+
-								'<span>['+i+'] '+parseData['loop'][i].title+'</span><br>'+
-								'<span>'+parseData['loop'][i].descript+'</span>'+
-							'</li>';
-					}			
+					var str = '';
 
-					parsed += '</ul>';
+					for (var i=0; i<parsed.length; i++ ) {
+
+						var callString = ParseString[key];
+
+						for(var dataKey in parsed[i]) {
+							callString = callString.replace(Process.keyBind(dataKey), parsed[i][dataKey]);
+						}
+
+						str += callString;
+					}
+
+					return str;
 				}
 
-				document.querySelector(node).innerHTML = parsed;
+				return ParseString[key].replace(Process.keyBind(key), parsed);
 			"
 		}
 	}
@@ -50,23 +55,28 @@
 <br>
 <div class="skin">
 
-	<div class="emptyskin">
+	<div class="normalskin">
 
-		{% empty %}
-		<h1>empty</h1>
-		<p>bind data = {{empty}}</p>
-		{% end empty %}
+		{% normal %}
+		<h1>normal</h1>
+		<p>bind data = {{normal}}</p>
+		{% end normal %}
 
 	</div>
 <hr>
 
-	<div class="loopskin">
+	<h1>loop</h1>
+	<ul class="loopskin">
 
-		{% loop %}
-		{{loop}}
-		{% end loop %}
+	{% loop %}
+		<li style="margin-top:10px">
+			<span>{{title}}</span><br>
+			<span>{{descript}}</span>
+		</li>
+	{% end loop %}
 
-	</div>	
+	</ul>
+
 <hr>
 
 	<div class="buttonskin">
@@ -78,15 +88,27 @@
 
 	</div>
 <hr>
-
+	
+	<h1>thumbnail</h1>
 	<div class="thumbnailskin">
 	
 		{% thumbnail %}
-		<h1>thumbnail</h1>
-		<p>bind data = {{thumbnail}}</p>
+		<div style="margin-top:10px">
+			{% if not { "thumbnail" : ["src"] } %}
+				<img src="{{src}}" alt="{{alt}}"><br>
+			{% end if %}
+			src = {{src}}<br>
+			alt = {{alt}}
+		</div>
 		{% end thumbnail %}
 
 	</div>
+
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
 
 </div>
 

@@ -1,6 +1,6 @@
 {
 	"data": {
-		"empty": "Complete Empty Skin data binding",
+		"normal": "냉무",
 		"loop": [
 			{
 				"title": "loop 1 title text",
@@ -43,7 +43,32 @@
 				"descript": "Complete loop 10 Skin data binding"
 			}
 		],
-		"button": "Complete button Skin data binding",
-		"thumbnail": "Complete thumbnail Skin data binding"
+		"button": "<button style=\"padding:20px;border:1px solid #000;\" onclick=\"return alert('스크립트도 가능하다')\" type='button'>태그를 입력 받을 수 있다</button>",
+		"thumbnail": [
+			{
+				"src": "/modules/js/skin/images/go.jpg",
+				"alt": "Complete alter text 1 Skin data binding"
+			},
+			{
+				"src": "",
+				"alt": "Complete alter text 2 Skin data binding"
+			},
+			{
+				"src": "",
+				"alt": "Complete alter text 3 Skin data binding"
+			},
+			{
+				"src": "",
+				"alt": "Complete alter text 4 Skin data binding"
+			},
+			{
+				"src": "",
+				"alt": "Complete alter text 5 Skin data binding"
+			},
+			{
+				"src": "",
+				"alt": "Complete alter text 6 Skin data binding"
+			}
+		]
 	}
 }

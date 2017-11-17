@@ -33,6 +33,13 @@ def 0.0.4 : 2017 11 16 정진환
 		# Process.dataBind 에 들어온 parsed 인자가 배열이면 배열이 가지고 있는 객체의 자식 객체를 가지고 데이터 바인딩
 		#
 
+def 0.0.5 : 2017 11 17 정진환
+	- empty 조건식 추가 
+		# {% empty not { "thumbnail" : ["src"] } %}
+		# 	<img src="{{src}}" alt="{{alt}}"><br>
+		# {% end empty %}
+		# 
+
 
 --------------------
 
@@ -44,6 +51,21 @@ def 0.0.4 : 2017 11 16 정진환
 
 
 */
+
+Error.skinChecker = function (_val) {
+
+	var err = true;
+
+	if (_val) {
+		if (_val.start != _val.end) {
+			err = 'Skin Error ( START : '+_val.start+', END : '+_val.end+' )';
+			document.write(err);
+			throw err;
+		}
+	}
+
+	return err;
+};
 
 function _Skin(args) {
 
@@ -63,9 +85,9 @@ function _Skin(args) {
 	SCOPE.option.rgxp.end = /\{\%[\u0020]+(end)/;
 	SCOPE.option.rgxp.remove = /[\s+{%}]/g;
 	SCOPE.option.rgxp.tail = /\%\}/g;
-	SCOPE.option.rgxp.if = /\{\%[a-zA-Z\u0020]+\{[a-zA-Z\"\:\u0020]+\[[\"\,a-zA-Z\u0020]+\][\u0020\}]+\%\}/;
-	SCOPE.option.rgxp.if.range = /\{\%[\u0020][a-zA-Z]+\s[a-zA-Z]+/g;
-	SCOPE.option.rgxp.if.remove = /\{\%[\u0020]+(if\s)/g;
+	SCOPE.option.rgxp.empty = /\{\%[a-zA-Z\u0020]+\{[a-zA-Z\"\:\u0020]+\[[\"\,a-zA-Z\u0020]+\][\u0020\}]+\%\}/;
+	SCOPE.option.rgxp.empty.range = /\{\%[\u0020][a-zA-Z]+\s[a-zA-Z]+/g;
+	SCOPE.option.rgxp.empty.remove = /\{\%[\u0020]+(empty\s)/g;
 
 	var Data = SCOPE.option.data;
 
@@ -105,22 +127,29 @@ _Skin.prototype.SkinParser = function (callback) {
 
 		for (var tempNum in Skin) {
 
-			Status.isMaybe = Reg.if.test(Skin[tempNum]);
+			Status.isMaybe = Reg.empty.test(Skin[tempNum]);
 
 			if (Reg.test(Skin[tempNum]) || Status.isMaybe) {
 
 				if (!Reg.end.test(Skin[tempNum])) {
 
 					if (Status.isMaybe) {
-						id = 'if';
 
-						Process.if = {
-							order: $.trim(Skin[tempNum].match(Reg.if.range)[0].replace(Reg.if.remove, '')),
-							attr: JSON.parse($.trim(Skin[tempNum].replace(Reg.if.range, '').replace(Reg.tail, '')))
+						var empty = {
+							order: $.trim(Skin[tempNum].match(Reg.empty.range)[0].replace(Reg.empty.remove, '')),
+							attr: JSON.parse($.trim(Skin[tempNum].replace(Reg.empty.range, '').replace(Reg.tail, ''))),
+							key: '',
+							string: '',
+							tempNum: {
+								start: tempNum,
+								empty: []
+							}
 						}
 					}
 					else{
 						id = Skin[tempNum].replace(Reg.remove,'');
+						ParseString[id] = '';
+
 					}
 
 					indicate[id] = '';
@@ -131,15 +160,24 @@ _Skin.prototype.SkinParser = function (callback) {
 
 					indicate[id] = null;
 					delete indicate[id];
+
+					empty = null;
+
 				}
 			}
 			else{
 
-				var keylen = Object.keys(indicate).length;
-				var lastKey = Object.keys(indicate)[keylen-1];
+				var keylen = Object.keys(indicate).length-1;
+				var lastKey = Object.keys(indicate)[keylen];
 
-				if (!ParseString[lastKey]) {
-					ParseString[lastKey] = '';
+				if (empty) {
+
+					Process.empty = empty;
+					Process.empty.key = id;
+					Process.empty.tempNum.empty.push(tempNum);
+					Process.empty.string += $.trim(Skin[tempNum]);
+
+					continue;
 				}
 
 				ParseString[lastKey] += $.trim(Skin[tempNum]);
@@ -208,15 +246,14 @@ _Skin.prototype.setBind = function (args) {
 	Process.dataBind = Override.dataBind || function (key, parsed) {
 
 		return ParseString[key].replace(Process.keyBind(key), parsed);
-	};
+	};	
 
 	for (var key in ParseData.data) {
 
-		ParseString[key] = Process.dataBind.call(
-				SCOPE, 
-				args.key || key, 
-				args.parsed || ParseData.data[key]
-			);
+		var _key = args ? args.key : key;
+		var _parsed  = args ? args.parsed : ParseData.data[key];
+
+		ParseString[key] = Process.dataBind.call(SCOPE, _key, _parsed);
 	}
 
 	return this;
@@ -240,7 +277,10 @@ _Skin.prototype.setAppend = function (args) {
 
 	for (var key in Data.config.indicate) {
 
-		Process.htmlAppend.call(SCOPE, Data.config.indicate[key], ParseString[key]);
+		var _node = args ? args.node : Data.config.indicate[key];
+		var _parsed  = args ? args.parsed : ParseString[key];
+
+		Process.htmlAppend.call(SCOPE, _node, _parsed);
 	}
 
 	SCOPE.option.indicate = null;
@@ -252,22 +292,32 @@ _Skin.prototype.setAppend = function (args) {
 _Skin.prototype.setMaybe = function (args) {
 
 	var SCOPE = this;
-	var ParseData = SCOPE.option.parseData;
+	var Process = SCOPE.option.process;
 	var ParseString = SCOPE.option.parseString;
+	var ParseData = SCOPE.option.parseData;
 	var Process = SCOPE.option.process;
 
-	var key = Object.keys(Process.if.attr)[0];
+	args = {};
 
-	switch (Process.if.order) {
-		case 'not': break;
+	switch (Process.empty.order) {
+		case 'N': args.n = false; break;
+		case 'Y': args.y = true; break;
 		default : 
-			var err = 'Skin Error ( '+Process.if.order +' ) 해당 조건식 명령은 사용할 수 없습니다';
+			var err = 'Skin Error ( '+Process.empty.order +' ) 해당 조건식 명령은 사용할 수 없습니다';
 			document.write(err); 
 			throw err;
 		break;
 	}
 
-	console.log(ParseData.data[key]);
+	var key = Object.keys(Process.empty.attr)[0];
+
+	if (args[Process.empty.order.toLowerCase()] && Process.empty.key == key) {
+
+		var row = Process.empty.tempNum.empty[0] - Process.empty.tempNum.start;
+
+		console.log(Process.empty);
+
+	}
 
 	return this;
 };

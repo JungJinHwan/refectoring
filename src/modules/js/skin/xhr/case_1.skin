@@ -94,11 +94,14 @@
 	
 		{% thumbnail %}
 		<div style="margin-top:10px">
-			{% if not { "thumbnail" : ["src"] } %}
+			img = 
+			
+			{% empty Y { "thumbnail" : ["src"] } %}
 				<img src="{{src}}" alt="{{alt}}"><br>
-			{% end if %}
-			src = {{src}}<br>
-			alt = {{alt}}
+				<img src="{{src}}" alt="{{alt}}"><br>
+				<img src="{{src}}" alt="{{alt}}"><br>
+			{% end empty %}
+
 		</div>
 		{% end thumbnail %}
 

@@ -13,38 +13,7 @@
 		"thumbnail": ".thumbnailskin"
 
 	},
-	"override": {
-		"dataBind": {
-			"arguments": "key, parsed",
-			"logics": "
-
-				/* 내부함수 재정의 예제 */
-
-				var ParseString = this.option.parseString;
-				var Process = this.option.process;
-
-				if (Array.isArray(parsed)) {
-
-					var str = '';
-
-					for (var i=0; i<parsed.length; i++ ) {
-
-						var callString = ParseString[key];
-
-						for(var dataKey in parsed[i]) {
-							callString = callString.replace(Process.keyBind(dataKey), parsed[i][dataKey]);
-						}
-
-						str += callString;
-					}
-
-					return str;
-				}
-
-				return ParseString[key].replace(Process.keyBind(key), parsed);
-			"
-		}
-	}
+	"override": {}
 }
 
 {% end config %}
@@ -94,12 +63,9 @@
 	
 		{% thumbnail %}
 		<div style="margin-top:10px">
-			img = 
-			
-			{% empty Y { "thumbnail" : ["src"] } %}
-				<img src="{{src}}" alt="{{alt}}"><br>
-				<img src="{{src}}" alt="{{alt}}"><br>
-				<img src="{{src}}" alt="{{alt}}"><br>
+		
+			{% empty ["src", "alt"] %}
+			<img src="{{src}}" alt="{{alt}}">
 			{% end empty %}
 
 		</div>

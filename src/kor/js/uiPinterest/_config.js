@@ -1,8 +1,9 @@
 export default class Config {
 
-	constructor (args) {
+	constructor (arg) {
 
-		this.option = args;
+		this.option = arg;
+		this.option.no_img = '/kor/js/uiPinterest/images/common/no_img.png';
 		this.option.styleSheet = '/kor/js/uiPinterest/css/style.css';
 		this.option.request = {
 			type: 'GET',
@@ -15,43 +16,52 @@ export default class Config {
 		this.option.page = {};
 		this.option.count = {};
 
+		this.option.selector = {
+			parent: '#uiPinterest'
+
+		};
+
 		// 실행할 메서드 등록
 		this.render([ 'bind', 'append' ]);
 	}
 
-	reg (args) {
+	reg (key) {
 
-		return new RegExp ('\{\{'+args+'\}\}', 'g');
+		return new RegExp ('\{\{'+key+'\}\}', 'g');
 	}
 
-	storage (args) {
+	storage (arg) {
 
-		args = {};
-		args.list = '\n'+
+		arg = {};
+		arg.list = '\n'+
 			'\n<li class="grid__item">'+
 			'\n\t<div class="grid__link">'+
 			'\n\t<div class="grid__img layer layer_01"></div>'+
 			'\n\t<div class="grid__img layer layer_02"></div>'+
 			'\n\t<div class="grid__img layer layer_03">'+
-			'\n\t\t<div class="thumb">'+
-			'\n\t\t\t<img src="{{img]}}" alt="{{title}}">'+
-			'\n\t\t</div>'+
-			'\n\t\t<div class="overlay"></div>'+
-			'\n\t\t\t<p class="title">{{title}}</p>'+
+			'\n\t\t<a href="{{url}}">'+
+			'\n\t\t\t<div class="thumb">'+
+			'\n\t\t\t\t<img src="{{img}}" alt="{{title}}">'+
+			'\n\t\t\t</div>'+
+			'\n\t\t\t<div class="overlay"></div>'+
+			'\n\t\t\t\t<p class="title">{{title}}</p>'+
+			'\n\t\t\t</a>'+
 			'\n\t\t</div>'+
 			'\n\t\t<span class="grid__title">{{date}}</span>'+
 			'\n\t</div>'+
 			'\n</li>';
 
-		return args;
+		return arg;
 	}
 
-	_storage (args) {
+	_storage (arg) {
 
-		args = {};
-		args.list = [];
-
-		return args;
+		return arg;
 	}	
+
+	inSize (arg) {
+
+
+	}
 };
 	

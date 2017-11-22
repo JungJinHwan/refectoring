@@ -2,33 +2,73 @@ import Requester from './_requester';
 
 class main extends Requester {
 
-	bind (args) {
+	bind (arg) {
 
 		const SCOPE = this;
-
-		const Str = this.storage();
 
 		let Data = SCOPE.option.data;
 		let Page = SCOPE.option.page;
 
+		// 다음 화면 호출시 증가된 page.count 로 다음 달 데이터 불러옴
 		let list = Data.response[Page.count].list;
 		let listCnt = Data.response[Page.count].count;
 
-		let _Str = this._storage();
+		let Str = this.storage();
+		let _Str = this._storage({ list: [] });
 
-		for (let key in list) {
+		let i = 0;
 
-			_Str.list.push( Str.list.replace( SCOPE.reg(key), list[key] ) );
-		}
+		Data.completeBind = '';
 
-		console.log(_Str);
-		console.log(Data.response[Page.count].count);
-		console.log(Data.response[Page.count].list);
+		(function keyBind(_n){
+
+			_Str.list[i] = Str.list;
+
+			for(let key in list[i]) {
+
+				if (key == 'img') {
+					// list.img 비어 있으면 페이크 이미지
+					if (!list[i].img.length) {
+						
+						list[i].img = SCOPE.option.no_img;
+					}
+				}
+
+				_Str.list[i] = _Str.list[i].replace( SCOPE.reg(key) , list[i][key]);
+
+				_n++;
+			}
+
+			if (_n < list[i].length) {
+
+				return keyBind(_n);
+			}
+			else{
+
+				Data.completeBind += _Str.list[i];
+
+				i++;
+
+				if (i < listCnt) {
+
+					return keyBind(0);
+				}
+			}
+
+			return 1;
+		})(0);
 
 		return this;
 	}
 
-	append (args) {
+	append (arg) {
+
+		const SCOPE = this;
+
+		let Data = SCOPE.option.data;
+		let Selector = SCOPE.option.selector;
+
+		document.querySelector(Selector.parent).innerHTML = Data.completeBind;
 
 		return this;
 	}
@@ -54,11 +94,10 @@ class main extends Requester {
 		});
 	}
 
-	render (args) {
+	render (arg) {
 
- 		return this.parse(args);
+ 		return this.parse(arg);
 	}
 }
 
 window.$UI_PINTEREST = new main({/* user only => _config.js */});
-

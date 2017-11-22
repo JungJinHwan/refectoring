@@ -82,7 +82,7 @@ function _social(args) {
 	},function(res) {
 		Social.data.fb.profile = res.photos.data[0].images[1].source;
 
-		SCOPE.onRender(facebook,[ SCOPE.setDefault, SCOPE.onEvent ]);
+		SCOPE.onRender(facebook,[ 'setDefault', 'onEvent' ]);
 
 	});
 
@@ -94,13 +94,13 @@ function _social(args) {
 		if(rw != t.width() || rh != t.height()) {
 			clearTimeout(rtime);
 			rtime = setTimeout(function() {
+
 				SCOPE.setDefault();
 
 			}, 100);
 
 			rw = rw || t.width(), rh = rh || t.height();
 		}
-
 	});
 
 	return 1;
@@ -118,8 +118,6 @@ _social.prototype.setDefault = function() {
 
 	var iWorld = $(Social.target).width(), iWidth = 0, iCount = 0;
 	var cutCount = 0;
-
-	$(Social.target).removeAttr('style');
 
 	Data.sort = { before: [], after: [] };
 
@@ -154,10 +152,10 @@ _social.prototype.setDefault = function() {
     		}
 
     		Data.row = i;
-
     	}
 
     	if(cutCount){
+
      		// 이것은 다음 줄의 가장 길이가 긴 것의 위치가 된다.
      		var min = Math.min.apply(null, Data.sort.before);
      		var max = Math.max.apply(null, Data.sort.after);
@@ -170,36 +168,29 @@ _social.prototype.setDefault = function() {
 
 			Data.beforeItem = Data.items.eq( Data.row + Data.sort.beforeIndex );
 			Data.afterItem = Data.items.eq( (Data.row - cutCount) + Data.sort.afterIndex );
-
 		}
 
         Data.beforeItem.css({
             'top': cutCount ? function() {
+
 				return Data.afterItem.position().top +
 					Data.afterItem.outerHeight(true) + Data.bounce;
 					// # css 의 position 위치를 기준으로 계산.
 					// # 시작 위치가 Data.bounce 만큼 위로 올라가 있기 때문에 Data.bounce 만큼 더해준다.
-
             }() : 0,
             'left': i ? function() {
+
 				var result = prev.position().left + prev.outerWidth(true);
 
             	return i%cutCount ? Data.afterItem.position().left : function() {
 					return iCount ? result : Data.afterItem.position().left
-
             	}();
-
             }() : 0,
             'margin-top': Data.bounce*-1
 
-        }).delay(70*i).animate({ 
-        	'opacity': 1, 
-        	'margin-top': 0
-
-        }, 1000, 'easeOutExpo');
+        });
 
         iCount++;
-
     }
 
     Data.endPosition = document.querySelector(Social.target).scrollHeight;
@@ -228,9 +219,9 @@ _social.prototype.onRequest = function(args, callback) {
 		}
 	}
 	else{
+
 		request = args;
 		data = {};
-
 	}
 
 	return $.getJSON(request, data, ( callback ? function(res) {
@@ -246,19 +237,22 @@ _social.prototype.onRender = function(args, callback) {
 	var Data = Social.data;
 
 	var RegEx = function(key) {
-		return new RegExp('\{\{'+key+'\}\}', 'gi');
+
+		return new RegExp('\{\{'+key+'\}\}', 'g');
 	}
 
-	return SCOPE.onRequest(args, function(res) {
+	SCOPE.onRequest(args, function(res) {
 
 		Data.paging = res.paging;
 
-		var ELEMENT = Social.element,
-			BODY = Social.body,
-			customer = {
+		var ELEMENT = Social.element;
+		var BODY = Social.body;
+
+		var customer = {
 				list: { get: '', set: '' }
-			}, 
-			storege = {
+			};
+
+		var storege = {
 				list: '', control: ELEMENT.control
 			};
 
@@ -281,13 +275,13 @@ _social.prototype.onRender = function(args, callback) {
 
 			customer.list.set = '\n'+
 				'\n<a href="'+res.data[fbNumber].link+'" target="_blank" title="새창열기">'+
-					'\n<div class="photos"><img src="'+Data.fb.profile+'" alt="'+name+'"></div>'+
+					'\n<div class="photos"><img  src="'+Data.fb.profile+'" alt="'+name+'"></div>'+
 					'\n<div class="name">'+name+'</div>'+
 					'\n<div class="time">'+time+'</div>'+
 					function() {
 						var result ='\n'+
 							'\n<div class="picture">'+
-								'\n<img src="'+picture+'" alt="'+message+'">'+
+								'\n<img class="picture_img" src="'+picture+'" alt="'+message+'">'+
 							'\n</div>';
 
 						return picture ? result : '';
@@ -298,7 +292,6 @@ _social.prototype.onRender = function(args, callback) {
 			storege.list += customer.list.get.replace(RegEx('LIST'), customer.list.set);
 
 			Data.index++;
-
 		}
 
 		for(var el in storege) {
@@ -316,38 +309,57 @@ _social.prototype.onRender = function(args, callback) {
 					else{
 						result = '';
 					}
-
 				}
 
 				return result;
-
 			}());
 		}
 
-		$(Social.target).html(BODY);
+		if (Data.itemslen) {
+
+			Data.items.last().after(BODY);
+		}
+		else{
+
+			$(Social.target).html(BODY);
+		}
 
 		Data.page++; // 페이지 가 생성되었음을 알리는 용도
 
 		if(callback) {
 
-			var loadLength = $DOCUMENT.find('img').length;
-			var loadCounter = 0;
+			// 모든 화면 변경 메서드는 콜백으로 실행 되기 때문에 지금 불러오는 데이터들은 이전 것이다.
+			var img = $('.picture_img').slice(Data.itemslen);
+			var imgLen = img.length;
+				
+			// Data.limit 보다 작을때 재귀
+			(function loop(_val) {
 
-			$DOCUMENT.find('img').load(function() {
-				// 그림들 불러오는 중인지 확인
-				loadCounter++;
+				for (var i=_val; i<imgLen; i++) {
 
-				if(loadCounter > loadLength-1) {
-					// 마지막 그림을 완전히 불러오면
-					for(var callNumber in callback) {
-						callback[callNumber].call(SCOPE);
+					if (img[i].complete) {
+						_val++;
 					}
-
-					return 1;
+					else {
+						break;
+					}
 				}
 
-				return 0;
-			});
+				if (_val < Data.limit) {
+					
+					return setTimeout(function () {
+						loop(_val);
+
+					},1);
+				} else {
+
+					for(var i=0; i<callback.length; i++) {
+						SCOPE[callback[i]].call(SCOPE);
+					}
+				}
+
+				return this;
+			})(0);
 		}
 	}); 
 
@@ -367,11 +379,10 @@ _social.prototype.onEvent = function(args) {
 			var t = $(this);
 			var dir = t.data('control');
 
-			var parentUrl = Data.paging.next.split('');
+			if (dir == 'more') {
 
-			console.log()
-
-			// SCOPE.onRender( Data.paging(dir), [ SCOPE.setDefault ] );
+				SCOPE.onRender(Data.paging.next, [ 'setDefault', 'onEvent']);
+			}
 
 		});
 
@@ -383,16 +394,17 @@ window.Social = new _social({
 	target: '#uiSocial',
 	body: '{{LIST}}{{CONTROL}}',
 	element: {
-		list: '\n<div style="opacity:0" class="uiSocial-item">{{LIST}}</div>',
+		list: '\n<div class="uiSocial-item">{{LIST}}</div>',
 		control: '\n'+
 			'\n<div class="uiSocial-button">'+
-				'\n<button data-control="prev" type="button">PREV</button>'+
-				'\n<button data-control="next" type="button">NEXT</button>'+
+				// '\n<button data-control="prev" type="button">PREV</button>'+
+				// '\n<button data-control="next" type="button">NEXT</button>'+
+				'\n<button data-control="more" type="button">MORE</button>'+
 			'\n</div>'
 	},
 	data: {
 		request: {
-			css: '/kor/js/uiSocial/css/style.css',
+			css: 'http://gonet.acego.net/kr/css/content_reset.css',
 		},
 		bounce: 25,  // 상, 하 어느 한쪽 면의 패딩 간격 만큼
 		limit: 10,

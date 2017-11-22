@@ -266,7 +266,7 @@ _Skin.prototype.setBind = function (args) {
 
 				for(var dataKey in parsed[i]) {
 
-					 _str = _str.replace(Process.keyBind(dataKey), parsed[i][dataKey]);
+					_str = _str.replace(Process.keyBind(dataKey), parsed[i][dataKey]);
 				}
 
 				str += _str;

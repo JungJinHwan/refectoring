@@ -8,7 +8,9 @@ function _Skin(args) {
 	args.parseData = {},
 	args.indicate = {},
 	args.process = {},
-	args.status = {}
+	args.status = {
+		confirm: true
+	}
 
 	var SCOPE = this;
 
@@ -36,7 +38,7 @@ function _Skin(args) {
 
 	GET_ELEMENT_POSITION.parentNode.insertBefore(MAKE_ELEMENT, GET_ELEMENT_POSITION);
 
-	SCOPE.SkinParser([ 'setDefault', 'setEmpty', 'setBind', 'setAppend' ]);
+	SCOPE.SkinParser([ 'setDefault', 'setBind', 'setAppend' ]);
 
 	return this
 }
@@ -50,7 +52,6 @@ _Skin.prototype.SkinParser = function (callback) {
 	var ParseString = SCOPE.option.parseString;
 	var ParseData = SCOPE.option.parseData;
 	var Process = SCOPE.option.process;
-	var Status = SCOPE.option.status;
 
 	// 템플릿 요청
 	SCOPE.getRequester(Data.request, function (res) {
@@ -86,6 +87,7 @@ _Skin.prototype.SkinParser = function (callback) {
 			}
 		}
 
+		// 소모시킨 config 잘라내고 이후 내용만 사용
 		Skin = Skin.slice(++sliceNum);
 
 		// config 저장
@@ -102,13 +104,11 @@ _Skin.prototype.SkinParser = function (callback) {
 
 			for (var tempNum in Skin) {
 
-				Status.isMaybe = Reg.empty.test(Skin[tempNum]);
-
 				if (Reg.test(Skin[tempNum])) {
 
 					if (!Reg.end.test(Skin[tempNum])) {
 
-						if (Status.isMaybe) {
+						if (Reg.empty.test(Skin[tempNum])) {
 
 							var empty = {
 								order: $.trim(Skin[tempNum].match(Reg.empty.range)[0].replace(/\{\%[\u0020]+/g, '')),
@@ -309,13 +309,6 @@ _Skin.prototype.setAppend = function (args) {
 
 	SCOPE.option.indicate = null;
 	delete SCOPE.option.indicat;
-
-	return this;
-};
-
-_Skin.prototype.setEmpty = function (args) {
-
-	var SCOPE = this;
 
 	return this;
 };

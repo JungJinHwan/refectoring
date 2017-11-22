@@ -1,90 +1,3 @@
-/*
-
-@ 개발노트
-
-def 0.0.1 : 2017 11 03 정진환 
-	- 스킨 개념, html 조각을 필요한 형태로 코딩 후 데이터가 들어갈 곳을 지정 약속어 형태로 데이터 바인딩
-		# UpperCase 만 사용
-		# {{약속어}} => {{TITLE}}
-		#
-
-	- {% abc %} 형태로 지시자 활용
-		#
-		# {% loop %}
-		#   // 지시구간 블럭 선언
-		# 	<li>{{PATH}}{{DATE}}</li>
-		# {% end loop %}
-		#
-
-	- ajax 요청을 담당하는 메서드를 만들고 이 메서드는 요청 결과를 담은 객체를 반환한다. 변수에 담아 요청하면 '.done', '.complete' 등 재요청 없이 추가 사용이 가능
-
-def 0.0.2 : 2017 11 06 정진환
-	- 소소한 설정 선언
-		# {% config %}
-		# 	{
-		# 		"loop": "#multi_upload_template_file_list"
-		#       // loop 
-		# 	}
-		# {% end config %}
-		#
-		# '{% [a-zA-Z] %}' 블럭 선언 후 처음 등장하는 공백없는 영문자를 지시자로 사용
-		# 지시구간 끝 선언은 {% end %} 로 충분하지만 명확한 이해를 위해 다음과 같이 약속
-		# {% loop %}
-		# 	[ ... ]
-		# {% end loop %}
-		#
-
-	- 실행 후 쓸모 없어진 객체 삭제 : delete 하면 연결만 끊길 뿐, null 혹은 undefined 로 비운후 delete
-		# this.option.indicate = null;
-		# delete this.option.indicate;
-		# 
-
-	- IE는 9 이상에서만 되는 문제, 해결된 플러그인 발견 
-		# 엑기스를 뽑아오자
-		# https://github.com/jquery-form/form
-		# 	= 파일 전송에 form, input type="file" 을 사용함
-		#
-
-	- 지시자 empty 삭제 
-		# 목록이 없는 상태를 기본으로 본다. 
-		# config 에 empty(목록이 없는 상태를 가리키는)를 선언 해당하는 요소를 파일이 리스팅 되는 순간 삭제
-		# process 에 form 요소 추가, config 에서 action, method 지정
-		# form => enctype="multipart/form-data" 으로 생성
-		# input => type="file" 생성하여 객체에 저장 multiple 로 여러파일 저장 가능하도록 생성
-		# 
-
-	- 각종 보안 위협 요소 이슈
-		# form 요소는 document 에 추가된 후에 전송이 가능하다
-		# multiple input에 FileList 객체 리스트를 담아서 form 에 append 후 document.body 에 append 그리고 submit
-		# 
-
-def 0.0.3 : 2017 11 08 정진환
-	- 임의 선언한 배열(Process.store = [])에 입력된 순서대로 FileList 를 push (apply 사용) 중복 파일 검사등의 처리에 사용
-	- Process.input 을 함수화 하여 파일이 입력 될 때마다 생성하여 FileList 를 입력 후 Process.form 에 append
-	- 삭제버튼 클릭시 해당 배열(Process.deleted = [])에 push 로 담고 안전 장치로 중복 제거 알고리즘을 사용
-		# 저장한 삭제 리스트를 함께 보낸다
-		#
-	- empty 블럭 다시 선언 
-		# 파일이 전부 목록에서 지워진 후 파일이 없는 상태를 표시해줘야 했다
-		#
-	- setStylesheet 메서드 추가 config 블럭 request.css 에 사용자가 기록한 css를 사용하도록 오픈
-		#
-
-@ 알려진 문제점 
-	- fakepath, input.value 참조는 파일 이름 만 가져올 수 있다
-		# 해결 가능한 경우
-		  . 브라우저 설정 => 사용자 보안 사항에서 허용되어야 한다
-		  . SWF Uploader 사용
-		  .
-	- FileList.File 접근은 가능하지만 file 경로등을 가져올 수 없었다. 6 이 살아있을 시절엔 value 로 가져올수 있었 던거 같은데 -_-... 해봣던 기억이 있는데....
-	- 이미 생성된 FileList 의 File 들을 Process.store.push.apply(Process.store, files[i]) 로 배열에 담아 둘수 있었지만 input type=file 에 다시 담을 수 없었다
-
-@ 개발 가능성
-	- 간단한 콜백 사용으로 스킨 파일 config 블럭에서 내부 함수들을 Override 가능할 것 같으다.... 
-
-
-*/
-
 function _UMachine(args) {
 
 	var SCOPE = this;
@@ -94,12 +7,7 @@ function _UMachine(args) {
 	SCOPE.option.rgxp = new RegExp('\{\%[a-zA-Z\u0020]+\%\}');
 	SCOPE.option.rgxp.end = new RegExp('[{%\u0020]+(end)');
 
-	SCOPE.setRender([ 
-		SCOPE.setStyleSheet, 
-		SCOPE.setDefault, 
-		SCOPE.setIndicator, 
-		SCOPE.onEvent 
-	]);
+	SCOPE.setRender([ 'setStyleSheet', 'setDefault', 'setIndicator', 'onEvent' ]);
 
 	return this
 }
@@ -148,8 +56,9 @@ _UMachine.prototype.setRender = function (callback) {
 		Data.config = JSON.parse(ParseString.config);
 
 		if(callback) {
-			for (var callNumber in callback) {
-				callback[callNumber].call(SCOPE);
+			var callLen = callback.length;
+			for (var i=0; i<callLen; i++) {
+				SCOPE[callback[i]].call(SCOPE);
 
 			}
 
@@ -192,12 +101,6 @@ _UMachine.prototype.setDefault = function (args) {
 	Process.form.enctype = 'multipart/form-data';
 
 	document.body.appendChild(Process.form);
-
-	$('#'+Process.form.id).ajaxForm({
-		success: function() {
-			alert('전송요');
-		}
-	});
 
 	Process.input = function (args) {
 		var el = document.createElement('input');
@@ -271,6 +174,10 @@ _UMachine.prototype.onEvent = function (args) {
 
 				var storeLen = Process.store ? Process.store.length : 0;
 
+				var clonesData = [];
+
+				console.log(SCOPE.clone(files));
+
 				for (var i=0; i<filesLen; i++) {
 
 					if(storeLen){
@@ -299,6 +206,8 @@ _UMachine.prototype.onEvent = function (args) {
 
 					Process.setQuery(Data.config.loop, loop);
 				}
+
+
 
 				// 추가한 파일이 동일 한 파일인가 등의 검증의 용도로 사용하기 위해 저장
 				Process.store.push.apply(Process.store, files);
@@ -405,6 +314,18 @@ _UMachine.prototype.getRequester = function (args, callback) {
 		}
 	});
 };
+
+_UMachine.prototype.clone = function (args) {
+  if (args === null || typeof(args) !== 'object')
+  return args;
+  var copy = args.constructor();
+  for (var attr in args) {
+    if (args.hasOwnProperty(attr)) {
+      copy[attr] = clone(args[attr]);
+    }
+  }
+  return copy;
+}
 
 window.UMachine = new _UMachine({
 

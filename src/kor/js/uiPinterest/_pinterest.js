@@ -13,7 +13,8 @@ class main extends Requester {
 
 		let items = SCOPE.selector(Selector.item);
 
-		items.forEach( (t,i) => {
+		items.forEach((t, i) => {
+
 			t.style.transform = 'translateY(0)';
 			t.style.transitionDelay = (30*(i/1.5))+'ms';
 			t.style.transitionDuration = '0.3s';
@@ -87,7 +88,7 @@ class main extends Requester {
 	    		Data.save.sort.beforeIndex = Data.save.sort.before.indexOf(min);
 	    		Data.save.sort.afterIndex = Data.save.sort.after.indexOf(max);
 
-	    		Data.save.sort.before[Data.save.sort.beforeIndex] = 99999999;
+	    		Data.save.sort.before[Data.save.sort.beforeIndex] = 100000000;
 	    		Data.save.sort.after[Data.save.sort.afterIndex] = 0;
 
 				Data.save.beforeItem = Data.save.items[Data.save.row + Data.save.sort.beforeIndex];

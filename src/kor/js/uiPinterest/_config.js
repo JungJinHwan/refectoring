@@ -5,12 +5,14 @@ export default class Config {
 	constructor (arg) {
 
 		this.option = arg;
+
 		this.option.no_img = '/kor/js/uiPinterest/images/common/no_img.jpg';
 		this.option.month_string = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 		this.option.styleSheet = [
 			'/kor/js/uiPinterest/css/style.css',
 			'/kor/js/uiPinterest/css/pinterest.css'
 		];
+
 		this.option.request = {
 			type: 'GET',
 			url: '/kor/js/uiPinterest/xhr/list.json',
@@ -23,7 +25,7 @@ export default class Config {
 		this.option.status = {};
 		this.option.page = {};
 		this.option.count = {};
-		this.option.save = {}
+		this.option.save = {};
 
 		this.option.selector = {
 			parent: '#uiPinterest',
@@ -76,6 +78,18 @@ export default class Config {
 			'\n\t\t<div class="grid__overlay"></div>'+
 			'\n\t</a>'+
 			'\n</div>';
+
+		arg.history = '\n'+
+			'\n<div id="history_control">'+
+			'\n\t<div id="history_up"><button id="pin_up" type="button">up</button></div>'+
+			'\n\t<div id="history_down"><button id="pin_down" type="button">down</button><</div>'+
+			'\n\t<div id="history_month_group"></div>'+
+			'\n\t<div id="history_bar"></div>'+
+			'\n</div>';
+
+		arg.month = val => {
+				return '\n<div id="month_'+val+'"><burron type="button">'+val+'</burron></div>';
+			}
 
 		return arg;
 	}

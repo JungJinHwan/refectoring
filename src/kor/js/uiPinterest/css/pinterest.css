@@ -1,0 +1,60 @@
+#uiPinterest{position:relative}
+#uiPinterest:after{content:'';display:block;clear:both}
+#uiPinterest .grid__item{position:absolute;top:0;left:0;width:50%;padding:10px}
+#uiPinterest .grid__item .grid__link{position:relative;display:block;padding-top:70%}
+#uiPinterest .grid__item .grid__overlay{
+	content:'';
+	z-index:-1;position:absolute;top:5px;right:5px;bottom:5px;left:5px;
+	display:block;padding-top:55%;color:#666;opacity:0.6;
+	background:rgba(0, 0, 0, 0.8);
+	box-shadow:0 0 20px 10px rgba(0, 0, 0, 0.8);
+	transform:translateZ(-1px) scale(0.95);
+	transition:transform 0.3s, opacity 0.3s, box-shadow 0.3s;
+	backface-visibility:hidden;
+}
+
+#uiPinterest .grid__item .grid__img{
+	z-index:1;position:absolute;top:0;left:0;
+	width:100%;height:100%;overflow:hidden;
+	transition:transform 0.3s;
+}
+
+#uiPinterest .grid__item .grid__img .grid__thumb{position:absolute;top:0;left:0;width:300%;height:100%;margin-left:-100%;text-align:center}
+#uiPinterest .grid__item .grid__img .grid__thumb img{max-width:none;height:100%}
+
+#uiPinterest .grid__item .grid__title{position:absolute;top:0;left:0;width:100%;padding:30px;line-height:160%;font-size:24px;color:#fff}
+
+#uiPinterest .grid__item .grid__icon{position:absolute;bottom:20px;right:20px;width:31px;height:31px;background:url(/kor/js/uiPinterest/images/common/link.png) no-repeat}
+
+#uiPinterest .grid__item .grid__date{
+	position:absolute;bottom:0;left:0;width:100%;
+	font-weight:600;font-size:16px;text-align:center;
+	letter-spacing:2px;opacity:0;
+	transform:translate3d(0, -20px, 0);
+	transition:transform 0.3s, opacity 0.3s;
+
+}
+
+#uiPinterest .grid__item .layer_01{background:#cf171f}
+#uiPinterest .grid__item .layer_02{background:#7c8392;box-shadow:5px 5px 5px rgba(0, 0, 0, 0.3)}
+#uiPinterest .grid__item .layer_03{box-shadow:5px 5px 5px rgba(0, 0, 0, 0.3)}
+
+/* hover */
+#uiPinterest .grid__item :hover .grid__overlay{opacity:0.2;transform:translateZ(-1px) scale(1)}
+#uiPinterest .grid__item :hover .grid__date{opacity:1;transform:translate3d(0, -5px, 0)}
+
+/* 삐뚤어진 grid__img*/
+#uiPinterest.ver_1 .grid__item :hover .layer_01{transform:translateY(-40px) translateX(-40px)}
+#uiPinterest.ver_1 .grid__item :hover .layer_02{transform:translateY(-80px) translateX(-80px)}
+#uiPinterest.ver_1 .grid__item :hover .layer_03{transform:translateY(-120px) translateX(-120px)}
+
+/* 정직한 grid__img*/
+#uiPinterest.ver_2 .grid__item :hover .layer_01{transform:translateY(-30px) translateX(-30px)}
+#uiPinterest.ver_2 .grid__item :hover .layer_02{transform:translateY(-50px) translateX(-50px)}
+#uiPinterest.ver_2 .grid__item :hover .layer_03{transform:translateY(-70px) translateX(-70px)}
+
+#uiPinterest.ver_1{position:fixed;top:300px;right:0;width:55%;min-width:800px;transform:rotateX(45deg) rotateZ(45deg)}
+#uiPinterest.ver_2{width:55%;padding:200px 0 100px}
+
+#uiPinterest .group{transition:opacity 0.3s}
+#uiPinterest .group .grig__item{transform:translateY(100px)}

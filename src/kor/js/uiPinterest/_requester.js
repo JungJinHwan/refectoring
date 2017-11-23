@@ -4,7 +4,8 @@ export default class Requester extends Config {
 
 	request (callback) {
 
-		const request = this.option.request;
+		const SCOPE = this;
+		const request = SCOPE.option.request;
 
 		return $.ajax({
 			type: request.type,

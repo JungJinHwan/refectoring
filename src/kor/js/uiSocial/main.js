@@ -331,7 +331,7 @@ _social.prototype.onRender = function(args, callback) {
 			// 모든 화면 변경 메서드는 콜백으로 실행 되기 때문에 지금 불러오는 데이터들은 이전 것이다.
 			var img = $('.picture_img').slice(Data.itemslen);
 			var imgLen = img.length;
-				
+
 			// Data.limit 보다 작을때 재귀
 			(function loop(_val) {
 
@@ -404,7 +404,7 @@ window.Social = new _social({
 	},
 	data: {
 		request: {
-			css: 'http://gonet.acego.net/kr/css/content_reset.css',
+			css: '/kor/js/uiSocial/css/style.css',
 		},
 		bounce: 25,  // 상, 하 어느 한쪽 면의 패딩 간격 만큼
 		limit: 10,

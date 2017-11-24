@@ -2,6 +2,27 @@ import Requester from './_requester';
 
 class main extends Requester {
 
+	resizebled (callback) {
+
+		const SCOPE = this;
+
+		let Data = SCOPE.option.data;
+
+		for (let i=0; i<Data.save.itemsLen; i++) {
+			Data.save.items[i].style.transitionProperty = 'top, left';
+		}
+
+		if (callback) {
+			
+			for (let i=0; i<callback.length; i++) {
+
+				SCOPE[callback[i]].call(SCOPE);
+			}
+		}
+
+		return this;
+	}
+
 	transform (arg, callback) {
 
 		const SCOPE = this;
@@ -110,7 +131,7 @@ class main extends Requester {
 			items[i].style.transform = 'translateY(0)';
 			items[i].style.opacity = 1;
 			items[i].style.transitionDelay = (30*i)+'ms';
-			items[i].style.transitionDuration = '0.3s';
+			items[i].style.transitionDuration = '300ms';
 			items[i].style.transitionProperty = 'transform, opacity';
 		}
 
@@ -120,7 +141,7 @@ class main extends Requester {
 		return this;
 	}
 
-	sort (arg, callback) {
+	sort (arg) {
 
 		const SCOPE = this;
 
@@ -131,90 +152,50 @@ class main extends Requester {
 		Data.save.items = SCOPE.selector(Selector.item);
 		Data.save.itemsLen = Data.save.items.length;
 
-		let iWorld = SCOPE.selector(Selector.parent).clientWidth;
-		let iWidth = 0;
-		let iCount = 0;
-		let cutCount = 0;
+		let grid = [[]]; // grid[0][0] = x , grid[1][0] = y : (y는 동적 생성)
 
-		for(let i=0; i<Data.save.itemsLen; i++) {
+		let map = {
+			iwidth:Data.save.items[0].offsetWidth,
+			iworld:SCOPE.selector(Selector.parent).clientWidth
+		};
 
-	    	let curr = Data.save.beforeItem = Data.save.items[i];
-	    	let prev = Data.save.items[function () { 
+		let cnt = { w:0, h:0, n:0, y:0, max:0 };
 
-	    		let n = --SCOPE._storage({ n: i }).n;
-	    		
-	    		return n < 0 ? 0 : n;
+		// 너비 한계선
+		for(let i=0; i<Data.save.itemsLen; i++){
+			// 너비 한계치에 도달하면
+			if(map.iwidth*(cnt.w+1) > map.iworld){
 
-	    	}.call(SCOPE)];
+				cnt.h++; // 높이 단계 값 증가
 
-	    	iWidth += curr.offsetWidth;
+				grid[cnt.h] = []; // 높이 단계 증가시 배열 추가
 
-			if(iWidth > (iWorld)) {
+				// 한계치 도달점을 기준으로 현재까지의 각 목록의 높이를 여백을 포함하여 배열 저장
+				for(let k=cnt.n; k<cnt.n+cnt.w; k++){
+					cnt.i = Data.save.items[k].offsetHeight;
 
-				iWidth = curr.offsetWidth;
-				cutCount = iCount;
-				iCount = 0;
+					grid[cnt.h][cnt.y] = (cnt.h > 1) ? cnt.i+grid[cnt.h-1][cnt.y] : cnt.i;
+
+					cnt.y++;
+
+				}
+
+				cnt.n += cnt.w;
+				cnt.y = 0;
+
+				cnt.max = cnt.w;
+
+				cnt.w = 0; // 너비 한계값 초기화
+
 			}
 
-			// 다음의 큰것(before), 이전의 작은것(after) 판단
-	    	if(i%cutCount === 0) {
-	    		let setLength = i+cutCount;
+			grid[0][cnt.w] = map.iwidth*(cnt.w); // x 좌표
 
-	    		for(let k=i; k<setLength; k++) {
+			Data.save.items[i].style.top = (cnt.h > 0 ? grid[cnt.h][cnt.w] : 0) + 'px';
+			Data.save.items[i].style.left = grid[0][cnt.w] + 'px';
 
-	    			if(k === Data.save.itemsLen){
-	    				break;
+			cnt.w++;
 
-	    			}
-
-	    			Data.save.sort.before[k-i] = Data.save.items[k].offsetWidth;
-	    			Data.save.sort.after[k-i] = Data.save.items[k-cutCount].offsetWidth+
-	    				parseInt(getComputedStyle(Data.save.items[k-cutCount], null).top);
-	    		}
-
-	    		Data.save.row = i;
-	    	}
-
-	    	if(cutCount){
-
-	     		// 이것은 다음 줄의 가장 길이가 긴 것의 위치가 된다.
-	     		let min = Math.min.apply(null, Data.save.sort.before);
-	     		let max = Math.max.apply(null, Data.save.sort.after);
-
-	    		Data.save.sort.beforeIndex = Data.save.sort.before.indexOf(min);
-	    		Data.save.sort.afterIndex = Data.save.sort.after.indexOf(max);
-
-	    		Data.save.sort.before[Data.save.sort.beforeIndex] = 100000000;
-	    		Data.save.sort.after[Data.save.sort.afterIndex] = 0;
-
-				Data.save.beforeItem = Data.save.items[Data.save.row + Data.save.sort.beforeIndex];
-				Data.save.afterItem = Data.save.items[(Data.save.row - cutCount) + Data.save.sort.afterIndex];
-			}
-
-	        $(Data.save.beforeItem).css({
-	            'top': cutCount ? function() {
-
-					return parseInt(getComputedStyle(Data.save.afterItem, null).top) + Data.save.afterItem.offsetHeight;
-	            }() : 0,
-	            'left': i ? function() {
-
-					let result = parseInt(getComputedStyle(prev, null).left) + prev.offsetWidth;
-
-	            	return i%cutCount ? parseInt(getComputedStyle(Data.save.afterItem, null).left) : function() {
-						return iCount ? result : parseInt(getComputedStyle(Data.save.afterItem, null).left)
-	            	}();
-	            }() : 0
-	        });
-
-	        iCount++;
-		}
-
-		if (callback) {
-			
-			for (let i=0; i<callback.length; i++) {
-
-				SCOPE[callback[i]].call(SCOPE);
-			}
 		}
 
 		return this;
@@ -322,10 +303,6 @@ class main extends Requester {
 
 		// 추가
 		SCOPE.selector(Selector.parent).innerHTML += Data.completeBind;
-
-		// 이미지 로딩 완료 확인 후 정렬 시작
-		Data.save = {};
-		Data.save.sort = { before: [], after: [] };
 
 		let img = $(Selector.img).slice(Data.save.itemsLen);
 		let imgLen = img.length;

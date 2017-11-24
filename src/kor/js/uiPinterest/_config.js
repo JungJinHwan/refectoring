@@ -21,11 +21,10 @@ export default class Config {
 		};
 
 		this.option.limit = 15;
-		this.option.data = {};
+		this.option.data = { save: { offset: [] } };
 		this.option.status = { count: 0, ani: true };
 		this.option.page = { count: 0 };
 		this.option.count = {};
-		this.option.save = {};
 
 		this.option.selector = {
 			parent: '#uiPinterest',
@@ -44,7 +43,7 @@ export default class Config {
 		// 실행할 메서드 등록
 		this.render([ 'bind', 'append' ]);
 
-		// 준비 완료 후 실행할 목록
+		// 준비 완료 후 실행할 목록, append 에서 콜백 동작
 		// next 는 반드시 마지막에 등장, 판단 기준으로 사용됨
 		this.option.completeFunctionList = [ 'sort' , 'ani', 'next'];
 
@@ -53,10 +52,11 @@ export default class Config {
 		window.onresize = () => {
 
 			if(rw != scope.selector('body').clientWidth || rh != scope.selector('body').clientHeight) {
+
 				clearTimeout(rtime);
-				rtime = setTimeout(function() {
-					scope.sort();
-					scope.ani();
+
+				rtime = setTimeout(() => {
+					scope.resizebled([ 'sort' ]);
 
 				}, 100);
 

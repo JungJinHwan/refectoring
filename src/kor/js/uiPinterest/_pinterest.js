@@ -48,6 +48,7 @@ class main extends Requester {
 	    		let n = --SCOPE._storage({ n: i }).n;
 	    		
 	    		return n < 0 ? 0 : n;
+
 	    	}.call(SCOPE)];
 
 	    	iWidth += curr.offsetWidth;

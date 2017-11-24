@@ -7,7 +7,7 @@ export default class Config {
 		this.option = arg;
 
 		this.option.no_img = '/kor/js/uiPinterest/images/common/no_img.jpg';
-		this.option.month_string = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+		this.option.month_string = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 		this.option.styleSheet = [
 			'/kor/js/uiPinterest/css/style.css',
 			'/kor/js/uiPinterest/css/pinterest.css'
@@ -22,16 +22,19 @@ export default class Config {
 
 		this.option.limit = 15;
 		this.option.data = {};
-		this.option.status = {};
-		this.option.page = {};
+		this.option.status = { count: 0, ani: true };
+		this.option.page = { count: 0 };
 		this.option.count = {};
 		this.option.save = {};
 
 		this.option.selector = {
 			parent: '#uiPinterest',
+			group: '#uiPinterest .group',
 			list: '#uiPinterest .grid',
 			item: '#uiPinterest .grid__item',
-			img: '#uiPinterest .grid__thumb img'
+			img: '#uiPinterest .grid__thumb img',
+			rotate: '#rotate',
+			honest: '#honest'
 
 		};
 
@@ -42,7 +45,24 @@ export default class Config {
 		this.render([ 'bind', 'append' ]);
 
 		// 준비 완료 후 실행할 목록
-		this.option.completeFunctionList = [ 'sort' , 'ani'];
+		// next 는 반드시 마지막에 등장, 판단 기준으로 사용됨
+		this.option.completeFunctionList = [ 'sort' , 'ani', 'next'];
+
+		let rw, rh, rtime, scope = this;
+
+		window.onresize = () => {
+
+			if(rw != scope.selector('body').clientWidth || rh != scope.selector('body').clientHeight) {
+				clearTimeout(rtime);
+				rtime = setTimeout(function() {
+					scope.sort();
+					scope.ani();
+
+				}, 100);
+
+				rw = rw || scope.selector('body').clientWidth, rh = rh || scope.selector('body').clientHeight;
+			}
+		}
 	}
 
 	selector (arg) {
@@ -59,11 +79,11 @@ export default class Config {
 
 	storage (arg) {
 
-		let aniStyle = 'transform:translateY(100px)';
+		let listStyle = 'transform:translateY(100px);opacity:0';
 
 		arg = {};
 		arg.list = '\n'+
-			'\n<div class="grid__item" style="'+aniStyle+'">'+
+			'\n<div class="grid__item" style="'+listStyle+'">'+
 			'\n\t<a class="grid__link" href="{{url}}">'+
 			'\n\t\t<div class="grid__img layer_01"></div>'+
 			'\n\t\t<div class="grid__img layer_02"></div>'+
@@ -81,14 +101,17 @@ export default class Config {
 
 		arg.history = '\n'+
 			'\n<div id="history_control">'+
-			'\n\t<div id="history_up"><button id="pin_up" type="button">up</button></div>'+
-			'\n\t<div id="history_down"><button id="pin_down" type="button">down</button><</div>'+
-			'\n\t<div id="history_month_group"></div>'+
-			'\n\t<div id="history_bar"></div>'+
+			'\n\t<div class="control" id="history_top"><button id="pin_top" type="button">new</button></div>'+
+			'\n\t<div class="control" id="history_up"><button id="pin_up" type="button">up</button></div>'+
+			'\n\t<div class="control" id="history_month_group">{{month}}</div>'+
+			'\n\t<div class="control" id="history_down"><button id="pin_down" type="button">down</button><</div>'+
 			'\n</div>';
 
-		arg.month = val => {
-				return '\n<div id="month_'+val+'"><burron type="button">'+val+'</burron></div>';
+		arg.month = _val => {
+
+				_val.m = _val.m < 10 ? '0'+_val.m : _val.m;
+
+				return '\n<div id="month_'+(_val.y+_val.m)+'"><button type="button"><span>'+_val.m+'</span></button></div>';
 			}
 
 		return arg;
@@ -99,5 +122,9 @@ export default class Config {
 		return arg;
 	}	
 
+	hasAttr (a, b, c) {
+
+		return document.querySelector(a).getAttributeNode(b).nodeValue.indexOf(c) != -1 ? true : false;
+	}
 };
 	

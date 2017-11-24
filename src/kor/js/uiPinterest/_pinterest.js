@@ -2,29 +2,125 @@ import Requester from './_requester';
 
 class main extends Requester {
 
-	ani (arg) {
+	transform (arg, callback) {
+
+		const SCOPE = this;
+
+		let Selector = SCOPE.option.selector;
+		let Status = SCOPE.option.status;
+
+		if (Status.ani) {
+
+			let attrStringArray = [ 'ver_1', 'ver_2' ];
+
+			if (SCOPE.hasAttr(Selector.parent, 'class', attrStringArray[arg])) {
+
+				return null;
+			}
+
+			Status.ani = false;
+
+			let parent = SCOPE.selector(Selector.parent);
+
+			parent.style.transitionProperty = 'transform, top, left, opacity';
+			parent.style.transitionDuration = '300ms';
+			parent.style.opacity = 0;
+
+			let items = SCOPE.selector(Selector.item);
+			let itemsLen = items.length;
+
+			for (let i=0; i<itemsLen; i++) {
+				items[i].style.transform = 'translateY(-100px)';
+				items[i].style.opacity = 0;
+			}
+
+			setTimeout(() => {
+
+				if(arg == 0) {
+
+					parent.setAttribute('class', 'grid ver_1');
+				}
+
+				if(arg == 1) {
+
+					parent.setAttribute('class', 'grid ver_2');
+				}
+
+			}, 400);
+
+			setTimeout(() => {
+
+				parent.style.opacity = 1;
+
+				if (callback) {
+
+					for (let i=0; i<callback.length; i++) {
+
+						SCOPE[callback[i]].call(SCOPE);
+					}
+				}
+
+				Status.ani = true;
+
+			}, 600);
+		}
+
+		return this;
+	}
+
+	next (arg) {
+		// 이 메서드는 모든 실행이 1회 완료 된 후 처리 되어야하는 상태를 판단하는 기준으로 활용할 값들을 변경하거나 초기화 한다.
+		// 반드시 모든 콜백들보다 늦게 등장해야한다.
 
 		const SCOPE = this;
 
 		let Data = SCOPE.option.data;
+		let Page = SCOPE.option.page;
+		let Status = SCOPE.option.status;
+
+		// Status.count 는 ani 가 실행 된 후에 증가
+		if (Status.count === Data.response[Page.count].count) {
+
+			// 저장되어 있는 전체 리스트들의 갯수 보디 작을때, 다음달 리스트를 불러오기 위해 Page.count 증가
+			if (Page.count < Data.response.length) {
+				Page.count++;
+
+				// 초기롸 후 빠져나감
+				Status.count = 0;
+			}
+		}
+
+		return this;
+	}
+
+	ani (arg) {
+
+		const SCOPE = this;
+
+		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
 		SCOPE.selector(Selector.completeGroup).style.opacity = 1;
 
 		let items = SCOPE.selector(Selector.item);
+		let itemsLen = items.length;
 
-		items.forEach((t, i) => {
+		for (let i=0; i<itemsLen; i++) {
 
-			t.style.transform = 'translateY(0)';
-			t.style.transitionDelay = (30*(i/1.5))+'ms';
-			t.style.transitionDuration = '0.3s';
-			t.style.transitionProperty = 'transform';
-		});
+			items[i].style.transform = 'translateY(0)';
+			items[i].style.opacity = 1;
+			items[i].style.transitionDelay = (30*i)+'ms';
+			items[i].style.transitionDuration = '0.3s';
+			items[i].style.transitionProperty = 'transform, opacity';
+		}
 
-		return SCOPE;
+		// count 저장
+		Status.count = items.length;
+
+		return this;
 	}
 
-	sort (arg) {
+	sort (arg, callback) {
 
 		const SCOPE = this;
 
@@ -53,7 +149,7 @@ class main extends Requester {
 
 	    	iWidth += curr.offsetWidth;
 
-			if(iWidth > iWorld) {
+			if(iWidth > (iWorld)) {
 
 				iWidth = curr.offsetWidth;
 				cutCount = iCount;
@@ -63,7 +159,6 @@ class main extends Requester {
 			// 다음의 큰것(before), 이전의 작은것(after) 판단
 	    	if(i%cutCount === 0) {
 	    		let setLength = i+cutCount;
-
 
 	    		for(let k=i; k<setLength; k++) {
 
@@ -114,6 +209,14 @@ class main extends Requester {
 	        iCount++;
 		}
 
+		if (callback) {
+			
+			for (let i=0; i<callback.length; i++) {
+
+				SCOPE[callback[i]].call(SCOPE);
+			}
+		}
+
 		return this;
 	}
 
@@ -129,14 +232,14 @@ class main extends Requester {
 		let list = Data.response[Page.count].list;
 		let listCnt = Data.response[Page.count].count;
 
-		let Str = this.storage();
-		let _Str = this._storage({ list: [] });
+		let Str = SCOPE.storage();
+		let _Str = SCOPE._storage({ list: [], history: '', month: '' });
 
 		let i = 0;
 
 		Data.completeBind = '';
 
-		(function keyBind(_n){
+		(function keyBind(_val){
 
 			_Str.list[i] = Str.list;
 
@@ -152,23 +255,23 @@ class main extends Requester {
 
 				if (key == 'date') {
 					// list.date 가공
-					let dateSplit = list[i].date.split('-');
+					Data.dateSplit = list[i].date.split('-');
 
-					var y = dateSplit[0];
-					var m = dateSplit[1];
-					var d = dateSplit[2];
+					var y = Data.dateSplit[0];
+					var m = Data.dateSplit[1];
+					var d = Data.dateSplit[2];
 
 					list[i].date = SCOPE.option.month_string[Number(m)-1].toUpperCase()+'\u0020'+d+',\u0020'+y;
 				}
 
-				_Str.list[i] = _Str.list[i].replace( SCOPE.reg(key), list[i][key]);
+				_Str.list[i] = _Str.list[i].replace( SCOPE.reg(key), list[i][key] );
 
-				_n++;
+				_val++;
 			}
 
-			if (_n < list[i].length) {
+			if (_val < list[i].length) {
 
-				return keyBind(_n);
+				return keyBind(_val);
 			}
 			else{
 
@@ -182,7 +285,22 @@ class main extends Requester {
 				} 
 				else {
 
-					Data.completeBind = '<div class="group" id="group'+(y+m)+'" style="opacity:0">'+Data.completeBind+'</div>';
+					Data.completeBind = '\n'+function () {
+
+						if (Page.count != 0) {
+							return '';
+						}
+
+						_Str.history = Str.history;
+
+						for (let i=0; i<Data.response.length; i++) {
+							
+							_Str.month += Str.month({ y: y, m: m-i });
+						}
+
+						return _Str.history.replace(SCOPE.reg('month'), _Str.month);
+					}()+
+					'\n<div class="group" id="group'+(y+m)+'" style="opacity:0">'+Data.completeBind+'</div>';
 	
 					// 생성된 그룹 저장					
 					Selector.completeGroup = '#group'+(y+m);
@@ -203,7 +321,7 @@ class main extends Requester {
 		let Selector = SCOPE.option.selector;
 
 		// 추가
-		document.querySelector(Selector.parent).innerHTML = Data.completeBind;
+		SCOPE.selector(Selector.parent).innerHTML += Data.completeBind;
 
 		// 이미지 로딩 완료 확인 후 정렬 시작
 		Data.save = {};
@@ -212,7 +330,7 @@ class main extends Requester {
 		let img = $(Selector.img).slice(Data.save.itemsLen);
 		let imgLen = img.length;
 
-		// limit 보다 작을때 재귀
+		// 로드 완료 된 img 가 limit 보다 작을때 재귀 후 콜백 리스트 실행
 		(function loop(_val) {
 
 			for (let i=_val; i<imgLen; i++) {
@@ -227,17 +345,16 @@ class main extends Requester {
 			}
 
 			if (_val < SCOPE.option.limit) {
-				
-				return setTimeout(function () {
-					loop(_val);
 
+				return setTimeout(function () {
+
+					loop(_val);
 				},1);
 			} else {
-
+				// 재귀 종료 지점 콜백 리스트 실행
 				let callList = SCOPE.option.completeFunctionList;
-				let callListLen = callList.length;
 
-				for (let i=0; i<callListLen; i++) {
+				for (let i=0; i<callList.length; i++) {
 
 					SCOPE[callList[i]].call(SCOPE);
 				}
@@ -251,10 +368,15 @@ class main extends Requester {
 
 		const SCOPE = this;
 
+		let Data = SCOPE.option.data;
+		let Page = SCOPE.option.page;
+		
+		// 새로 불러오면 초기화
+		Page.count = 0;
+
 		return SCOPE.request.call(SCOPE, res => {
 
-			SCOPE.option.data.response = res;
-			SCOPE.option.page.count = 0;
+			Data.response = res;
 
 			if (callback) {
 				

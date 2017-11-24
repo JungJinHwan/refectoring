@@ -1,7 +1,9 @@
-#uiPinterest{position:relative}
+#wrap{overflow:hidden;background:#343841}
+
+#uiPinterest{position:relative;height:100%}
 #uiPinterest:after{content:'';display:block;clear:both}
-#uiPinterest .grid__item{position:absolute;top:0;left:0;width:50%;padding:10px}
-#uiPinterest .grid__item .grid__link{position:relative;display:block;padding-top:70%}
+#uiPinterest .grid__item{position:absolute;top:0;left:0;padding:20px}
+#uiPinterest .grid__item .grid__link{position:relative;display:block;padding-top:110%;font-family:'nsr', sans-serif}
 #uiPinterest .grid__item .grid__overlay{
 	content:'';
 	z-index:-1;position:absolute;top:5px;right:5px;bottom:5px;left:5px;
@@ -9,35 +11,37 @@
 	background:rgba(0, 0, 0, 0.8);
 	box-shadow:0 0 20px 10px rgba(0, 0, 0, 0.8);
 	transform:translateZ(-1px) scale(0.95);
-	transition:transform 0.3s, opacity 0.3s, box-shadow 0.3s;
+	transition:transform 200ms ease-out, opacity 200ms ease-out, box-shadow 200ms ease-out;
 	backface-visibility:hidden;
 }
 
 #uiPinterest .grid__item .grid__img{
 	z-index:1;position:absolute;top:0;left:0;
 	width:100%;height:100%;overflow:hidden;
-	transition:transform 0.3s;
+	transition:transform 200ms ease-out;
 }
 
 #uiPinterest .grid__item .grid__img .grid__thumb{position:absolute;top:0;left:0;width:300%;height:100%;margin-left:-100%;text-align:center}
-#uiPinterest .grid__item .grid__img .grid__thumb img{max-width:none;height:100%}
-
-#uiPinterest .grid__item .grid__title{position:absolute;top:0;left:0;width:100%;padding:30px;line-height:160%;font-size:24px;color:#fff}
-
+#uiPinterest .grid__item .grid__img .grid__thumb img{
+	max-width:none;height:100%;
+	-ms-interpolation-mode:bicubic;
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+#uiPinterest .grid__item .grid__title{position:absolute;top:0;left:0;width:100%;padding:25px;line-height:140%;font-size:20px;color:#fff}
 #uiPinterest .grid__item .grid__icon{position:absolute;bottom:20px;right:20px;width:31px;height:31px;background:url(/kor/js/uiPinterest/images/common/link.png) no-repeat}
-
 #uiPinterest .grid__item .grid__date{
+	z-index:-1;
 	position:absolute;bottom:0;left:0;width:100%;
-	font-weight:600;font-size:16px;text-align:center;
+	text-indent:-15%;font-weight:normal;font-size:14px;text-align:center;color:#fff;
 	letter-spacing:2px;opacity:0;
 	transform:translate3d(0, -20px, 0);
-	transition:transform 0.3s, opacity 0.3s;
+	transition:transform 200ms ease-out, opacity 200ms ease-out;
 
 }
 
-#uiPinterest .grid__item .layer_01{background:#cf171f}
-#uiPinterest .grid__item .layer_02{background:#7c8392;box-shadow:5px 5px 5px rgba(0, 0, 0, 0.3)}
-#uiPinterest .grid__item .layer_03{box-shadow:5px 5px 5px rgba(0, 0, 0, 0.3)}
+#uiPinterest .grid__item .layer_01{background:#7c8597}
+#uiPinterest .grid__item .layer_02{background:rgba(255, 255, 255, 0.3)}
+#uiPinterest .grid__item .layer_03{box-shadow:0 0 0 rgba(0, 0, 0, 0.3)}
 
 /* hover */
 #uiPinterest .grid__item :hover .grid__overlay{opacity:0.2;transform:translateZ(-1px) scale(1)}
@@ -45,16 +49,82 @@
 
 /* 삐뚤어진 grid__img*/
 #uiPinterest.ver_1 .grid__item :hover .layer_01{transform:translateY(-40px) translateX(-40px)}
-#uiPinterest.ver_1 .grid__item :hover .layer_02{transform:translateY(-80px) translateX(-80px)}
-#uiPinterest.ver_1 .grid__item :hover .layer_03{transform:translateY(-120px) translateX(-120px)}
+#uiPinterest.ver_1 .grid__item :hover .layer_02{transform:translateY(-90px) translateX(-90px);box-shadow:15px 15px 5px rgba(0, 0, 0, 0.2)}
+#uiPinterest.ver_1 .grid__item :hover .layer_03{transform:translateY(-130px) translateX(-130px);box-shadow:5px 5px 5px rgba(0, 0, 0, 0.3)}
 
 /* 정직한 grid__img*/
 #uiPinterest.ver_2 .grid__item :hover .layer_01{transform:translateY(-30px) translateX(-30px)}
-#uiPinterest.ver_2 .grid__item :hover .layer_02{transform:translateY(-50px) translateX(-50px)}
-#uiPinterest.ver_2 .grid__item :hover .layer_03{transform:translateY(-70px) translateX(-70px)}
+#uiPinterest.ver_2 .grid__item :hover .layer_02{transform:translateY(-50px) translateX(-50px);box-shadow:5px 5px 5px rgba(0, 0, 0, 0.2)}
+#uiPinterest.ver_2 .grid__item :hover .layer_03{transform:translateY(-70px) translateX(-70px);box-shadow:5px 5px 5px rgba(0, 0, 0, 0.3)}
 
-#uiPinterest.ver_1{position:fixed;top:300px;right:0;width:55%;min-width:800px;transform:rotateX(45deg) rotateZ(45deg)}
-#uiPinterest.ver_2{width:55%;padding:200px 0 100px}
 
-#uiPinterest .group{transition:opacity 0.3s}
+/* 위에서 기본을 정했고 디테일 들어갑시다. */
+#uiPinterest .group{z-index:10;position:relative;transition:opacity 200ms}
 #uiPinterest .group .grig__item{transform:translateY(100px)}
+
+#uiPinterest.ver_1{position:fixed;top:170px;left:35%;width:60%;transform:rotateX(45deg) rotateZ(45deg)}
+#uiPinterest.ver_1 .grid__item{width:49%}
+
+@media (min-width:1600px) {
+	#uiPinterest.ver_1 .grid__item{width:33%}
+}
+
+#uiPinterest.ver_2{position:fixed;top:100px;left:35%;width:60%}
+#uiPinterest.ver_2 .grid__item{width:33%}
+
+#history_control{position:absolute;top:0;left:-50px;width:30px;height:100%}
+#history_control:before{content:'';position:absolute;top:0;left:50%;height:100%;width:2px;margin-left:-1px;background-color:#5d6067}
+
+#history_top{margin-bottom:50px}
+#history_top button{
+	z-index:1;
+	position:relative;overflow:hidden;width:30px;height:30px;
+	border-radius:100%;border:3px solid #343841;background:#cf171f;
+	color:#fff;
+}
+
+#history_top button:before{
+	content:'N';display:block;height:100%;padding-top:5px;
+	text-indent:-1px;text-align:center;line-height:1;font-size:14px;
+	color:#fff;
+}
+
+#history_up button, #history_down button{
+	overflow:hidden;width:30px;height:30px;
+	border-radius:100%;border:3px solid #343841;
+	background:#5d6067 url(/kor/js/uiPinterest/images/common/arr.png) no-repeat 50% 50%;
+}
+
+#history_down button{transform:rotate(180deg)}
+
+#history_up button:before, #history_down button:before{content:'';display:block;height:100%}
+
+#history_month_group{position:relative;top:0;left:0;width:100%;height:300px;margin:50px 0}
+#history_month_group div{position:relative;height:33.33%}
+#history_month_group button{
+	display:block;position:absolute;top:0;left:-30px;width:50px;
+	text-align:right;font-size:13px;color:#5d6067;
+	transition:border-color 100ms ease-out, color 100ms ease-out;
+}
+#history_month_group button span{display:inline-block;vertical-align:middle}
+#history_month_group button:after{
+	content:'';
+	display:inline-block;width:5px;height:5px;margin-left:10px;
+	vertical-align:middle;border-radius:100%;
+	border:3px solid #5d6067;
+	background-color:#343841;
+}
+#history_month_group button:hover,
+#history_month_group button.ov{border-color:#fff;color:#fff}
+#history_month_group button:hover:after,
+#history_month_group button.ov:after{border-color:#fff}
+
+#history_month_group #month_201711{height:50%}
+#history_month_group #month_201710{height:30%}
+#history_month_group #month_201709{height:20%}
+
+
+#history_control .control{position:relative}
+
+
+#change_rotate,#change_honest{padding:20px 30px;border:1px solid #fff;color:#fff}

@@ -21,10 +21,11 @@ export default class Config {
 		};
 
 		this.option.limit = 15;
-		this.option.data = { save: { offset: [] } };
-		this.option.status = { count: 0, ani: true };
-		this.option.page = { count: 0 };
-		this.option.count = {};
+		this.option.data = { offset: [], index: 0 };
+		this.option.status = { ani: true };
+		this.option.page = 0;
+		this.option.count = 0;
+		this.option.process = {};
 
 		this.option.selector = {
 			parent: '#uiPinterest',
@@ -51,7 +52,7 @@ export default class Config {
 
 		window.onresize = () => {
 
-			if(rw != scope.selector('body').clientWidth || rh != scope.selector('body').clientHeight) {
+			if(rw != scope.select('body').clientWidth || rh != scope.select('body').clientHeight) {
 
 				clearTimeout(rtime);
 
@@ -60,12 +61,28 @@ export default class Config {
 
 				}, 100);
 
-				rw = rw || scope.selector('body').clientWidth, rh = rh || scope.selector('body').clientHeight;
+				rw = rw || scope.select('body').clientWidth, rh = rh || scope.select('body').clientHeight;
 			}
 		}
 	}
 
-	selector (arg) {
+	request (callback) {
+
+		const SCOPE = this;
+
+		return $.ajax({
+			type: SCOPE.option.request.type,
+			url: SCOPE.option.request.url,
+			data: SCOPE.option.request.data,
+			dataType: SCOPE.option.request.dataType,
+			success: callback,
+			error: res => {
+				console.log('ERROR', res);
+			}
+		});
+	}
+
+	select (arg) {
 
 		arg = document.querySelectorAll(arg);
 
@@ -126,5 +143,14 @@ export default class Config {
 
 		return document.querySelector(a).getAttributeNode(b).nodeValue.indexOf(c) != -1 ? true : false;
 	}
+
+	returnCall (arg) {
+		
+		for (let i=0; i<arg.length; i++) {
+
+			this[arg[i]]();
+		}
+	}
+
 };
 	

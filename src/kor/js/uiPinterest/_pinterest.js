@@ -1,6 +1,10 @@
-import Requester from './_requester';
+import Config from './_config';
 
-class main extends Requester {
+class main extends Config {
+
+	lithener () {
+
+	}
 
 	resizebled (callback) {
 
@@ -8,19 +12,11 @@ class main extends Requester {
 
 		let Data = SCOPE.option.data;
 
-		for (let i=0; i<Data.save.itemsLen; i++) {
-			Data.save.items[i].style.transitionProperty = 'top, left';
+		for (let i=0; i<Data.itemsLen; i++) {
+			Data.items[i].style.transitionProperty = 'top, left';
 		}
 
-		if (callback) {
-			
-			for (let i=0; i<callback.length; i++) {
-
-				SCOPE[callback[i]].call(SCOPE);
-			}
-		}
-
-		return this;
+		return SCOPE.returnCall(callback);
 	}
 
 	transform (arg, callback) {
@@ -41,13 +37,13 @@ class main extends Requester {
 
 			Status.ani = false;
 
-			let parent = SCOPE.selector(Selector.parent);
+			let parent = SCOPE.select(Selector.parent);
 
 			parent.style.transitionProperty = 'transform, top, left, opacity';
 			parent.style.transitionDuration = '300ms';
 			parent.style.opacity = 0;
 
-			let items = SCOPE.selector(Selector.item);
+			let items = SCOPE.select(Selector.item);
 			let itemsLen = items.length;
 
 			for (let i=0; i<itemsLen; i++) {
@@ -73,13 +69,7 @@ class main extends Requester {
 
 				parent.style.opacity = 1;
 
-				if (callback) {
-
-					for (let i=0; i<callback.length; i++) {
-
-						SCOPE[callback[i]].call(SCOPE);
-					}
-				}
+				SCOPE.returnCall(callback);
 
 				Status.ani = true;
 
@@ -90,24 +80,25 @@ class main extends Requester {
 	}
 
 	next (arg) {
-		// 이 메서드는 모든 실행이 1회 완료 된 후 처리 되어야하는 상태를 판단하는 기준으로 활용할 값들을 변경하거나 초기화 한다.
-		// 반드시 모든 콜백들보다 늦게 등장해야한다.
+		// 이 메서드는 위치 계산 완료 후, 혹은 정렬 애니메이션 완료 후에 호출
+		// *완료 후 상태를 판단하고 처리한다
 
 		const SCOPE = this;
 
 		let Data = SCOPE.option.data;
-		let Page = SCOPE.option.page;
-		let Status = SCOPE.option.status;
 
-		// Status.count 는 ani 가 실행 된 후에 증가
-		if (Status.count === Data.response[Page.count].count) {
+		if (SCOPE.option.count === Data.response[SCOPE.option.page].count) {
 
-			// 저장되어 있는 전체 리스트들의 갯수 보디 작을때, 다음달 리스트를 불러오기 위해 Page.count 증가
-			if (Page.count < Data.response.length) {
-				Page.count++;
+			if (SCOPE.option.page < Data.response.length) {
 
-				// 초기롸 후 빠져나감
-				Status.count = 0;
+				// 현제 추가된 된 list 갯수가, 요청된 page 의 list 갯수와 일치하면 다음 그룹으로 넘어가고
+				// 현재 진행중인 page 카운트가 작으면, 만족할 때까지 증가
+				// 이것은 다음달 리스트를 불러오기 위한 판단기준이 된다
+				SCOPE.option.page++;
+			}
+			else {
+
+				// 다음달 리스트 가져오는 메서드 여기서 실행
 			}
 		}
 
@@ -118,12 +109,11 @@ class main extends Requester {
 
 		const SCOPE = this;
 
-		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
-		SCOPE.selector(Selector.completeGroup).style.opacity = 1;
+		SCOPE.select(Selector.completeGroup).style.opacity = 1;
 
-		let items = SCOPE.selector(Selector.item);
+		let items = SCOPE.select(Selector.item);
 		let itemsLen = items.length;
 
 		for (let i=0; i<itemsLen; i++) {
@@ -136,7 +126,7 @@ class main extends Requester {
 		}
 
 		// count 저장
-		Status.count = items.length;
+		SCOPE.option.count = items.length;
 
 		return this;
 	}
@@ -149,20 +139,22 @@ class main extends Requester {
 		let Selector = SCOPE.option.selector;
 
 		// 재귀 종료지점, 정렬 시작
-		Data.save.items = SCOPE.selector(Selector.item);
-		Data.save.itemsLen = Data.save.items.length;
+		let items = SCOPE.select(Selector.item);
+		let itemsLen = items.length;
+
+		let parent = SCOPE.select(Selector.parent);
 
 		let grid = [[]]; // grid[0][0] = x , grid[1][0] = y : (y는 동적 생성)
 
 		let map = {
-			iwidth:Data.save.items[0].offsetWidth,
-			iworld:SCOPE.selector(Selector.parent).clientWidth
+			iwidth: items[0].offsetWidth,
+			iworld: parent.clientWidth
 		};
 
-		let cnt = { w:0, h:0, n:0, y:0, max:0 };
+		let cnt = { w: 0, h: 0, n: 0, y: 0 };
 
 		// 너비 한계선
-		for(let i=0; i<Data.save.itemsLen; i++){
+		for(let i=0; i<itemsLen; i++){
 			// 너비 한계치에 도달하면
 			if(map.iwidth*(cnt.w+1) > map.iworld){
 
@@ -172,9 +164,9 @@ class main extends Requester {
 
 				// 한계치 도달점을 기준으로 현재까지의 각 목록의 높이를 여백을 포함하여 배열 저장
 				for(let k=cnt.n; k<cnt.n+cnt.w; k++){
-					cnt.i = Data.save.items[k].offsetHeight;
+					cnt.i = items[k].offsetHeight;
 
-					grid[cnt.h][cnt.y] = (cnt.h > 1) ? cnt.i+grid[cnt.h-1][cnt.y] : cnt.i;
+					grid[cnt.h][cnt.y] = (cnt.h > 1) ? cnt.i + grid[cnt.h-1][cnt.y] : cnt.i;
 
 					cnt.y++;
 
@@ -182,21 +174,22 @@ class main extends Requester {
 
 				cnt.n += cnt.w;
 				cnt.y = 0;
-
-				cnt.max = cnt.w;
-
 				cnt.w = 0; // 너비 한계값 초기화
-
 			}
 
 			grid[0][cnt.w] = map.iwidth*(cnt.w); // x 좌표
 
-			Data.save.items[i].style.top = (cnt.h > 0 ? grid[cnt.h][cnt.w] : 0) + 'px';
-			Data.save.items[i].style.left = grid[0][cnt.w] + 'px';
+			items[i].style.top = (cnt.h > 0 ? grid[cnt.h][cnt.w] : 0) + 'px';
+			items[i].style.left = grid[0][cnt.w] + 'px';
 
 			cnt.w++;
-
 		}
+
+		// 마지막 행 + 아이템 하나의 높이 = 전체 높이
+		// 모든 카드의 크키가 같으면 편하지
+		parent.style.height = grid[grid.length-1][0] + items[0].offsetHeight + 'px';
+
+		grid = null;
 
 		return this;
 	}
@@ -206,12 +199,12 @@ class main extends Requester {
 		const SCOPE = this;
 
 		let Data = SCOPE.option.data;
-		let Page = SCOPE.option.page;
 		let Selector = SCOPE.option.selector;
 
-		// 다음 화면 호출시 증가된 page.count 로 다음 달 데이터 불러옴
-		let list = Data.response[Page.count].list;
-		let listCnt = Data.response[Page.count].count;
+		// 다음 화면 호출시 증가된 SCOPE.option.count 로 다음 달 데이터 불러옴
+
+		let list = Data.response[SCOPE.option.page].list;
+		let listCnt = Data.response[SCOPE.option.page].count;
 
 		let Str = SCOPE.storage();
 		let _Str = SCOPE._storage({ list: [], history: '', month: '' });
@@ -236,11 +229,11 @@ class main extends Requester {
 
 				if (key == 'date') {
 					// list.date 가공
-					Data.dateSplit = list[i].date.split('-');
+					let dateSplit = list[i].date.split('-');
 
-					var y = Data.dateSplit[0];
-					var m = Data.dateSplit[1];
-					var d = Data.dateSplit[2];
+					var y = dateSplit[0];
+					var m = dateSplit[1];
+					var d = dateSplit[2];
 
 					list[i].date = SCOPE.option.month_string[Number(m)-1].toUpperCase()+'\u0020'+d+',\u0020'+y;
 				}
@@ -250,46 +243,40 @@ class main extends Requester {
 				_val++;
 			}
 
-			if (_val < list[i].length) {
+			Data.completeBind += _Str.list[i];
 
-				return keyBind(_val);
-			}
-			else{
+			i++;
 
-				Data.completeBind += _Str.list[i];
+			if (i < SCOPE.option.limit) {
 
-				i++;
+				return keyBind(0);
+			} 
+			else {
 
-				if (i < listCnt) {
+				Data.completeBind = '\n'+function () {
 
-					return keyBind(0);
-				} 
-				else {
+					if (SCOPE.option.count != 0) {
+						return '';
+					}
 
-					Data.completeBind = '\n'+function () {
+					_Str.history = Str.history;
 
-						if (Page.count != 0) {
-							return '';
-						}
+					for (let i=0; i<Data.response.length; i++) {
+						
+						_Str.month += Str.month({ y: y, m: m-i });
+					}
 
-						_Str.history = Str.history;
+					return _Str.history.replace(SCOPE.reg('month'), _Str.month);
+				}()+
+				'\n<div class="group" id="group'+(y+m)+'" style="opacity:0">'+Data.completeBind+'</div>';
 
-						for (let i=0; i<Data.response.length; i++) {
-							
-							_Str.month += Str.month({ y: y, m: m-i });
-						}
-
-						return _Str.history.replace(SCOPE.reg('month'), _Str.month);
-					}()+
-					'\n<div class="group" id="group'+(y+m)+'" style="opacity:0">'+Data.completeBind+'</div>';
-	
-					// 생성된 그룹 저장					
-					Selector.completeGroup = '#group'+(y+m);
-				}
+				// 생성된 그룹 저장	
+				Selector.completeGroup = '#group'+(y+m);
 			}
 
 			return 1;
 		})(0);
+
 
 		return SCOPE;
 	}
@@ -302,9 +289,9 @@ class main extends Requester {
 		let Selector = SCOPE.option.selector;
 
 		// 추가
-		SCOPE.selector(Selector.parent).innerHTML += Data.completeBind;
+		SCOPE.select(Selector.parent).innerHTML += Data.completeBind;
 
-		let img = $(Selector.img).slice(Data.save.itemsLen);
+		let img = $(Selector.img).slice(SCOPE.option.count);
 		let imgLen = img.length;
 
 		// 로드 완료 된 img 가 limit 보다 작을때 재귀 후 콜백 리스트 실행
@@ -328,13 +315,9 @@ class main extends Requester {
 					loop(_val);
 				},1);
 			} else {
+
 				// 재귀 종료 지점 콜백 리스트 실행
-				let callList = SCOPE.option.completeFunctionList;
-
-				for (let i=0; i<callList.length; i++) {
-
-					SCOPE[callList[i]].call(SCOPE);
-				}
+				SCOPE.returnCall(SCOPE.option.completeFunctionList);
 			}
 		})(0);
 
@@ -346,24 +329,19 @@ class main extends Requester {
 		const SCOPE = this;
 
 		let Data = SCOPE.option.data;
-		let Page = SCOPE.option.page;
 		
 		// 새로 불러오면 초기화
-		Page.count = 0;
+		SCOPE.option.count = 0;
 
-		return SCOPE.request.call(SCOPE, res => {
+		// 새것은 새그릇에
+		Data.response = null;
+		Data.completeBind = null;
+
+		return SCOPE.request(res => {
 
 			Data.response = res;
 
-			if (callback) {
-				
-				let len = callback.length;
-
-				for (let i=0; i<len; i++) {
-
-					SCOPE[callback[i]].call(SCOPE);
-				}
-			}
+			return SCOPE.returnCall(callback);
 		});
 	}
 }

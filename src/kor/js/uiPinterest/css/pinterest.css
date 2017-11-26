@@ -1,6 +1,6 @@
 #wrap{overflow:hidden;background:#343841}
 
-#uiPinterest{position:relative;height:100%}
+#uiPinterest{position:relative;height:100%;transform-origin:0% 0%}
 #uiPinterest:after{content:'';display:block;clear:both}
 #uiPinterest .grid__item{position:absolute;top:0;left:0;padding:20px}
 #uiPinterest .grid__item .grid__link{position:relative;display:block;padding-top:110%;font-family:'nsr', sans-serif}
@@ -39,8 +39,8 @@
 
 }
 
-#uiPinterest .grid__item .layer_01{background:#7c8597}
-#uiPinterest .grid__item .layer_02{background:rgba(255, 255, 255, 0.3)}
+#uiPinterest .grid__item .layer_01{transform:scale(0.9, 0.9);background:#7c8597}
+#uiPinterest .grid__item .layer_02{transform:scale(0.9, 0.9);background:rgba(255, 255, 255, 0.3)}
 #uiPinterest .grid__item .layer_03{box-shadow:0 0 0 rgba(0, 0, 0, 0.3)}
 
 /* hover */
@@ -62,12 +62,8 @@
 #uiPinterest .group{z-index:10;position:relative;transition:opacity 200ms}
 #uiPinterest .group .grig__item{transform:translateY(100px)}
 
-#uiPinterest.ver_1{position:fixed;top:170px;left:35%;width:60%;transform:rotateX(45deg) rotateZ(45deg)}
-#uiPinterest.ver_1 .grid__item{width:49%}
-
-@media (min-width:1600px) {
-	#uiPinterest.ver_1 .grid__item{width:33%}
-}
+#uiPinterest.ver_1{position:fixed;top:150px;left:60%;width:55%;transform:rotateX(45deg) rotateZ(45deg)}
+#uiPinterest.ver_1 .grid__item{width:33%}
 
 #uiPinterest.ver_2{position:fixed;top:100px;left:35%;width:60%}
 #uiPinterest.ver_2 .grid__item{width:33%}

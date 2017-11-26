@@ -10,10 +10,13 @@ class main extends Config {
 
 		const SCOPE = this;
 
-		let Data = SCOPE.option.data;
+		let Selector = SCOPE.option.selector;
 
-		for (let i=0; i<Data.itemsLen; i++) {
-			Data.items[i].style.transitionProperty = 'top, left';
+		let items = SCOPE.select(Selector.item);
+		let itemsLen = items.length;
+
+		for (let i=0; i<itemsLen; i++) {
+			items[i].style.transitionProperty = 'top, left';
 		}
 
 		return SCOPE.returnCall(callback);
@@ -94,12 +97,31 @@ class main extends Config {
 				// 현제 추가된 된 list 갯수가, 요청된 page 의 list 갯수와 일치하면 다음 그룹으로 넘어가고
 				// 현재 진행중인 page 카운트가 작으면, 만족할 때까지 증가
 				// 이것은 다음달 리스트를 불러오기 위한 판단기준이 된다
+
 				SCOPE.option.page++;
-			}
-			else {
+
+				// 다음달 리스트 가져오기 전 초기화
+				SCOPE.option.count = 0;
 
 				// 다음달 리스트 가져오는 메서드 여기서 실행
+				/* function */ SCOPE.returnCall([/* 필요한 함수 이름 추가 */]);
 			}
+			else {
+				// 요청 시작하기 전 초기화
+				SCOPE.option.count = 0;
+
+				// 새것은 새그릇에
+				Data.response = null;
+				Data.completeBind = null;
+
+				// 다음 json 데이터 요청 메서드 여기서 실행
+				/* function */ SCOPE.returnCall([/* 필요한 함수 이름 추가 */]);
+			}
+		}
+		else {
+
+			// 추가한 list 갯수가 모자랄 때 남은 목록 limit 만큼 또 추가
+			/* function */ SCOPE.returnCall([/* 필요한 함수 이름 추가 */]);
 		}
 
 		return this;
@@ -135,7 +157,6 @@ class main extends Config {
 
 		const SCOPE = this;
 
-		let Data = SCOPE.option.data;
 		let Selector = SCOPE.option.selector;
 
 		// 재귀 종료지점, 정렬 시작
@@ -201,10 +222,8 @@ class main extends Config {
 		let Data = SCOPE.option.data;
 		let Selector = SCOPE.option.selector;
 
-		// 다음 화면 호출시 증가된 SCOPE.option.count 로 다음 달 데이터 불러옴
-
-		let list = Data.response[SCOPE.option.page].list;
-		let listCnt = Data.response[SCOPE.option.page].count;
+		// SCOPE.option.count 만큼 처리할 배열에서 제외
+		let list = Data.response[SCOPE.option.page].list.slice(SCOPE.option.count);
 
 		let Str = SCOPE.storage();
 		let _Str = SCOPE._storage({ list: [], history: '', month: '' });
@@ -253,7 +272,7 @@ class main extends Config {
 			} 
 			else {
 
-				Data.completeBind = '\n'+function () {
+				Data.completeBind = '\n'+(() => {
 
 					if (SCOPE.option.count != 0) {
 						return '';
@@ -267,7 +286,7 @@ class main extends Config {
 					}
 
 					return _Str.history.replace(SCOPE.reg('month'), _Str.month);
-				}()+
+				})()+
 				'\n<div class="group" id="group'+(y+m)+'" style="opacity:0">'+Data.completeBind+'</div>';
 
 				// 생성된 그룹 저장	
@@ -328,18 +347,9 @@ class main extends Config {
 
 		const SCOPE = this;
 
-		let Data = SCOPE.option.data;
-		
-		// 새로 불러오면 초기화
-		SCOPE.option.count = 0;
-
-		// 새것은 새그릇에
-		Data.response = null;
-		Data.completeBind = null;
-
 		return SCOPE.request(res => {
 
-			Data.response = res;
+			SCOPE.option.data.response = res;
 
 			return SCOPE.returnCall(callback);
 		});

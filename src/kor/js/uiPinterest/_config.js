@@ -46,9 +46,9 @@ export default class Config {
 
 		// 준비 완료 후 실행할 목록, append 에서 콜백 동작
 		// next 는 반드시 마지막에 등장, 판단 기준으로 사용됨
-		this.option.completeFunctionList = [ 'sort' , 'ani', 'next'];
+		this.option.completeFunctionList = [ 'sort' , 'ani'];
 
-		let rw, rh, rtime, scope = this;
+		let rw = 0, rh = 0, rtime = null, scope = this;
 
 		window.onresize = () => {
 
@@ -61,7 +61,8 @@ export default class Config {
 
 				}, 100);
 
-				rw = rw || scope.select('body').clientWidth, rh = rh || scope.select('body').clientHeight;
+				rw = scope.select('body').clientWidth;
+				rh = scope.select('body').clientHeight;
 			}
 		}
 	}

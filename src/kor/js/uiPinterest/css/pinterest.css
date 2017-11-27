@@ -60,7 +60,7 @@
 
 
 /* 위에서 기본을 정했고 디테일 들어갑시다. */
- #story_body{position:relative}
+#story_body{position:relative}
 
 #uiPinterest .group{transition:opacity 200ms}
 #uiPinterest .group .grig__item{transform:translateY(100px)}
@@ -76,7 +76,6 @@
 
 #story_top{margin-bottom:50px}
 #story_top button{
-	z-index:1;
 	position:relative;overflow:hidden;width:30px;height:30px;
 	border-radius:100%;border:3px solid #343841;background:#cf171f;
 	color:#fff;
@@ -98,14 +97,10 @@
 
 #story_up button:before, #story_down button:before{content:'';display:block;height:100%}
 
-#story_month_group{position:relative;top:0;left:0;width:100%;height:500px}
-#story_month_group div{position:absolute;left:-30px}
-#story_month_group div:nth-child(1){top:400px}
-#story_month_group div:nth-child(2){top:430px}
-#story_month_group div:nth-child(3){top:460px}
+#story_month_group{position:relative;top:0;left:0;width:100%;height:450px;margin-top:50px}
 
 #story_month_group button{
-	display:block;width:50px;
+	display:block;width:50px;margin-top:-12px;
 	text-align:right;font-size:13px;color:#5d6067;
 	transition:border-color 100ms ease-out, color 100ms ease-out;
 }
@@ -124,7 +119,12 @@
 #story_month_group button:hover:after,
 #story_month_group .ov button:after{border-color:#fff}
 
-#story_control .control{position:relative}
+#story_control .relative{position:relative}
+#story_control .absolute{position:absolute;top:0;left:0;width:100%}
 
+#story_month_group #story_month_group_bar{height:100%;width:2px;left:14px}
+#story_month_group #story_month_group_bar #active_bar{position:absolute;top:-50px;left:0;width:100%;height:50px;background:#f00}
+#story_month_group #story_month_group_bar #rocks_bar{background:#f00}
+#story_month_group #story_month_group_button{height:100%;top:0;left:-30px}
 
 .testButtons{padding:20px 30px;border:1px solid #fff;color:#fff}

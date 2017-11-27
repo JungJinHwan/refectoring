@@ -37,7 +37,7 @@ export default class Config {
 			rotate: '#rotate',
 			honest: '#honest',
 			story: '#story',
-			story_month: '#story_month_group',
+			story_month: '#story_month_group_button',
 		};
 
 		this.option.event = {

@@ -31,10 +31,16 @@
 
 	<div id="uiPinterest" class="grid ver_1">
 		<div id="story_control">
-			<div class="control" id="story_top"><button id="pin_top" type="button">new</button></div>
-			<div class="control" id="story_up"><button id="pin_up" type="button">up</button></div>
-			<div class="control" id="story_month_group"></div>
-			<div class="control" id="story_down"><button id="pin_down" type="button">down</button></div>
+			<div class="relative" id="story_top"><button id="pin_top" type="button">new</button></div>
+			<div class="relative" id="story_up"><button id="pin_up" type="button">up</button></div>
+			<div class="relative" id="story_month_group">
+				<div class="absolute" id="story_month_group_bar">
+					<div id="active_bar"></div>
+					<div id="rocks_bar"></div>
+				</div>
+				<div class="absolute" id="story_month_group_button"></div>
+			</div>
+			<div class="relative" id="story_down"><button id="pin_down" type="button">down</button></div>
 		</div>
 		<div id="story_body">
 			

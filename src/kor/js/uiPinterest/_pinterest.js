@@ -11,10 +11,6 @@ class main extends Config {
 
 		let month = SCOPE.select(Selector.completeMonth);
 
-		month.style.transitionProperty = 'top';
-		month.style.transitionDuration = '400ms';
-		month.style.transitionTimingFunction = 'ease-in-out';
-
 		let monthGroup = month.parentNode.children;
 
 		for (let i=0; i<monthGroup.length; i++) {
@@ -24,8 +20,6 @@ class main extends Config {
 		let index = SCOPE.index(monthGroup, month);
 
 		month.setAttribute('class', 'ov');
-
-		month.style.top = (index ? 30 * (index+1) : 30) + 'px';
 
 		return this;
 	}
@@ -126,23 +120,23 @@ class main extends Config {
 
 		        let order = saveDir > 0 ? 'prev' : 'next';
 
-				$body.css({
+				$body.stop(1, 1).animate({
 					'top': ((_val) =>{
 
 						if (order === 'prev') {
 
-							_val = '-='+50;
+							_val = '-='+70;
 						}
 
 						if (order === 'next') {
 
-							_val = '+='+50;
+							_val = '+='+70;
 						}
 
 						return _val;
 					})()
 
-				});
+				}, 100);
 
 				Process.move({
 
@@ -406,7 +400,7 @@ class main extends Config {
 			iworld: body.clientWidth
 		};
 
-		let cnt = { w: 0, h: 0, n: 0, y: 0, max: 0 };
+		let cnt = { w: 0, h: 0, n: 0, y: 0 };
 
 		// 너비 한계선
 		for(let i=0; i<itemsLen; i++){
@@ -444,27 +438,33 @@ class main extends Config {
 		parent.style.height = grid.length * items[0].offsetHeight + 'px';
 
 		if (SCOPE.option.count == 0) {
-			// 데이터로 가지고 있는 현재 그룹의 리스트 전체에 대한 높이 
-			let count = Data.response[SCOPE.option.page].count;
+			
+			// 저장된 데이터의 총 카운터를 구해 전체를 구하고, 각 그룹의 리스트 카운터로 각 그룹의 전체를 구한다.
+			// 일부/전체*100 의 공식으로 전체에 대한 일부의 퍼센테이지를 구한다.
+			let countAll = 0;
+			let count = [];
 
-			let num = 0;
+			for (let i=0; i<Data.response.length; i++) {
 
-			for (let i=0; i<count; i++) {
-
-				if (i % cnt.w == 0) {
-
-					num = i;
-				}
+				countAll += Data.response[i].count;
+				count[i] = Data.response[i].count;
 			}
 
-			// 1부터 시작하는 카운트와 동일한 조건이어야 하기 때문에
-			// 0부터 시작하는 index 결과에 1 증가시킨다
-			num++;
+			Data.world = countAll/cnt.w*items[0].offsetHeight;
+			
+			Data.room = [];
 
-			// 여기 가지의 결과가 10 일때 나누어 떨어진 값이 정수가 아니면 올림처리
-			cnt.max =  Math.ceil(num/cnt.w) * items[0].offsetHeight;
+			let monthGroup = SCOPE.select(Selector.story_month).children;
+			let monthGroupSum = 0;
 
-			group.style.height = cnt.max + 'px';
+			for (let i=0; i<monthGroup.length; i++) {
+
+				Data.room[i] = count[i]/countAll*100;
+				
+				monthGroupSum += Data.room[i];
+
+				monthGroup[i].style.height = Data.room[i] + '%';
+			}
 		}
 
 		grid = null;

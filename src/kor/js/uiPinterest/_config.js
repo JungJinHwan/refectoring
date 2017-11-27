@@ -29,24 +29,33 @@ export default class Config {
 
 		this.option.selector = {
 			parent: '#uiPinterest',
-			group: '#uiPinterest .group',
-			list: '#uiPinterest .grid',
-			item: '#uiPinterest .grid__item',
-			img: '#uiPinterest .grid__thumb img',
+			body: '#story_body',
+			group: '#story_body .group',
+			list: '#story_body .grid',
+			item: '.grid__item',
+			img: '.grid__thumb img',
 			rotate: '#rotate',
-			honest: '#honest'
-
+			honest: '#honest',
+			story: '#story',
+			story_month: '#story_month_group',
 		};
+
+		this.option.event = {
+			def: 'click.def',
+			// touch: 'drag.touch touchstart.touch touchmove.touch touchend.touch mousedown.touch mousemove.touch mouseup.touch mouseleave.touch',
+			touch: 'touchstart.touch touchmove.touch touchend.touch',
+			wheel: 'mousewheel.wheel DOMMouseScroll.wheel'
+		}
 
 		// 스타일시트 리스트 추가
 		Style.addStyleSheet(this.option.styleSheet);
 
 		// 실행할 메서드 등록
-		this.render([ 'bind', 'append' ]);
+		this.render([ 'bind', 'append', 'lithener' ]);
 
-		// 준비 완료 후 실행할 목록, append 에서 콜백 동작
+		// *[ append 에서 콜백 ] 준비 완료 후 실행할 목록
 		// next 는 반드시 마지막에 등장, 판단 기준으로 사용됨
-		this.option.completeFunctionList = [ 'sort' , 'ani'];
+		this.option.completeFunctionList = [ 'sort' , 'ani', 'pull' ];
 
 		let rw = 0, rh = 0, rtime = null, scope = this;
 
@@ -117,19 +126,11 @@ export default class Config {
 			'\n\t</a>'+
 			'\n</div>';
 
-		arg.history = '\n'+
-			'\n<div id="history_control">'+
-			'\n\t<div class="control" id="history_top"><button id="pin_top" type="button">new</button></div>'+
-			'\n\t<div class="control" id="history_up"><button id="pin_up" type="button">up</button></div>'+
-			'\n\t<div class="control" id="history_month_group">{{month}}</div>'+
-			'\n\t<div class="control" id="history_down"><button id="pin_down" type="button">down</button><</div>'+
-			'\n</div>';
-
 		arg.month = _val => {
 
 				_val.m = _val.m < 10 ? '0'+_val.m : _val.m;
 
-				return '\n<div id="month_'+(_val.y+_val.m)+'"><button type="button"><span>'+_val.m+'</span></button></div>';
+				return '\n<div id="month'+(_val.y+_val.m)+'"><button type="button"><span>'+_val.m+'</span></button></div>';
 			}
 
 		return arg;
@@ -151,6 +152,20 @@ export default class Config {
 
 			this[arg[i]]();
 		}
+	}
+
+	index (a, b) {
+
+		let aLen = a.length;
+
+		for (var i=0; i<aLen; i++) {
+			
+			if (a[i] === b) {
+				break;
+			}
+		}
+
+		return i;
 	}
 
 };

@@ -2,6 +2,7 @@
 
 #uiPinterest{position:relative;height:100%;transform-origin:0% 0%}
 #uiPinterest:after{content:'';display:block;clear:both}
+
 #uiPinterest .grid__item{position:absolute;top:0;left:0;padding:20px}
 #uiPinterest .grid__item .grid__link{position:relative;display:block;padding-top:110%;font-family:'nsr', sans-serif}
 #uiPinterest .grid__item .grid__overlay{
@@ -59,7 +60,9 @@
 
 
 /* 위에서 기본을 정했고 디테일 들어갑시다. */
-#uiPinterest .group{z-index:10;position:relative;transition:opacity 200ms}
+ #story_body{position:relative}
+
+#uiPinterest .group{transition:opacity 200ms}
 #uiPinterest .group .grig__item{transform:translateY(100px)}
 
 #uiPinterest.ver_1{position:fixed;top:150px;left:60%;width:55%;transform:rotateX(45deg) rotateZ(45deg)}
@@ -68,59 +71,60 @@
 #uiPinterest.ver_2{position:fixed;top:100px;left:35%;width:60%}
 #uiPinterest.ver_2 .grid__item{width:33%}
 
-#history_control{position:absolute;top:0;left:-50px;width:30px;height:100%}
-#history_control:before{content:'';position:absolute;top:0;left:50%;height:100%;width:2px;margin-left:-1px;background-color:#5d6067}
+#story_control{position:absolute;top:0;left:-50px;width:30px;height:100%}
+#story_control:before{content:'';position:absolute;top:0;left:50%;height:100%;width:2px;margin-left:-1px;background-color:#5d6067}
 
-#history_top{margin-bottom:50px}
-#history_top button{
+#story_top{margin-bottom:50px}
+#story_top button{
 	z-index:1;
 	position:relative;overflow:hidden;width:30px;height:30px;
 	border-radius:100%;border:3px solid #343841;background:#cf171f;
 	color:#fff;
 }
 
-#history_top button:before{
+#story_top button:before{
 	content:'N';display:block;height:100%;padding-top:5px;
 	text-indent:-1px;text-align:center;line-height:1;font-size:14px;
 	color:#fff;
 }
 
-#history_up button, #history_down button{
+#story_up button, #story_down button{
 	overflow:hidden;width:30px;height:30px;
 	border-radius:100%;border:3px solid #343841;
 	background:#5d6067 url(/kor/js/uiPinterest/images/common/arr.png) no-repeat 50% 50%;
 }
 
-#history_down button{transform:rotate(180deg)}
+#story_down button{transform:rotate(180deg)}
 
-#history_up button:before, #history_down button:before{content:'';display:block;height:100%}
+#story_up button:before, #story_down button:before{content:'';display:block;height:100%}
 
-#history_month_group{position:relative;top:0;left:0;width:100%;height:300px;margin:50px 0}
-#history_month_group div{position:relative;height:33.33%}
-#history_month_group button{
-	display:block;position:absolute;top:0;left:-30px;width:50px;
+#story_month_group{position:relative;top:0;left:0;width:100%;height:400px;margin-bottom:100px}
+#story_month_group div{position:absolute;left:-30px}
+#story_month_group div:nth-child(1){top:400px}
+#story_month_group div:nth-child(2){top:430px}
+#story_month_group div:nth-child(3){top:460px}
+
+#story_month_group button{
+	display:block;width:50px;
 	text-align:right;font-size:13px;color:#5d6067;
 	transition:border-color 100ms ease-out, color 100ms ease-out;
 }
-#history_month_group button span{display:inline-block;vertical-align:middle}
-#history_month_group button:after{
+
+#story_month_group button span{display:inline-block;vertical-align:middle}
+#story_month_group button:after{
 	content:'';
 	display:inline-block;width:5px;height:5px;margin-left:10px;
 	vertical-align:middle;border-radius:100%;
 	border:3px solid #5d6067;
 	background-color:#343841;
 }
-#history_month_group button:hover,
-#history_month_group button.ov{border-color:#fff;color:#fff}
-#history_month_group button:hover:after,
-#history_month_group button.ov:after{border-color:#fff}
 
-#history_month_group #month_201711{height:50%}
-#history_month_group #month_201710{height:30%}
-#history_month_group #month_201709{height:20%}
+#story_month_group button:hover,
+#story_month_group .ov button{border-color:#fff;color:#fff}
+#story_month_group button:hover:after,
+#story_month_group .ov button:after{border-color:#fff}
 
-
-#history_control .control{position:relative}
+#story_control .control{position:relative}
 
 
-#change_rotate,#change_honest{padding:20px 30px;border:1px solid #fff;color:#fff}
+.testButtons{padding:20px 30px;border:1px solid #fff;color:#fff}

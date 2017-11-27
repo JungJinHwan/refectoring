@@ -25,10 +25,21 @@
 <body>
 <div id="wrap">
 	
-	<button onclick="return $UI_PINTEREST.transform(0, [ 'sort', 'ani' ]);" id="change_rotate" type="button">Rotate</button>
-	<button onclick="return $UI_PINTEREST.transform(1, [ 'sort', 'ani' ]);" id="change_honest" type="button">Honest</button>
+	<button onclick="return $UI_PINTEREST.transform(0, [ 'sort', 'ani' ]);" class="testButtons" type="button">Rotate</button>
+	<button onclick="return $UI_PINTEREST.transform(1, [ 'sort', 'ani' ]);" class="testButtons" type="button">Honest</button>
+	<button onclick="return $UI_PINTEREST.next();" class="testButtons" type="button">NEXT MORE</button>
 
-	<div id="uiPinterest" class="grid ver_1"></div>
+	<div id="uiPinterest" class="grid ver_1">
+		<div id="story_control">
+			<div class="control" id="story_top"><button id="pin_top" type="button">new</button></div>
+			<div class="control" id="story_up"><button id="pin_up" type="button">up</button></div>
+			<div class="control" id="story_month_group"></div>
+			<div class="control" id="story_down"><button id="pin_down" type="button">down</button></div>
+		</div>
+		<div id="story_body">
+			
+		</div>
+	</div>
     <script src='/kor/js/config.js'></script>
     <script src='/kor/js/jquery.event.drag-2.2.js'></script>
     <script src='/kor/js/uiPinterest/uiPinterest.min.js'></script>

@@ -98,7 +98,7 @@
 
 #story_up button:before, #story_down button:before{content:'';display:block;height:100%}
 
-#story_month_group{position:relative;top:0;left:0;width:100%;height:400px;margin-bottom:100px}
+#story_month_group{position:relative;top:0;left:0;width:100%;height:500px}
 #story_month_group div{position:absolute;left:-30px}
 #story_month_group div:nth-child(1){top:400px}
 #story_month_group div:nth-child(2){top:430px}

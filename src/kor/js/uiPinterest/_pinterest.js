@@ -372,6 +372,10 @@ class main extends Config {
 		}
 		else{
 
+			if (!Status.next) {
+				return false;
+			}
+
 			Status.nextLimit = 0;
 			Status.next = false;
 			Status.ani = false;
@@ -398,7 +402,7 @@ class main extends Config {
 
 			setTimeout(() => {
 
-				bar.style = '';
+				bar.setAttribute('style', '');
 
 				SCOPE.option.page = 0;
 				SCOPE.option.count = 0;

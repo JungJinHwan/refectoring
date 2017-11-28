@@ -21,8 +21,8 @@ export default class Config {
 		};
 
 		this.option.limit = 15;
-		this.option.data = { offset: [], index: 0 };
-		this.option.status = { ani: true };
+		this.option.data = { offset: [] };
+		this.option.status = { ani: true, index: 0, complete: [], completeGroup: [] };
 		this.option.page = 0;
 		this.option.count = 0;
 		this.option.process = {};
@@ -38,6 +38,7 @@ export default class Config {
 			honest: '#honest',
 			story: '#story',
 			story_month: '#story_month_group_button',
+			process_bar: '#rocks_bar',
 		};
 
 		this.option.event = {
@@ -51,11 +52,11 @@ export default class Config {
 		Style.addStyleSheet(this.option.styleSheet);
 
 		// 실행할 메서드 등록
-		this.render([ 'bind', 'append', 'lithener' ]);
+		this.render([ 'bind', 'append', 'lithener', 'pull' ]);
 
 		// *[ append 에서 콜백 ] 준비 완료 후 실행할 목록
 		// next 는 반드시 마지막에 등장, 판단 기준으로 사용됨
-		this.option.completeFunctionList = [ 'sort' , 'ani', 'pull' ];
+		this.option.completeFunctionList = [ 'sort' , 'ani' ];
 
 		let rw = 0, rh = 0, rtime = null, scope = this;
 
@@ -92,24 +93,24 @@ export default class Config {
 		});
 	}
 
-	select (arg) {
+	select (a) {
 
-		arg = document.querySelectorAll(arg);
+		a = document.querySelectorAll(a);
 
-		return arg.length > 1 ? arg : arg[0];
+		return a.length > 1 ? a : a[0];
 	}
 
-	reg (key) {
+	reg (a) {
 
-		return new RegExp ('\{\{'+key+'\}\}', 'g');
+		return new RegExp ('\{\{'+a+'\}\}', 'g');
 	}
 
-	storage (arg) {
+	storage (a) {
 
 		let listStyle = 'transform:translateY(100px);opacity:0';
 
-		arg = {};
-		arg.list = '\n'+
+		a = {};
+		a.list = '\n'+
 			'\n<div class="grid__item" style="'+listStyle+'">'+
 			'\n\t<a class="grid__link" href="{{url}}">'+
 			'\n\t\t<div class="grid__img layer_01"></div>'+
@@ -126,19 +127,19 @@ export default class Config {
 			'\n\t</a>'+
 			'\n</div>';
 
-		arg.month = _val => {
+		a.month = _val => {
 
 				_val.m = _val.m < 10 ? '0'+_val.m : _val.m;
 
 				return '\n<div id="month'+(_val.y+_val.m)+'"><button type="button"><span>'+_val.m+'</span></button></div>';
 			}
 
-		return arg;
+		return a;
 	}
 
-	_storage (arg) {
+	_storage (a) {
 
-		return arg;
+		return a;
 	}	
 
 	hasAttr (a, b, c) {
@@ -146,11 +147,11 @@ export default class Config {
 		return document.querySelector(a).getAttributeNode(b).nodeValue.indexOf(c) != -1 ? true : false;
 	}
 
-	returnCall (arg) {
+	returnCall (a) {
 		
-		for (let i=0; i<arg.length; i++) {
+		for (let i=0; i<a.length; i++) {
 
-			this[arg[i]]();
+			this[a[i]]();
 		}
 	}
 
@@ -167,6 +168,5 @@ export default class Config {
 
 		return i;
 	}
-
 };
 	

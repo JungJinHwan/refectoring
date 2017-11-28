@@ -2,22 +2,109 @@ import Config from './_config';
 
 class main extends Config {
 
+	move (arg) {
+
+		const SCOPE = this;
+
+		let Data = SCOPE.option.data;
+		let Status = SCOPE.option.status;
+		let Selector = SCOPE.option.selector;
+
+		let body = SCOPE.select(Selector.body);
+		let items = SCOPE.select(Selector.item);
+		let month = SCOPE.select(Selector.completeMonth);
+		let bar = SCOPE.select(Selector.process_bar);
+
+		// 내용이 위로 올라갈 때 음수가 양수가 되는것이 생각하기 편하다
+		let pos = Math.ceil(parseInt(getComputedStyle(body).top))*-1;
+		let duration = parseInt(getComputedStyle(body).transitionDuration);
+
+		let shield = true;
+
+		if (pos < 0 ) {
+
+			if (shield) {
+
+				setTimeout(() => {
+
+					shield = true;
+
+					body.style.top = 0;
+					body.style.transitionDuration = '150ms';
+
+				}, 150);
+			}
+
+			shield = false;
+		}
+		else {
+
+			if (duration == 0) {
+
+				body.style.transitionDuration = '70ms';
+				body.style.transitionProperty = 'top';
+			}
+		}
+
+		Status.barPos = Math.ceil(pos/Status.world*100);
+
+		bar.style.height = Status.barPos + '%';
+
+		Status.nextLimit = SCOPE.select('body').clientHeight - items[Status.row].offsetHeight;
+
+		let nextBindLimit = 0;
+
+		let lastComplete = Status.complete[Data.resLen-1];
+
+		if (lastComplete) {
+
+			if (SCOPE.hasAttr(lastComplete, 'class', 'ov')) {
+
+				nextBindLimit = 100;
+			}
+		}
+		else {
+
+			for (let i=0; i<SCOPE.option.page; i++) {
+
+				nextBindLimit += parseInt(SCOPE.select(Status.complete[i]).style.height);
+			}
+		}
+
+		Status.next = Status.barPos > nextBindLimit;
+
+		if (Status.next) {
+
+			SCOPE.pull();
+		}
+
+		if (Status.nextLimit > $(items[Status.row]).offset().top) {
+
+			SCOPE.next();
+		}
+
+		return this;
+	}
+
 	pull (arg) {
 		
 		const SCOPE = this;
 
-		let Data = SCOPE.option.selector;
+		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
+
+		if (!Status.ani) {
+			return false;
+		}
 
 		let month = SCOPE.select(Selector.completeMonth);
 
 		let monthGroup = month.parentNode.children;
 
 		for (let i=0; i<monthGroup.length; i++) {
+
 			monthGroup[i].setAttribute('class', 'of');
 		}
-
-		let index = SCOPE.index(monthGroup, month);
 
 		month.setAttribute('class', 'ov');
 
@@ -30,61 +117,12 @@ class main extends Config {
 
 		const SCOPE = this;
 
-		let Data = SCOPE.option.data;
 		let Selector = SCOPE.option.selector;
 		let Process = SCOPE.option.process;
 		let Status = SCOPE.option.status;
 		let Event = SCOPE.option.event;
 
 		let $body = $(Selector.body); // jquery 메서드를 사용하기 위해
-		let groups = SCOPE.select(Selector.group); // jquery constructor 빼고 가볍게
-		let groupsLen = groups.length;
-
-		Process.index = getValue => {
-
-			switch(getValue) {
-				case 'prev' :
-					if(Data.index > 0) {
-						Data.index--;
-					}
-					else{
-						Data.index = groupsLen-1;
-					}
-
-					break;
-
-				case 'next' :
-					if(Data.index < groupsLen-1) {
-						Data.index++;
-					}
-					else{
-						Data.index = 0;
-					}
-
-					break;
-				default : return Data.index; break;
-			}
-		}
-
-		Process.move = getValue => {
-
-			if(getValue.useShield) {
-				if($body.is(':animated')) {
-					return false;
-
-				}
-			}
-
-			if (getValue.order === 'prev') {
-
-			}
-
-			if (getValue.order === 'next') {
-
-			}
-
-			return 1;
-		}
 
 	    Process.dir = delta => {
 	        // 휠 방향 [ 1:위, -1:아래 ]
@@ -95,18 +133,17 @@ class main extends Config {
 		$DOCUMENT.on(Event.def, Selector.control, function(event) {
 			event.preventDefault();
 
-			let getValue = $(this).data('control');
-
-			return Process.move({ 
-				order: getValue, 
-				useShield: 0
-			});
 		});
 
 		// 마우스 휠
 	    $DOCUMENT.on(
 	    	Event.wheel, Selector.body, function(event) {
 	    		event.preventDefault();
+
+	    		if (!Status.ani) {
+
+	    			return false;
+	    		}
 
 		        let saveDir = null;
 
@@ -120,84 +157,79 @@ class main extends Config {
 
 		        let order = saveDir > 0 ? 'prev' : 'next';
 
-				$body.stop(1, 1).animate({
+				$body.css({
 					'top': ((_val) =>{
-
-						if (order === 'prev') {
-
-							_val = '-='+70;
-						}
 
 						if (order === 'next') {
 
-							_val = '+='+70;
+							_val = '-='+100;
+						}
+
+						if (order === 'prev') {
+
+							_val = '+='+100;
 						}
 
 						return _val;
 					})()
 
-				}, 100);
-
-				Process.move({
-
-					order: order,
-					useShield: 1
 				});
+
+				SCOPE.move();
 	    	}
 	    );
 
 	    // 터치, 드래그, 마우스복합
-		Data.swipe = {
+		Status.swipe = {
 			prev: 0, 
 			next: 0
 
 		};
 
-		Data.touchDir = '';
-		Data.mouseDown = false;
+		Status.touchDir = '';
 
 	    $DOCUMENT.on(
 	    	Event.touch, Selector.body, function(event) {
 
-	    		if (event.typ == "drag") {
-	    			event.preventDefault();
+	    		if (!Status.ani) {
 
+	    			return false;
 	    		}
 
-	    		if(!Data.mouseDown && ( event.type == "touchstart" || event.type == "mousedown" )) {
+	    		if(event.type == "touchstart") {
 
-	    			Data.mouseDown = true;
-	    			Data.start = Math.floor(event.pageY);
-					Data.half = $body[Data.index].offsetHeight/2;
+	    			SCOPE.select(Selector.body).style.transitionDuration = '0ms';
+
+	    			Status.start = Math.floor(event.originalEvent.changedTouches[0].clientY);
+					Status.half = $body[Status.index].offsetHeight/2;
 	    		}
 
-	    		if(Data.mouseDown && ( event.type == "touchmove" || event.type == "mousemove" )) {
-	    			event.preventDefault();
+	    		if( event.type == "touchmove") {
 
-	    			Data.move = Math.floor(event.pageY) - Data.start;
+	    			Status.move = Math.floor(event.originalEvent.changedTouches[0].clientY) - Status.start;
 
-			    	Data.range = Data.move - Data.prev;
+			    	Status.range = Status.move - Status.prev;
 
 					$body.css({
 						'top': '+='+ function(){
 
-							var result = Data.range;
+							var result = Status.range;
 
-							if(Data.range < 0){
-								Data.swipe.next = 0;
-								Data.swipe.prev += result;
+							if(Status.range < 0){
+								Status.swipe.next = 0;
+								Status.swipe.prev += result;
 
-				    			if(Data.half < Data.swipe.prev*-1) {
-									Data.touchDir = 'next';
+				    			if(Status.half < Status.swipe.prev*-1) {
+									Status.touchDir = 'next';
 				    			}
 							}
 
-							if(Data.range > 0){
-								Data.swipe.prev = 0;
-								Data.swipe.next += result;
+							if(Status.range > 0){
+								Status.swipe.prev = 0;
+								Status.swipe.next += result;
 
-				    			if(Data.half < Data.swipe.next) {
-									Data.touchDir = 'prev';
+				    			if(Status.half < Status.swipe.next) {
+									Status.touchDir = 'prev';
 				    			}
 							}
 
@@ -206,22 +238,22 @@ class main extends Config {
 
 					});
 
-					Data.prev = Data.move;
+					Status.prev = Status.move;
 	    		}
 
-	    		if(Data.mouseDown && ( event.type == "touchend" || event.type == "mouseup" || event.type == "mouseleave" )) {
+	    		if(event.type == "touchend") {
 
-	    			Data.mouseDown = false;
+	    			Status.prev = 0;
 
-	    			Data.prev = 0;
-
-					Data.swipe = {
+					Status.swipe = {
 						prev: 0, 
 						next: 0
 
 					};
 
-					Data.touchDir = '';
+					Status.touchDir = '';
+
+					SCOPE.move();
 	    		}
 	    	}
 	    );
@@ -311,20 +343,25 @@ class main extends Config {
 		const SCOPE = this;
 
 		let Data = SCOPE.option.data;
+		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
-		if (SCOPE.option.count < Data.response[SCOPE.option.page].count) {
+		if (SCOPE.option.page < Data.resLen-1) {
 
-			// 추가한 list 갯수가 모자랄 때 남은 목록 limit 만큼 또 추가
-			/* function */ SCOPE.returnCall([ 'bind', 'append' ]);
-		}
-		else {
+			if (SCOPE.option.count < Data.response[SCOPE.option.page].count) {
 
-			if (SCOPE.option.page < Data.response.length) {
+				// 추가한 list 갯수가 모자랄 때 남은 목록 limit 만큼 또 추가
+				/* function */ SCOPE.returnCall([ 'bind', 'append' ]);
+			}
+			else {
 
 				// 현제 추가된 된 list 갯수가, 요청된 page 의 list 갯수와 일치하면 다음 그룹으로 넘어가고
 				// 현재 진행중인 page 카운트가 작으면, 만족할 때까지 증가
 				// 이것은 다음달 리스트를 불러오기 위한 판단기준이 된다
+
+				// if (!Status.next) {
+				// 	return false;
+				// }
 
 				SCOPE.option.page++;
 
@@ -333,10 +370,39 @@ class main extends Config {
 
 				// 다음달 리스트 가져오는 메서드 여기서 실행
 				/* function */ SCOPE.returnCall(['bind', 'append', 'lithener' ]);
-
 			}
-			else {
-				// 요청 시작하기 전 초기화
+		}
+		else{
+
+			Status.nextLimit = 0;
+			Status.next = false;
+			Status.ani = false;
+
+			//  시각요소 초기화
+			let bar = SCOPE.select(Selector.process_bar);
+			let month = SCOPE.select(Selector.story_month);
+			let body = SCOPE.select(Selector.body);
+			let parent = SCOPE.select(Selector.parent);
+
+			bar.style.top = '100px';
+			bar.style.opacity = '0';
+			bar.style.transitionDuration = '1000ms';
+			bar.style.transitionTimingFunction = 'ease-in-out';
+
+			month.style.top = '100px';
+			month.style.opacity = 0;
+			month.style.transitionProperty = 'opacity, top';
+			month.style.transitionDuration = '300ms';
+
+			body.style.opacity = 0;
+			body.style.transitionDuration = '300ms';
+			body.style.transitionProperty = 'opacity';
+
+			setTimeout(() => {
+
+				bar.style = '';
+
+				SCOPE.option.page = 0;
 				SCOPE.option.count = 0;
 
 				// 새것은 새그릇에
@@ -344,9 +410,31 @@ class main extends Config {
 				Data.completeStory = null;
 				Data.completeList = null;
 
+				for (let i=0; i<Status.complete.length; i++) {
+
+					month.removeChild(SCOPE.select(Status.complete[i]));
+				}
+
+				for (let i=0; i<Status.completeGroup.length; i++) {
+
+					body.removeChild(SCOPE.select(Status.completeGroup[i]));
+				}
+
+				month.style.top = 0;
+				month.style.opacity = 1;
+
+				body.style.top = 0;
+				body.style.opacity = 1;
+
+				Status.complete = [];
+				Status.completeGroup = [];
+
 				// 다음 json 데이터 요청 메서드 여기서 실행
-				/* function */ SCOPE.returnCall([/* 필요한 메서드 이름 추가 */]);
-			}
+				/* 요쳥 url 변경 */ SCOPE.option.request.url = '/kor/js/uiPinterest/xhr/list.json';
+				/* function */ SCOPE.render([ 'bind', 'append', 'lithener', 'pull' ]);
+
+			}, 1000);
+
 		}
 
 		return this;
@@ -356,6 +444,7 @@ class main extends Config {
 
 		const SCOPE = this;
 
+		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
 		SCOPE.select(Selector.completeGroup).style.opacity = 1;
@@ -364,6 +453,8 @@ class main extends Config {
 		let itemsLen = items.length;
 
 		for (let i=0; i<itemsLen; i++) {
+
+			var aniTime = (30*(i-(itemsLen-SCOPE.option.limit)));
 
 			items[i].style.transform = 'translateY(0)';
 			items[i].style.opacity = '1';
@@ -375,6 +466,14 @@ class main extends Config {
 		// count 저장
 		SCOPE.option.count = items.length;
 
+		let timeout = null;
+
+		clearTimeout(timeout);
+		timeout = setTimeout(() => {
+
+			Status.ani = true;
+		}, aniTime);
+
 		return this;
 	}
 
@@ -383,6 +482,7 @@ class main extends Config {
 		const SCOPE = this;
 
 		let Data = SCOPE.option.data;
+		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
 		// 재귀 종료지점, 정렬 시작
@@ -391,7 +491,6 @@ class main extends Config {
 
 		let parent = SCOPE.select(Selector.parent);
 		let body = SCOPE.select(Selector.body);
-		let group = SCOPE.select(Selector.completeGroup);
 
 		let grid = [[]]; // grid[0][0] = x , grid[1][0] = y : (y는 동적 생성)
 
@@ -419,7 +518,7 @@ class main extends Config {
 					grid[cnt.h][cnt.y] = (cnt.h > 1) ? cnt.i + grid[cnt.h-1][cnt.y] : cnt.i;
 
 					cnt.y++;
-				}	
+				}
 
 				cnt.n += cnt.w;
 				cnt.y = 0;
@@ -432,39 +531,47 @@ class main extends Config {
 			items[i].style.left = grid[0][cnt.w] + 'px';
 
 			cnt.w++;
+
+			if (i%cnt.w == 0) {
+				// 마지막행 첫번째 index
+				Status.row = i;
+			}
 		}
 
-		// 전체 행 갯수 * 아이템 하나의 높이 = 전체 높이, 모든 카드의 크키가 같으면 편하지 ^_^♡
-		parent.style.height = grid.length * items[0].offsetHeight + 'px';
-
 		if (SCOPE.option.count == 0) {
+
+			let countAll = 0;
+			let count = [];
 			
 			// 저장된 데이터의 총 카운터를 구해 전체를 구하고, 각 그룹의 리스트 카운터로 각 그룹의 전체를 구한다.
 			// 일부/전체*100 의 공식으로 전체에 대한 일부의 퍼센테이지를 구한다.
-			let countAll = 0;
-			let count = [];
 
-			for (let i=0; i<Data.response.length; i++) {
+			for (let i=0; i<Data.resLen; i++) {
 
 				countAll += Data.response[i].count;
 				count[i] = Data.response[i].count;
 			}
 
-			Data.world = countAll/cnt.w*items[0].offsetHeight;
-			
-			Data.room = [];
+			Status.world = countAll/cnt.w*items[0].offsetHeight;
+			Status.roomWorld = [];
+			Status.room = [];
 
 			let monthGroup = SCOPE.select(Selector.story_month).children;
 			let monthGroupSum = 0;
 
 			for (let i=0; i<monthGroup.length; i++) {
 
-				Data.room[i] = count[i]/countAll*100;
-				
-				monthGroupSum += Data.room[i];
+				Status.room[i] = count[i]/countAll*100;
+				Status.roomWorld[i] = count[i]/cnt.w*items[0].offsetHeight;
 
-				monthGroup[i].style.height = Data.room[i] + '%';
+				monthGroupSum += Status.room[i];
+
+				monthGroup[i].style.height = Status.room[i] + '%';
 			}
+
+			// 전체 행 갯수 * 아이템 하나의 높이 = 전체 높이, 모든 카드의 크키가 같으면 편하지 ^_^♡
+			parent.style.height = countAll * items[0].offsetHeight + 'px';
+
 		}
 
 		grid = null;
@@ -477,6 +584,7 @@ class main extends Config {
 		const SCOPE = this;
 
 		let Data = SCOPE.option.data;
+		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
 		// SCOPE.option.count 만큼 처리할 배열에서 제외하고 복사
@@ -540,7 +648,7 @@ class main extends Config {
 
 					let _Str = SCOPE._storage({ month: '' });
 
-					for (let i=0; i<Data.response.length; i++) {
+					for (let i=0; i<Data.resLen; i++) {
 						
 						_Str.month += Str.month({ y: y, m: m-i });
 					}
@@ -550,8 +658,11 @@ class main extends Config {
 
 				// 생성된 그룹 셀렉터 저장	
 				Selector.completeGroup = '#group'+(y+m);
+				Status.completeGroup[SCOPE.option.page] = Selector.completeGroup;
+
 				// 생성된 버튼 셀렉터 저장
 				Selector.completeMonth = '#month'+(y+m);
+				Status.complete[SCOPE.option.page] = Selector.completeMonth;
 			}
 
 			return 1;
@@ -629,6 +740,8 @@ class main extends Config {
 		return SCOPE.request(res => {
 
 			SCOPE.option.data.response = res;
+
+			SCOPE.option.data.resLen = res.length;
 
 			return SCOPE.returnCall(callback);
 		});

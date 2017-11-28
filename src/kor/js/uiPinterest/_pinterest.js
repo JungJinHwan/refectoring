@@ -56,18 +56,16 @@ class main extends Config {
 
 		let lastComplete = Status.complete[Data.resLen-1];
 
+		for (let i=0; i<SCOPE.option.page; i++) {
+
+			nextBindLimit += parseInt(SCOPE.select(Status.complete[i]).style.height);
+		}
+		
 		if (lastComplete) {
 
 			if (SCOPE.hasAttr(lastComplete, 'class', 'ov')) {
 
 				nextBindLimit = 100;
-			}
-		}
-		else {
-
-			for (let i=0; i<SCOPE.option.page; i++) {
-
-				nextBindLimit += parseInt(SCOPE.select(Status.complete[i]).style.height);
 			}
 		}
 

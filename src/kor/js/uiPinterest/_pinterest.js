@@ -12,7 +12,6 @@ class main extends Config {
 
 		let body = SCOPE.select(Selector.body);
 		let items = SCOPE.select(Selector.item);
-		let month = SCOPE.select(Selector.completeMonth);
 		let bar = SCOPE.select(Selector.process_bar);
 
 		// 내용이 위로 올라갈 때 음수가 양수가 되는것이 생각하기 편하다
@@ -30,6 +29,7 @@ class main extends Config {
 					shield = true;
 
 					body.style.top = 0;
+					body.style.transitionProperty = 'top';
 					body.style.transitionDuration = '150ms';
 
 				}, 150);
@@ -46,37 +46,47 @@ class main extends Config {
 			}
 		}
 
-		Status.barPos = Math.ceil(pos/Status.world*100);
+		let $items = $(items[Status.row]);
+
+		let bodyHeight = SCOPE.select('body').clientHeight;
+
+		Status.barPos = Math.ceil(pos/(Status.world-bodyHeight)*100);
 
 		bar.style.height = Status.barPos + '%';
 
-		Status.nextLimit = SCOPE.select('body').clientHeight - items[Status.row].offsetHeight;
+		Status.nextLimit = bodyHeight - items[Status.row].offsetHeight;
 
-		let nextBindLimit = 0;
+		let roomLimit = Status.room[Status.touchDir == 'prev' ? Status.index-1 : Status.index];
+		let changePer = Math.ceil(((parseInt(body.style.top)*-1)+$items.height())/Status.world*100);
 
-		let lastComplete = Status.complete[Data.resLen-1];
+		Status.prev = roomLimit > changePer;
+		Status.next = roomLimit < changePer;
 
-		for (let i=0; i<SCOPE.option.page; i++) {
 
-			nextBindLimit += parseInt(SCOPE.select(Status.complete[i]).style.height);
-		}
-		
-		if (lastComplete) {
+		if (Status.touchDir === 'prev') {
 
-			if (SCOPE.hasAttr(lastComplete, 'class', 'ov')) {
+			if (Status.prev) {
 
-				nextBindLimit = 100;
+				if (Status.index > 0) {
+					Status.index--;
+					SCOPE.pull();
+				}
 			}
 		}
 
-		Status.next = Status.barPos > nextBindLimit;
+		if (Status.touchDir === 'next') {
 
-		if (Status.next) {
+			if (Status.next) {
 
-			SCOPE.pull();
+				if (Status.index < Data.resLen-1) {
+
+					Status.index++;
+					SCOPE.pull();
+				}
+			}
 		}
 
-		if (Status.nextLimit > $(items[Status.row]).offset().top) {
+		if (Status.nextLimit > $items.offset().top) {
 
 			SCOPE.next();
 		}
@@ -91,10 +101,6 @@ class main extends Config {
 		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
-		if (!Status.ani) {
-			return false;
-		}
-
 		let month = SCOPE.select(Selector.completeMonth);
 
 		let monthGroup = month.parentNode.children;
@@ -104,7 +110,7 @@ class main extends Config {
 			monthGroup[i].setAttribute('class', 'of');
 		}
 
-		month.setAttribute('class', 'ov');
+		monthGroup[Status.index].setAttribute('class', 'ov');
 
 		return this;
 	}
@@ -119,19 +125,69 @@ class main extends Config {
 		let Process = SCOPE.option.process;
 		let Status = SCOPE.option.status;
 		let Event = SCOPE.option.event;
+		let Data = SCOPE.option.data;
 
 		let $body = $(Selector.body); // jquery 메서드를 사용하기 위해
+
+	    // 터치, 드래그, 마우스복합
+		Status.swipe = {
+			prev: 0, 
+			next: 0
+
+		};
+
+		Status.touchDir = '';
 
 	    Process.dir = delta => {
 	        // 휠 방향 [ 1:위, -1:아래 ]
 	        return (delta < 0) ? delta = 1 : delta = -1;
 	    }
 
-	    // 클릭 구간 건너띄기
-		$DOCUMENT.on(Event.def, Selector.control, function(event) {
-			event.preventDefault();
+	    // 클릭 up
+		$DOCUMENT.on(
+			Event.def, Selector.pin_up, function(event) {
+				event.preventDefault();
 
-		});
+				if (Status.ani) {
+
+					SCOPE.option.page = Data.resLen-1;
+					// 다음 json 데이터 요청 메서드 여기서 실행
+					/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.before;
+					/* function */ SCOPE.next();
+				}
+			}
+		);
+
+	    // 클릭 down
+		$DOCUMENT.on(
+			Event.def, Selector.pin_down, function(event) {
+				event.preventDefault();
+
+				if (Status.ani) {
+
+					SCOPE.option.page = Data.resLen-1;
+					// 다음 json 데이터 요청 메서드 여기서 실행
+					/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.after;
+					/* function */ SCOPE.next();
+				}
+			}
+		);
+
+	    // 클릭 top
+		$DOCUMENT.on(
+			Event.def, Selector.pin_top, function(event) {
+				event.preventDefault();
+
+				if (Status.ani) {
+
+					SCOPE.option.page = Data.resLen-1;
+					// 다음 json 데이터 요청 메서드 여기서 실행
+					/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.top;
+					/* function */ SCOPE.next();
+				}
+			}
+		);
+
 
 		// 마우스 휠
 	    $DOCUMENT.on(
@@ -153,17 +209,17 @@ class main extends Config {
 		            saveDir = Process.dir(event.originalEvent.detail); // FF,CROME,SFARI
 		        }
 
-		        let order = saveDir > 0 ? 'prev' : 'next';
+		        Status.touchDir = saveDir > 0 ? 'prev' : 'next';
 
 				$body.css({
 					'top': ((_val) =>{
 
-						if (order === 'next') {
+						if (Status.touchDir === 'next') {
 
 							_val = '-='+100;
 						}
 
-						if (order === 'prev') {
+						if (Status.touchDir === 'prev') {
 
 							_val = '+='+100;
 						}
@@ -176,15 +232,6 @@ class main extends Config {
 				SCOPE.move();
 	    	}
 	    );
-
-	    // 터치, 드래그, 마우스복합
-		Status.swipe = {
-			prev: 0, 
-			next: 0
-
-		};
-
-		Status.touchDir = '';
 
 	    $DOCUMENT.on(
 	    	Event.touch, Selector.body, function(event) {
@@ -199,7 +246,7 @@ class main extends Config {
 	    			SCOPE.select(Selector.body).style.transitionDuration = '0ms';
 
 	    			Status.start = Math.floor(event.originalEvent.changedTouches[0].clientY);
-					Status.half = $body[Status.index].offsetHeight/2;
+					Status.half = Status.roomWorld[Status.index]/2;
 	    		}
 
 	    		if( event.type == "touchmove") {
@@ -283,11 +330,14 @@ class main extends Config {
 
 		if (Status.ani) {
 
-			let attrStringArray = [ 'ver_1', 'ver_2' ];
+			if (arg != null) {
 
-			if (SCOPE.hasAttr(Selector.parent, 'class', attrStringArray[arg])) {
+				let attrStringArray = [ 'ver_1', 'ver_2' ];
 
-				return null;
+				if (SCOPE.hasAttr(Selector.parent, 'class', attrStringArray[arg])) {
+
+					return null;
+				}
 			}
 
 			Status.ani = false;
@@ -334,6 +384,11 @@ class main extends Config {
 		return this;
 	}
 
+	shift (arg) {
+
+		return this;
+	}
+
 	next (arg) {
 		// 이 메서드는 위치 계산 완료 후, 혹은 정렬 애니메이션 완료 후에 호출
 		// *완료 후 상태를 판단하고 처리한다
@@ -367,16 +422,19 @@ class main extends Config {
 				SCOPE.option.count = 0;
 
 				// 다음달 리스트 가져오는 메서드 여기서 실행
-				/* function */ SCOPE.returnCall(['bind', 'append', 'lithener' ]);
+				/* function */ SCOPE.returnCall([ 'bind', 'append', 'lithener' ]);
 			}
 		}
 		else{
 
-			if (!Status.next) {
-				return false;
-			}
+			// 헌것을 비우고
+			Status.barPos = Status.nextLimit = Status.index = Status.prev = Status.next = Status.ani = null;
 
+			// 새것을 채운다
+			Status.barPos = 0;
 			Status.nextLimit = 0;
+			Status.index = 0;
+			Status.prev = 0;
 			Status.next = false;
 			Status.ani = false;
 
@@ -384,7 +442,6 @@ class main extends Config {
 			let bar = SCOPE.select(Selector.process_bar);
 			let month = SCOPE.select(Selector.story_month);
 			let body = SCOPE.select(Selector.body);
-			let parent = SCOPE.select(Selector.parent);
 
 			bar.style.top = '100px';
 			bar.style.opacity = '0';
@@ -412,19 +469,21 @@ class main extends Config {
 				Data.completeStory = null;
 				Data.completeList = null;
 
-				for (let i=0; i<Status.complete.length; i++) {
+				// for (let i=0; i<Status.complete.length; i++) {
 
-					month.removeChild(SCOPE.select(Status.complete[i]));
-				}
+				// 	month.removeChild(SCOPE.select(Status.complete[i]));
+				// }
 
-				for (let i=0; i<Status.completeGroup.length; i++) {
-
-					body.removeChild(SCOPE.select(Status.completeGroup[i]));
-				}
-
+				month.innerHTML = '';
 				month.style.top = 0;
 				month.style.opacity = 1;
 
+				// for (let i=0; i<Status.completeGroup.length; i++) {
+
+				// 	body.removeChild(SCOPE.select(Status.completeGroup[i]));
+				// }
+
+				body.innerHTML = '';
 				body.style.top = 0;
 				body.style.opacity = 1;
 
@@ -435,7 +494,7 @@ class main extends Config {
 				/* 요쳥 url 변경 */ SCOPE.option.request.url = '/kor/js/uiPinterest/xhr/list.json';
 				/* function */ SCOPE.render([ 'bind', 'append', 'lithener', 'pull' ]);
 
-			}, 1000);
+			}, 700);
 
 		}
 
@@ -559,16 +618,15 @@ class main extends Config {
 			Status.room = [];
 
 			let monthGroup = SCOPE.select(Selector.story_month).children;
-			let monthGroupSum = 0;
 
 			for (let i=0; i<monthGroup.length; i++) {
 
-				Status.room[i] = count[i]/countAll*100;
+				let room = count[i]/countAll*100;
+
+				Status.room[i] = i ? Status.room[i-1] + room : room;
 				Status.roomWorld[i] = count[i]/cnt.w*items[0].offsetHeight;
 
-				monthGroupSum += Status.room[i];
-
-				monthGroup[i].style.height = Status.room[i] + '%';
+				monthGroup[i].style.height = room + '%';
 			}
 
 			// 전체 행 갯수 * 아이템 하나의 높이 = 전체 높이, 모든 카드의 크키가 같으면 편하지 ^_^♡
@@ -608,11 +666,32 @@ class main extends Config {
 
 			for(let key in list[i]) {
 
+				if (key == 'category') {
+					// list.category 지정
+					list[i].category = 'category__'+list[i].category;
+				}
+
 				if (key == 'img') {
-					// list.img 비어 있으면 페이크 이미지
+					// list.img 비어 있으면 default
 					if (!list[i].img.length) {
 						
 						list[i].img = SCOPE.option.no_img;
+					}
+				}
+
+				if (key == 'photo') {
+					// list.photo 비어 있으면 default
+					if (!list[i].photo.length) {
+						
+						list[i].photo = SCOPE.option.no_photo;
+					}
+				}
+
+				if (key == 'name') {
+					// list.name 비어 있으면 default
+					if (!list[i].name.length) {
+						
+						list[i].name = SCOPE.option.no_name;
 					}
 				}
 
@@ -624,7 +703,7 @@ class main extends Config {
 					var m = dateSplit[1];
 					var d = dateSplit[2];
 
-					list[i].date = SCOPE.option.month_string[Number(m)-1].toUpperCase()+'\u0020'+d+',\u0020'+y;
+					list[i].date = SCOPE.option.month_string[Number(m)-1]+'\u0020'+d+',\u0020'+y;
 				}
 
 				_Str.list[i] = _Str.list[i].replace( SCOPE.reg(key), list[i][key] );
@@ -741,9 +820,11 @@ class main extends Config {
 
 		return SCOPE.request(res => {
 
-			SCOPE.option.data.response = res;
+			SCOPE.option.data.response = res.data;
 
-			SCOPE.option.data.resLen = res.length;
+			SCOPE.option.data.resLen = res.data.length;
+
+			SCOPE.option.data.config = res.config;
 
 			return SCOPE.returnCall(callback);
 		});

@@ -7,6 +7,8 @@ export default class Config {
 		this.option = arg;
 
 		this.option.no_img = '/kor/js/uiPinterest/images/common/no_img.jpg';
+		this.option.no_photo = '/kor/js/uiPinterest/images/common/no_photo.gif';
+		this.option.no_name = 'GONET';
 		this.option.month_string = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 		this.option.styleSheet = [
 			'/kor/js/uiPinterest/css/style.css',
@@ -39,6 +41,9 @@ export default class Config {
 			story: '#story',
 			story_month: '#story_month_group_button',
 			process_bar: '#rocks_bar',
+			pin_up: "#pin_up",
+			pin_down: "#pin_down",
+			pin_top: "#pin_top"
 		};
 
 		this.option.event = {
@@ -111,16 +116,24 @@ export default class Config {
 
 		a = {};
 		a.list = '\n'+
-			'\n<div class="grid__item" style="'+listStyle+'">'+
+			'\n<div class="grid__item {{category}}" style="'+listStyle+'">'+
 			'\n\t<a class="grid__link" href="{{url}}">'+
-			'\n\t\t<div class="grid__img layer_01"></div>'+
+			'\n\t\t<div class="grid__img layer_01"><div class="category"></div></div>'+
 			'\n\t\t<div class="grid__img layer_02"></div>'+
 			'\n\t\t<div class="grid__img layer_03">'+
-			'\n\t\t\t<div class="grid__thumb">'+
-			'\n\t\t\t\t<img src="{{img}}" alt="{{title}}">'+
+			'\n\t\t\t<div class="grid__info">'+
+			'\n\t\t\t\t<div class="photo"><div><img src="{{photo}}" alt="{{name}}"></div> <span>{{name}}</span></div>'+
+			'\n\t\t\t\t<div class="count">'+
+			'\n\t\t\t\t\t<div class="like">{{like}}</div>'+
+			'\n\t\t\t\t\t<div class="comment">{{comment}}</div>'+
+			'\n\t\t\t\t</div>'+
 			'\n\t\t\t</div>'+
-			'\n\t\t\t<div class="grid__title">{{title}}</div>'+
-			'\n\t\t\t<div class="grid__icon"></div>'+
+			'\n\t\t\t<div class="grid__img layer_04">'+
+			'\n\t\t\t\t<div class="grid__thumb">'+
+			'\n\t\t\t\t\t<img src="{{img}}" alt="{{title}}">'+
+			'\n\t\t\t\t</div>'+
+			'\n\t\t\t\t<div class="grid__title">{{title}}</div>'+
+			'\n\t\t\t</div>'+
 			'\n\t\t</div>'+
 			'\n\t\t<span class="grid__date">{{date}}</span>'+
 			'\n\t\t<div class="grid__overlay"></div>'+

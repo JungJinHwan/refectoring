@@ -12,13 +12,15 @@ class main extends Config {
 
 		let body = SCOPE.select(Selector.body);
 		let items = SCOPE.select(Selector.item);
-		let bar = SCOPE.select(Selector.process_bar);
+		let bar = SCOPE.select(Selector.story_bar);
 
 		// 내용이 위로 올라갈 때 음수가 양수가 되는것이 생각하기 편하다
-		let pos = Math.ceil(parseInt(getComputedStyle(body).top))*-1;
-		let duration = parseInt(getComputedStyle(body).transitionDuration);
+		let pos = parseInt(body.style.top)*-1;
 
 		let shield = true;
+
+		body.style.transitionProperty = 'top';
+		body.style.transitionDuration = '150ms';
 
 		if (pos < 0 ) {
 
@@ -29,21 +31,12 @@ class main extends Config {
 					shield = true;
 
 					body.style.top = 0;
-					body.style.transitionProperty = 'top';
-					body.style.transitionDuration = '150ms';
+
 
 				}, 150);
 			}
 
 			shield = false;
-		}
-		else {
-
-			if (duration == 0) {
-
-				body.style.transitionDuration = '70ms';
-				body.style.transitionProperty = 'top';
-			}
 		}
 
 		let $items = $(items[Status.row]);
@@ -54,14 +47,11 @@ class main extends Config {
 
 		bar.style.height = Status.barPos + '%';
 
-		Status.nextLimit = bodyHeight - items[Status.row].offsetHeight;
-
 		let roomLimit = Status.room[Status.touchDir == 'prev' ? Status.index-1 : Status.index];
-		let changePer = Math.ceil(((parseInt(body.style.top)*-1)+$items.height())/Status.world*100);
+		let barState =  Math.ceil(parseInt(getComputedStyle(bar).height)/SCOPE.select(Selector.story_month).clientHeight*100);
 
-		Status.prev = roomLimit > changePer;
-		Status.next = roomLimit < changePer;
-
+		Status.prev = roomLimit >= barState;
+		Status.next = roomLimit <= barState;
 
 		if (Status.touchDir === 'prev') {
 
@@ -85,6 +75,8 @@ class main extends Config {
 				}
 			}
 		}
+
+		Status.nextLimit = bodyHeight - $items.height();
 
 		if (Status.nextLimit > $items.offset().top) {
 
@@ -128,6 +120,8 @@ class main extends Config {
 		let Data = SCOPE.option.data;
 
 		let $body = $(Selector.body); // jquery 메서드를 사용하기 위해
+		let $bar = $(Selector.story_bar);
+		let $items = $(Selector.item[Status.row]);
 
 	    // 터치, 드래그, 마우스복합
 		Status.swipe = {
@@ -143,17 +137,37 @@ class main extends Config {
 	        return (delta < 0) ? delta = 1 : delta = -1;
 	    }
 
-	    // 클릭 up
+	    let handle = 0;
+
+	    function renderLoop() {
+
+	    	console.log(parseInt($bar[0].style.height));
+
+	    	handle = window.requestAnimationFrame(renderLoop);
+	    }
+
+		// shift
 		$DOCUMENT.on(
-			Event.def, Selector.pin_up, function(event) {
+			Event.def, Selector.story_shift, function(event) {
 				event.preventDefault();
 
 				if (Status.ani) {
 
-					SCOPE.option.page = Data.resLen-1;
+					renderLoop();
+
+					let index = SCOPE.index(SCOPE.select(Selector.story_shift), this);
+
+					$bar.stop(1, 0).animate({ 'height': ( index ? Status.room[index-1] : 0 ) + "%" }, 300, 'easeOutExpo', () => {
+
+						window.cancelAnimationFrame(handle);
+					});
+
+					Status.index = index;
+
+					SCOPE.pull();
+
 					// 다음 json 데이터 요청 메서드 여기서 실행
-					/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.before;
-					/* function */ SCOPE.next();
+					/* function  SCOPE.move();*/
 				}
 			}
 		);
@@ -188,7 +202,6 @@ class main extends Config {
 			}
 		);
 
-
 		// 마우스 휠
 	    $DOCUMENT.on(
 	    	Event.wheel, Selector.body, function(event) {
@@ -216,12 +229,12 @@ class main extends Config {
 
 						if (Status.touchDir === 'next') {
 
-							_val = '-='+100;
+							_val = '-='+200;
 						}
 
 						if (Status.touchDir === 'prev') {
 
-							_val = '+='+100;
+							_val = '+='+200;
 						}
 
 						return _val;
@@ -439,7 +452,7 @@ class main extends Config {
 			Status.ani = false;
 
 			//  시각요소 초기화
-			let bar = SCOPE.select(Selector.process_bar);
+			let bar = SCOPE.select(Selector.story_bar);
 			let month = SCOPE.select(Selector.story_month);
 			let body = SCOPE.select(Selector.body);
 
@@ -491,7 +504,7 @@ class main extends Config {
 				Status.completeGroup = [];
 
 				// 다음 json 데이터 요청 메서드 여기서 실행
-				/* 요쳥 url 변경 */ SCOPE.option.request.url = '/kor/js/uiPinterest/xhr/list.json';
+				/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.after;
 				/* function */ SCOPE.render([ 'bind', 'append', 'lithener', 'pull' ]);
 
 			}, 700);

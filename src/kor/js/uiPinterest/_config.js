@@ -40,10 +40,11 @@ export default class Config {
 			honest: '#honest',
 			story: '#story',
 			story_month: '#story_month_group_button',
-			process_bar: '#rocks_bar',
+			story_shift: "#story_month_group_button button",
+			story_bar: '#rocks_bar',
 			pin_up: "#pin_up",
 			pin_down: "#pin_down",
-			pin_top: "#pin_top"
+			pin_top: "#pin_top",
 		};
 
 		this.option.event = {

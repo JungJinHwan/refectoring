@@ -62,7 +62,7 @@ export default class Config {
 
 		// *[ append 에서 콜백 ] 준비 완료 후 실행할 목록
 		// next 는 반드시 마지막에 등장, 판단 기준으로 사용됨
-		this.option.completeFunctionList = [ 'sort' , 'ani' ];
+		this.option.completeFunctionList = [ 'sort' , 'ani' , 'move' ];
 
 		let rw = 0, rh = 0, rtime = null, scope = this;
 

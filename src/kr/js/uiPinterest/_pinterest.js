@@ -11,7 +11,7 @@ class main extends Config {
 		let Selector = SCOPE.option.selector;
 
 		let body = SCOPE.select(Selector.body);
-		let items = SCOPE.select(Selector.completeGroup+'\u0020'+Selector.item);
+		let items = SCOPE.select(Status.completeGroup[SCOPE.option.page]+'\u0020'+Selector.item);
 		let bar = SCOPE.select(Selector.story_bar);
 
 		// 내용이 위로 올라갈 때 음수가 양수가 되는것이 생각하기 편하다
@@ -38,8 +38,6 @@ class main extends Config {
 
 			shield = false;
 		}
-
-		let $items = $(items[Status.row]);
 
 		let bodyHeight = SCOPE.select('body').clientHeight;
 
@@ -75,6 +73,8 @@ class main extends Config {
 			}
 
 		}
+
+		let $items = $(items.length ? items[Status.row] : items);
 
 		Status.nextLimit = bodyHeight - $items.height();
 
@@ -138,31 +138,31 @@ class main extends Config {
 	    	handle = window.requestAnimationFrame(renderLoop);
 	    }
 
-		// shift
-		$DOCUMENT.on(
-			Event.def, Selector.story_shift, function(event) {
-				event.preventDefault();
+		// // shift
+		// $DOCUMENT.on(
+		// 	Event.def, Selector.story_shift, function(event) {
+		// 		event.preventDefault();
 
-				if (Status.ani) {
+		// 		if (Status.ani) {
 
-					renderLoop();
+		// 			renderLoop();
 
-					let index = SCOPE.index(SCOPE.select(Selector.story_shift), this);
+		// 			let index = SCOPE.index(SCOPE.select(Selector.story_shift), this);
 
-					$bar.stop(1, 0).animate({ 'height': ( index ? Status.room[index-1] : 0 ) + "%" }, 300, 'easeOutExpo', () => {
+		// 			$bar.stop(1, 0).animate({ 'height': ( index ? Status.room[index-1] : 0 ) + "%" }, 300, 'easeOutExpo', () => {
 
-						window.cancelAnimationFrame(handle);
-					});
+		// 				window.cancelAnimationFrame(handle);
+		// 			});
 
-					Status.index = index;
+		// 			Status.index = index;
 
-					SCOPE.pull();
+		// 			SCOPE.pull();
 
-					// 다음 json 데이터 요청 메서드 여기서 실행
-					/* function  SCOPE.move();*/
-				}
-			}
-		);
+		// 			// 다음 json 데이터 요청 메서드 여기서 실행
+		// 			/* function  SCOPE.move();*/
+		// 		}
+		// 	}
+		// );
 
 	    // 클릭 up
 		$DOCUMENT.on(
@@ -322,17 +322,14 @@ class main extends Config {
 		const SCOPE = this;
 
 		let Status = SCOPE.option.status;
-		// let Selector = SCOPE.option.selector;
+		let Selector = SCOPE.option.selector;
 
-		// let items = SCOPE.select(Selector.item);
-		// let itemsLen = items.length;
+		let items = SCOPE.select(Selector.item);
+		let itemsLen = items.length;
 
-		// for (let i=0; i<itemsLen; i++) {
-		// 	items[i].style.transitionProperty = 'top, left';
-		// 	items[i].style.transitionDelay = 100 +'ms';
-		// }
-
-		Status.resizebled = true;
+		for (let i=0; i<itemsLen; i++) {
+			items[i].style.transitionProperty = 'top, left';
+		}
 
 		return SCOPE.returnCall(callback);
 	}
@@ -419,7 +416,7 @@ class main extends Config {
 		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
-		if (!Status.resizebled && SCOPE.option.page < Data.resLen-1) {
+		if (SCOPE.option.page < Data.resLen-1) {
 
 			if (SCOPE.option.count < Data.response[SCOPE.option.page].count) {
 
@@ -459,6 +456,7 @@ class main extends Config {
 			Status.nextLimit = 0;
 			Status.index = 0;
 			Status.prev = 0;
+			Status.row = 0;
 			Status.next = false;
 			Status.ani = false;
 
@@ -516,15 +514,8 @@ class main extends Config {
 				Status.completeGroup = [];
 
 				// 다음 json 데이터 요청 메서드 여기서 실행
-				/* 요쳥 url 변경 */ 
-				if (!Status.resizebled) {
-
-					SCOPE.option.request.url = Data.config.after;
-				}
-				/* function */ 
-				SCOPE.render([ 'bind', 'append', 'lithener', 'pull' ]);
-
-				Status.resizebled = false;
+				/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.after;
+				/* function */ SCOPE.render([ 'bind', 'append', 'lithener', 'pull' ]);
 
 			}, 700);
 
@@ -540,35 +531,32 @@ class main extends Config {
 		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
-		let items = SCOPE.select(Selector.item);
-		let itemsLen = items.length;
+		let group = Status.completeGroup;
+		let groupLen = group.length;
 
-		for (let i=0; i<itemsLen; i++) {
+		for (let i=0; i<groupLen; i++) {
 
-			var aniTime = 30*i;
+			let $items = $(group[i]+'\u0020'+Selector.item);
+			let $itemsLen = $items.length;
 
-			items[i].style.transform = 'translateY(0)';
-			items[i].style.opacity = '1';
-			items[i].style.transitionDelay = aniTime+'ms';
-			items[i].style.transitionDuration = '300ms';
-			items[i].style.transitionProperty = 'transform, opacity';
+			for (let j=0; j<$itemsLen; j++) {
+
+				var aniTime = 30*(j+1);
+
+				$items[j].style.transform = 'translateY(0)';
+				$items[j].style.opacity = '1';
+				$items[j].style.transitionDelay = aniTime+'ms';
+				$items[j].style.transitionDuration = '300ms';
+				$items[j].style.transitionProperty = 'transform, opacity';
+			}
 		}
 
 		// count 저장
-		SCOPE.option.count = items.length;
+		SCOPE.option.count = $(group[SCOPE.option.page]+'\u0020'+Selector.item).length;
 
 		let timeout = null;
 
 		timeout = setTimeout(() => {
-
-			let $items = $(items[Status.row]);
-
-			Status.nextLimit = SCOPE.select('body').clientHeight - $items.height();
-
-			if (Status.nextLimit > $items.offset().top) {
-
-				SCOPE.next();
-			}
 
 			Status.ani = true;
 		}, aniTime);
@@ -634,13 +622,11 @@ class main extends Config {
 				$items[j].style.top = ((cnt.h > 0 ? grid[cnt.h][cnt.w] : 0)) + 'px';
 				$items[j].style.left = grid[0][cnt.w] + 'px';
 
-				if (j%cnt.w) {
-
-					Status.row = j;
-				}
 
 				cnt.w++;
 			}
+
+			Status.row = $itemsLen-1;
 
 			let countAll = 0;
 			let count = [];

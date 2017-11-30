@@ -443,8 +443,7 @@ class main extends Config {
 			}
 		}
 		else{
-
-			if(!Status.next) {
+			if(Status.barPos < 100) {
 				return false;
 			}
 

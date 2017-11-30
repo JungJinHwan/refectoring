@@ -27,8 +27,8 @@
 #uiPinterest .grid__item .grid__img .grid__info .photo div{display:inline-block;vertical-align:middle;width:30px;height:30px;margin-right:5px;border-radius:100%;overflow:hidden}
 #uiPinterest .grid__item .grid__img .grid__info .photo span{display:inline-block;vertical-align:middle;margin-top:1px}
 #uiPinterest .grid__item .grid__img .grid__info .count{float:right;margin:4.5% 10px 0 0;font-size:13px}
-#uiPinterest .grid__item .grid__img .grid__info .count .like{float:left;padding-left:13px;background:url(/kor/js/uiPinterest/images/common/like.png) no-repeat 0 1px}
-#uiPinterest .grid__item .grid__img .grid__info .count .comment{float:left;padding-left:15px;margin-left:15px;background:url(/kor/js/uiPinterest/images/common/comment.png) no-repeat 0 0}
+#uiPinterest .grid__item .grid__img .grid__info .count .like{float:left;padding-left:13px;background:url(/kr/js/uiPinterest/images/common/like.png) no-repeat 0 1px}
+#uiPinterest .grid__item .grid__img .grid__info .count .comment{float:left;padding-left:15px;margin-left:15px;background:url(/kr/js/uiPinterest/images/common/comment.png) no-repeat 0 0}
 
 #uiPinterest .grid__item .grid__img .grid__thumb{position:absolute;top:0;left:0;width:300%;height:100%;margin-left:-100%;text-align:center}
 #uiPinterest .grid__item .grid__img .grid__thumb img{
@@ -37,7 +37,7 @@
 	-webkit-tap-highlight-color:rgba(0,0,0,0);
 }
 #uiPinterest .grid__item .grid__title{position:absolute;top:0;left:0;width:100%;padding:25px;line-height:140%;font-size:20px;color:#fff}
-#uiPinterest .grid__item .grid__icon{position:absolute;bottom:20px;right:20px;width:31px;height:31px;background:url(/kor/js/uiPinterest/images/common/link.png) no-repeat}
+#uiPinterest .grid__item .grid__icon{position:absolute;bottom:20px;right:20px;width:31px;height:31px;background:url(/kr/js/uiPinterest/images/common/link.png) no-repeat}
 #uiPinterest .grid__item .grid__date{
 	z-index:-1;
 	position:absolute;bottom:0;left:0;width:100%;
@@ -70,7 +70,7 @@
 /* 위에서 기본을 정했고 디테일 들어갑시다. */
 #story_body{position:relative;height:100%;transition:top 70ms ease-out}
 
-#uiPinterest .group{transition:opacity 200ms}
+#uiPinterest .group{position:relative;transition:opacity 200ms}
 #uiPinterest .group .grig__item{transform:translateY(100px)}
 
 #uiPinterest.ver_1{position:fixed;top:150px;left:60%;width:55%;transform:rotateX(45deg) rotateZ(45deg)}
@@ -98,7 +98,7 @@
 #story_up button, #story_down button{
 	overflow:hidden;width:30px;height:30px;
 	border-radius:100%;border:3px solid #343841;
-	background:#5d6067 url(/kor/js/uiPinterest/images/common/arr.png) no-repeat 50% 50%;
+	background:#5d6067 url(/kr/js/uiPinterest/images/common/arr.png) no-repeat 50% 50%;
 }
 
 #story_down button{transform:rotate(180deg)}
@@ -134,6 +134,8 @@
 #story_month_group #story_month_group_bar #active_bar{position:absolute;top:-50px;left:0;width:100%;height:50px;background:#f00}
 #story_month_group #story_month_group_bar #rocks_bar{position:absolute;top:0;left:0;width:100%;background:#f00;transition:all 300ms}
 #story_month_group #story_month_group_button{height:100%;top:0;left:-30px}
+#story_month_group #story_month_group_button div{position:relative}
+#story_month_group #story_month_group_button button{position:absolute;top:0;left:0}
 
 .testButtons{padding:20px 30px;border:1px solid #fff;color:#fff}
 
@@ -148,7 +150,7 @@
 	background: linear-gradient(to bottom, #f93f15 0%,#e1193c 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f93f15', endColorstr='#e1193c',GradientType=0 ); /* IE6-9 */
 }
-#uiPinterest .category__0 .layer_01 .category{background-image:url(/kor/js/uiPinterest/images/common/category_0.png)}
+#uiPinterest .category__0 .layer_01 .category{background-image:url(/kr/js/uiPinterest/images/common/category_0.png)}
 
 #uiPinterest .category__1 .layer_01{
 	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8aa8cf+0,808da3+99 */
@@ -158,7 +160,7 @@
 	background: linear-gradient(to bottom, #8aa8cf 0%,#808da3 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8aa8cf', endColorstr='#808da3',GradientType=0 ); /* IE6-9 */
 }
-#uiPinterest .category__1 .layer_01 .category{background-image:url(/kor/js/uiPinterest/images/common/category_1.png)}
+#uiPinterest .category__1 .layer_01 .category{background-image:url(/kr/js/uiPinterest/images/common/category_1.png)}
 
 #uiPinterest .category__2 .layer_01{
 	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#7c41b7+0,f96f30+100 */
@@ -168,7 +170,7 @@
 	background: linear-gradient(to bottom, #7c41b7 0%,#f96f30 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7c41b7', endColorstr='#f96f30',GradientType=0 ); /* IE6-9 */
 }
-#uiPinterest .category__2 .layer_01 .category{background-image:url(/kor/js/uiPinterest/images/common/category_2.png)}
+#uiPinterest .category__2 .layer_01 .category{background-image:url(/kr/js/uiPinterest/images/common/category_2.png)}
 
 #uiPinterest.ver_1 .grid__item .layer_01 .category{bottom:10px}
 #uiPinterest.ver_2 .grid__item .layer_01 .category{bottom:5px}

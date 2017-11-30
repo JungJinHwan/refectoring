@@ -11,7 +11,7 @@ class main extends Config {
 		let Selector = SCOPE.option.selector;
 
 		let body = SCOPE.select(Selector.body);
-		let items = SCOPE.select(Selector.item);
+		let items = SCOPE.select(Selector.completeGroup+'\u0020'+Selector.item);
 		let bar = SCOPE.select(Selector.story_bar);
 
 		// 내용이 위로 올라갈 때 음수가 양수가 되는것이 생각하기 편하다
@@ -43,15 +43,14 @@ class main extends Config {
 
 		let bodyHeight = SCOPE.select('body').clientHeight;
 
-		Status.barPos = Math.ceil(pos/(Status.world-bodyHeight)*100);
+		Status.barPos = Math.floor(pos/(Status.world)*100);
 
 		bar.style.height = Status.barPos + '%';
 
 		let roomLimit = Status.room[Status.touchDir == 'prev' ? Status.index-1 : Status.index];
-		let barState =  Math.ceil(parseInt(getComputedStyle(bar).height)/SCOPE.select(Selector.story_month).clientHeight*100);
 
-		Status.prev = roomLimit >= barState;
-		Status.next = roomLimit <= barState;
+		Status.prev = roomLimit >= Status.barPos;
+		Status.next = roomLimit <= Status.barPos;
 
 		if (Status.touchDir === 'prev') {
 
@@ -74,6 +73,7 @@ class main extends Config {
 					SCOPE.pull();
 				}
 			}
+
 		}
 
 		Status.nextLimit = bodyHeight - $items.height();
@@ -121,14 +121,6 @@ class main extends Config {
 
 		let $body = $(Selector.body); // jquery 메서드를 사용하기 위해
 		let $bar = $(Selector.story_bar);
-		let $items = $(Selector.item[Status.row]);
-
-	    // 터치, 드래그, 마우스복합
-		Status.swipe = {
-			prev: 0, 
-			next: 0
-
-		};
 
 		Status.touchDir = '';
 
@@ -172,6 +164,24 @@ class main extends Config {
 			}
 		);
 
+	    // 클릭 up
+		$DOCUMENT.on(
+			Event.def, Selector.pin_up, function(event) {
+				event.preventDefault();
+
+				if (Status.ani) {
+
+					Status.next = true;
+
+					SCOPE.option.page = Data.resLen-1;
+
+					// 다음 json 데이터 요청 메서드 여기서 실행
+					/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.before;
+					/* function */ SCOPE.next();
+				}
+			}
+		);
+
 	    // 클릭 down
 		$DOCUMENT.on(
 			Event.def, Selector.pin_down, function(event) {
@@ -179,7 +189,10 @@ class main extends Config {
 
 				if (Status.ani) {
 
+					Status.next = true;
+
 					SCOPE.option.page = Data.resLen-1;
+
 					// 다음 json 데이터 요청 메서드 여기서 실행
 					/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.after;
 					/* function */ SCOPE.next();
@@ -194,7 +207,10 @@ class main extends Config {
 
 				if (Status.ani) {
 
+					Status.next = true;
+
 					SCOPE.option.page = Data.resLen-1;
+
 					// 다음 json 데이터 요청 메서드 여기서 실행
 					/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.top;
 					/* function */ SCOPE.next();
@@ -229,12 +245,12 @@ class main extends Config {
 
 						if (Status.touchDir === 'next') {
 
-							_val = '-='+200;
+							_val = '-='+100;
 						}
 
 						if (Status.touchDir === 'prev') {
 
-							_val = '+='+200;
+							_val = '+='+100;
 						}
 
 						return _val;
@@ -274,21 +290,11 @@ class main extends Config {
 							var result = Status.range;
 
 							if(Status.range < 0){
-								Status.swipe.next = 0;
-								Status.swipe.prev += result;
-
-				    			if(Status.half < Status.swipe.prev*-1) {
-									Status.touchDir = 'next';
-				    			}
+								Status.touchDir = 'next';
 							}
 
 							if(Status.range > 0){
-								Status.swipe.prev = 0;
-								Status.swipe.next += result;
-
-				    			if(Status.half < Status.swipe.next) {
-									Status.touchDir = 'prev';
-				    			}
+								Status.touchDir = 'prev';
 							}
 
 							return result;
@@ -303,15 +309,9 @@ class main extends Config {
 
 	    			Status.prev = 0;
 
-					Status.swipe = {
-						prev: 0, 
-						next: 0
-
-					};
+					SCOPE.move();
 
 					Status.touchDir = '';
-
-					SCOPE.move();
 	    		}
 	    	}
 	    );
@@ -321,15 +321,18 @@ class main extends Config {
 
 		const SCOPE = this;
 
-		let Selector = SCOPE.option.selector;
+		let Status = SCOPE.option.status;
+		// let Selector = SCOPE.option.selector;
 
-		let items = SCOPE.select(Selector.item);
-		let itemsLen = items.length;
+		// let items = SCOPE.select(Selector.item);
+		// let itemsLen = items.length;
 
-		for (let i=0; i<itemsLen; i++) {
-			items[i].style.transitionProperty = 'top, left';
-			items[i].style.transitionDelay = 100 +'ms';
-		}
+		// for (let i=0; i<itemsLen; i++) {
+		// 	items[i].style.transitionProperty = 'top, left';
+		// 	items[i].style.transitionDelay = 100 +'ms';
+		// }
+
+		Status.resizebled = true;
 
 		return SCOPE.returnCall(callback);
 	}
@@ -365,7 +368,9 @@ class main extends Config {
 			let itemsLen = items.length;
 
 			for (let i=0; i<itemsLen; i++) {
+				items[i].style.transitionProperty = 'transform, opacity';
 				items[i].style.transform = 'translateY(-100px)';
+				items[i].style.transitionDelay = '0ms';
 				items[i].style.opacity = 0;
 			}
 
@@ -386,6 +391,8 @@ class main extends Config {
 			setTimeout(() => {
 
 				parent.style.opacity = 1;
+
+				Status.transform = true;
 
 				SCOPE.returnCall(callback);
 
@@ -412,7 +419,7 @@ class main extends Config {
 		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
-		if (SCOPE.option.page < Data.resLen-1) {
+		if (!Status.resizebled && SCOPE.option.page < Data.resLen-1) {
 
 			if (SCOPE.option.count < Data.response[SCOPE.option.page].count) {
 
@@ -439,6 +446,10 @@ class main extends Config {
 			}
 		}
 		else{
+
+			if(!Status.next) {
+				return false;
+			}
 
 			// 헌것을 비우고
 			Status.barPos = Status.nextLimit = Status.index = Status.prev = Status.next = Status.ani = null;
@@ -467,8 +478,8 @@ class main extends Config {
 			month.style.transitionDuration = '300ms';
 
 			body.style.opacity = 0;
+			body.style.transitionProperty = 'opacity, top';
 			body.style.transitionDuration = '300ms';
-			body.style.transitionProperty = 'opacity';
 
 			setTimeout(() => {
 
@@ -499,13 +510,21 @@ class main extends Config {
 				body.innerHTML = '';
 				body.style.top = 0;
 				body.style.opacity = 1;
+				body.style.transitionProperty = 'opacity';
 
 				Status.complete = [];
 				Status.completeGroup = [];
 
 				// 다음 json 데이터 요청 메서드 여기서 실행
-				/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.after;
-				/* function */ SCOPE.render([ 'bind', 'append', 'lithener', 'pull' ]);
+				/* 요쳥 url 변경 */ 
+				if (!Status.resizebled) {
+
+					SCOPE.option.request.url = Data.config.after;
+				}
+				/* function */ 
+				SCOPE.render([ 'bind', 'append', 'lithener', 'pull' ]);
+
+				Status.resizebled = false;
 
 			}, 700);
 
@@ -521,18 +540,16 @@ class main extends Config {
 		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
-		SCOPE.select(Selector.completeGroup).style.opacity = 1;
-
-		let items = $(Selector.item);
+		let items = SCOPE.select(Selector.item);
 		let itemsLen = items.length;
 
 		for (let i=0; i<itemsLen; i++) {
 
-			var aniTime = (30*(i-(itemsLen-SCOPE.option.limit)));
+			var aniTime = 30*i;
 
 			items[i].style.transform = 'translateY(0)';
 			items[i].style.opacity = '1';
-			items[i].style.transitionDelay = (30*(i-(itemsLen-SCOPE.option.limit)))+'ms';
+			items[i].style.transitionDelay = aniTime+'ms';
 			items[i].style.transitionDuration = '300ms';
 			items[i].style.transitionProperty = 'transform, opacity';
 		}
@@ -542,8 +559,16 @@ class main extends Config {
 
 		let timeout = null;
 
-		clearTimeout(timeout);
 		timeout = setTimeout(() => {
+
+			let $items = $(items[Status.row]);
+
+			Status.nextLimit = SCOPE.select('body').clientHeight - $items.height();
+
+			if (Status.nextLimit > $items.offset().top) {
+
+				SCOPE.next();
+			}
 
 			Status.ani = true;
 		}, aniTime);
@@ -559,64 +584,67 @@ class main extends Config {
 		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
-		// 재귀 종료지점, 정렬 시작
-		let items = SCOPE.select(Selector.item);
-		let itemsLen = items.length;
+		for (let i=0; i<Status.completeGroup.length; i++) {
 
-		let parent = SCOPE.select(Selector.parent);
-		let body = SCOPE.select(Selector.body);
+			// 재귀 종료지점, 정렬 시작
+			let items = SCOPE.select(Status.completeGroup[i]+'\u0020'+Selector.item);
 
-		let grid = [[]]; // grid[0][0] = x , grid[1][0] = y : (y는 동적 생성)
+			let $items = $(Status.completeGroup[i]+'\u0020'+Selector.item);
+			let $itemsLen = $items.length;
 
-		let map = {
-			iwidth: items[0].offsetWidth,
-			iworld: body.clientWidth
-		};
+			let parent = SCOPE.select(Selector.parent);
+			let body = SCOPE.select(Selector.body);
 
-		let cnt = { w: 0, h: 0, n: 0, y: 0 };
+			var grid = [[]]; // grid[0][0] = x , grid[1][0] = y : (y는 동적 생성)
 
-		// 너비 한계선
-		for(let i=0; i<itemsLen; i++){
-			// 너비 한계치에 도달하면
-			if(map.iwidth*(cnt.w+1) > map.iworld){
+			let cnt = { w: 0, h: 0, n: 0, y: 0 };
 
-				cnt.h++; // 높이 단계 값 증가
+			let map = {
+				iwidth: $items[0].offsetWidth,
+				iworld: body.clientWidth
+			};
 
-				grid[cnt.h] = []; // 높이 단계 증가시 배열 추가
+			// 너비 한계선
+			for(let j=0; j<$itemsLen; j++){
 
-				// 한계치 도달점을 기준으로 현재까지의 각 목록의 높이를 여백을 포함하여 배열 저장
-				for(let k=cnt.n; k<cnt.n+cnt.w; k++){
+				// 너비 한계치에 도달하면
+				if(map.iwidth*(cnt.w+1) > map.iworld){
 
-					cnt.i = items[k].offsetHeight;
+					cnt.h++; // 높이 단계 값 증가
 
-					grid[cnt.h][cnt.y] = (cnt.h > 1) ? cnt.i + grid[cnt.h-1][cnt.y] : cnt.i;
+					grid[cnt.h] = []; // 높이 단계 증가시 배열 추가
 
-					cnt.y++;
+					// 한계치 도달점을 기준으로 현재까지의 각 목록의 높이를 여백을 포함하여 배열 저장
+					for(let k=cnt.n; k<cnt.n+cnt.w; k++){
+
+						cnt.i = $items[k].offsetHeight;
+
+						grid[cnt.h][cnt.y] = (cnt.h > 1) ? cnt.i + grid[cnt.h-1][cnt.y] : cnt.i;
+
+						cnt.y++;
+					}
+
+					cnt.n += cnt.w;
+					cnt.y = 0;
+					cnt.w = 0; // 너비 한계값 초기화
 				}
 
-				cnt.n += cnt.w;
-				cnt.y = 0;
-				cnt.w = 0; // 너비 한계값 초기화
+				grid[0][cnt.w] = map.iwidth * (cnt.w); // x 좌표
+
+				$items[j].style.top = ((cnt.h > 0 ? grid[cnt.h][cnt.w] : 0)) + 'px';
+				$items[j].style.left = grid[0][cnt.w] + 'px';
+
+				if (j%cnt.w) {
+
+					Status.row = j;
+				}
+
+				cnt.w++;
 			}
-
-			grid[0][cnt.w] = map.iwidth*(cnt.w); // x 좌표
-
-			items[i].style.top = ((cnt.h > 0 ? grid[cnt.h][cnt.w] : 0)) + 'px';
-			items[i].style.left = grid[0][cnt.w] + 'px';
-
-			cnt.w++;
-
-			if (i%cnt.w == 0) {
-				// 마지막행 첫번째 index
-				Status.row = i;
-			}
-		}
-
-		if (SCOPE.option.count == 0) {
 
 			let countAll = 0;
 			let count = [];
-			
+
 			// 저장된 데이터의 총 카운터를 구해 전체를 구하고, 각 그룹의 리스트 카운터로 각 그룹의 전체를 구한다.
 			// 일부/전체*100 의 공식으로 전체에 대한 일부의 퍼센테이지를 구한다.
 
@@ -626,7 +654,7 @@ class main extends Config {
 				count[i] = Data.response[i].count;
 			}
 
-			Status.world = countAll/cnt.w*items[0].offsetHeight;
+			Status.world = countAll/grid[0].length*$items[0].offsetHeight;
 			Status.roomWorld = [];
 			Status.room = [];
 
@@ -637,13 +665,15 @@ class main extends Config {
 				let room = count[i]/countAll*100;
 
 				Status.room[i] = i ? Status.room[i-1] + room : room;
-				Status.roomWorld[i] = count[i]/cnt.w*items[0].offsetHeight;
+				Status.roomWorld[i] = Math.ceil(count[i]/grid[0].length)*$items[0].offsetHeight;
 
 				monthGroup[i].style.height = room + '%';
 			}
 
 			// 전체 행 갯수 * 아이템 하나의 높이 = 전체 높이, 모든 카드의 크키가 같으면 편하지 ^_^♡
-			parent.style.height = countAll * items[0].offsetHeight + 'px';
+			parent.style.height = countAll * $items[0].offsetHeight + 'px';
+
+			SCOPE.select(Status.completeGroup[i]).style.height = Status.roomWorld[i] + 'px';
 
 		}
 
@@ -663,6 +693,7 @@ class main extends Config {
 		// SCOPE.option.count 만큼 처리할 배열에서 제외하고 복사
 		// slice는 깊은 복사이기 때문에 원본은 유지된다
 		let list = Data.response[SCOPE.option.page].list.slice(SCOPE.option.count);
+		let listLen = list.length < SCOPE.option.limit ? list.length : SCOPE.option.limit;
 
 		// 매번 주소가 다른 객체를 벹어줘야 한다
 		let Str = SCOPE.storage();
@@ -728,7 +759,7 @@ class main extends Config {
 
 			i++;
 
-			if (i < SCOPE.option.limit) {
+			if (i < listLen) {
 
 				return keyBind(0);
 			} 
@@ -785,7 +816,7 @@ class main extends Config {
 		// 현재 리스트 처리가 완료 됬을때 다음 페이지 리스트를 새 그룹으로 묶어서 보낸다
 		else{
 			select = Selector.body;
-			completeBind = '\n<div style="opacity:0" class="group" id="'+Selector.completeGroup.substr(1)+'">'+Data.completeList+'\n</div>';
+			completeBind = '\n<div class="group" id="'+Selector.completeGroup.substr(1)+'">'+Data.completeList+'\n</div>';
 
 			// 추가된 다음달 추가
 			SCOPE.select(Selector.story_month).innerHTML += Data.completeMonth;
@@ -794,7 +825,7 @@ class main extends Config {
 		// 처리된 상태 HTML 에 반영
 		SCOPE.select(select).innerHTML += completeBind;
 
-		let img = $(Selector.img).slice(SCOPE.option.count);
+		let img = $(Selector.completeGroup+'\u0020'+Selector.img);
 		let imgLen = img.length;
 
 		// 로드 완료 된 img 가 limit 보다 작을때 재귀 후 콜백 리스트 실행
@@ -811,7 +842,7 @@ class main extends Config {
 				}
 			}
 
-			if (_val < SCOPE.option.limit) {
+			if (_val < imgLen) {
 
 				return setTimeout(function () {
 

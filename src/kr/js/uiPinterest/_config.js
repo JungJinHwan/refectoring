@@ -6,18 +6,18 @@ export default class Config {
 
 		this.option = arg;
 
-		this.option.no_img = '/kor/js/uiPinterest/images/common/no_img.jpg';
-		this.option.no_photo = '/kor/js/uiPinterest/images/common/no_photo.gif';
+		this.option.no_img = '/kr/js/uiPinterest/images/common/no_img.jpg';
+		this.option.no_photo = '/kr/js/uiPinterest/images/common/no_photo.gif';
 		this.option.no_name = 'GONET';
 		this.option.month_string = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 		this.option.styleSheet = [
-			'/kor/js/uiPinterest/css/style.css',
-			'/kor/js/uiPinterest/css/pinterest.css'
+			'/kr/js/uiPinterest/css/style.css',
+			'/kr/js/uiPinterest/css/pinterest.css'
 		];
 
 		this.option.request = {
 			type: 'GET',
-			url: '/kor/js/uiPinterest/xhr/list.json',
+			url: '/kr/js/uiPinterest/xhr/list.json',
 			data: {},
 			dataType: 'json'
 		};
@@ -118,7 +118,7 @@ export default class Config {
 		a = {};
 		a.list = '\n'+
 			'\n<div class="grid__item {{category}}" style="'+listStyle+'">'+
-			'\n\t<a class="grid__link" href="{{url}}">'+
+			'\n\t<a onclick="return newsView.showLayer(this.href);" class="grid__link" href="{{url}}">'+
 			'\n\t\t<div class="grid__img layer_01"><div class="category"></div></div>'+
 			'\n\t\t<div class="grid__img layer_02"></div>'+
 			'\n\t\t<div class="grid__img layer_03">'+
@@ -133,7 +133,7 @@ export default class Config {
 			'\n\t\t\t\t<div class="grid__thumb">'+
 			'\n\t\t\t\t\t<img src="{{img}}" alt="{{title}}">'+
 			'\n\t\t\t\t</div>'+
-			'\n\t\t\t\t<div class="grid__title">{{title}}</div>'+
+			// '\n\t\t\t\t<div class="grid__title">{{title}}</div>'+
 			'\n\t\t\t</div>'+
 			'\n\t\t</div>'+
 			'\n\t\t<span class="grid__date">{{date}}</span>'+

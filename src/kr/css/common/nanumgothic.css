@@ -1,0 +1,10 @@
+@charset "utf-8";
+
+@font-face{
+	font-family:'ngn';
+	font-stretch:normal;
+	font-style:normal;
+	src:url('/kr/font/NanumBarunGothic.eot');
+	src:url('/kr/font/NanumBarunGothic.eot?#iefix') format('embedded-opentype'),
+		url('/kr/font/NanumBarunGothic.woff') format('woff')
+}

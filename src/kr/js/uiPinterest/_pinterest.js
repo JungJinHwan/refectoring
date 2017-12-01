@@ -19,6 +19,11 @@ class main extends Config {
 
 		let shield = true;
 
+		if (!parseInt(body.style.top)) {
+
+			body.style.top = 0;
+		}
+
 		body.style.transitionProperty = 'top';
 		body.style.transitionDuration = '150ms';
 
@@ -41,7 +46,7 @@ class main extends Config {
 
 		let bodyHeight = SCOPE.select('body').clientHeight;
 
-		Status.barPos = Math.floor(pos/(Status.world)*100);
+		Status.barPos = pos/(Status.world)*100;
 
 		bar.style.height = Status.barPos + '%';
 
@@ -119,8 +124,7 @@ class main extends Config {
 		let Event = SCOPE.option.event;
 		let Data = SCOPE.option.data;
 
-		let $body = $(Selector.body); // jquery 메서드를 사용하기 위해
-		let $bar = $(Selector.story_bar);
+		let body = SCOPE.select(Selector.body); // jquery 메서드를 사용하기 위해
 
 		Status.touchDir = '';
 
@@ -129,14 +133,14 @@ class main extends Config {
 	        return (delta < 0) ? delta = 1 : delta = -1;
 	    }
 
-	    let handle = 0;
+	 //    let handle = 0;
 
-	    function renderLoop() {
+	 //    function renderLoop() {
 
-	    	console.log(parseInt($bar[0].style.height));
+	 //    	console.log(parseInt($bar[0].style.height));
 
-	    	handle = window.requestAnimationFrame(renderLoop);
-	    }
+	 //    	handle = window.requestAnimationFrame(renderLoop);
+	 //    }
 
 		// // shift
 		// $DOCUMENT.on(
@@ -159,7 +163,7 @@ class main extends Config {
 		// 			SCOPE.pull();
 
 		// 			// 다음 json 데이터 요청 메서드 여기서 실행
-		// 			/* function  SCOPE.move();*/
+		// 			/* function ;*/ SCOPE.move()
 		// 		}
 		// 	}
 		// );
@@ -171,7 +175,7 @@ class main extends Config {
 
 				if (Status.ani) {
 
-					Status.next = true;
+					Status.barPos = 100;
 
 					SCOPE.option.page = Data.resLen-1;
 
@@ -189,7 +193,7 @@ class main extends Config {
 
 				if (Status.ani) {
 
-					Status.next = true;
+					Status.barPos = 100;
 
 					SCOPE.option.page = Data.resLen-1;
 
@@ -207,7 +211,7 @@ class main extends Config {
 
 				if (Status.ani) {
 
-					Status.next = true;
+					Status.barPos = 100;
 
 					SCOPE.option.page = Data.resLen-1;
 
@@ -240,22 +244,22 @@ class main extends Config {
 
 		        Status.touchDir = saveDir > 0 ? 'prev' : 'next';
 
-				$body.css({
-					'top': ((_val) =>{
-
-						if (Status.touchDir === 'next') {
-
-							_val = '-='+100;
-						}
+		       	$(body).css({
+		       		'top': ((_val) => {
 
 						if (Status.touchDir === 'prev') {
 
 							_val = '+='+100;
 						}
 
-						return _val;
-					})()
+						if (Status.touchDir === 'next') {
 
+							_val = '-='+100;
+						}
+
+						return _val;
+
+					})()
 				});
 
 				SCOPE.move();
@@ -284,23 +288,15 @@ class main extends Config {
 
 			    	Status.range = Status.move - Status.prev;
 
-					$body.css({
-						'top': '+='+ function(){
+					body.style.top = parseInt(body.style.top) + Status.range + 'px';
 
-							var result = Status.range;
+					if(Status.range < 0){
+						Status.touchDir = 'prev';
+					}
 
-							if(Status.range < 0){
-								Status.touchDir = 'next';
-							}
-
-							if(Status.range > 0){
-								Status.touchDir = 'prev';
-							}
-
-							return result;
-						}()
-
-					});
+					if(Status.range > 0){
+						Status.touchDir = 'next';
+					}
 
 					Status.prev = Status.move;
 	    		}
@@ -321,7 +317,6 @@ class main extends Config {
 
 		const SCOPE = this;
 
-		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
 		let items = SCOPE.select(Selector.item);
@@ -574,8 +569,6 @@ class main extends Config {
 		for (let i=0; i<Status.completeGroup.length; i++) {
 
 			// 재귀 종료지점, 정렬 시작
-			let items = SCOPE.select(Status.completeGroup[i]+'\u0020'+Selector.item);
-
 			let $items = $(Status.completeGroup[i]+'\u0020'+Selector.item);
 			let $itemsLen = $items.length;
 

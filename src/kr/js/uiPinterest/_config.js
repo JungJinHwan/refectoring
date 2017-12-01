@@ -8,6 +8,7 @@ export default class Config {
 
 		this.option.no_img = '/kr/js/uiPinterest/images/common/no_img.jpg';
 		this.option.no_photo = '/kr/js/uiPinterest/images/common/no_photo.gif';
+		this.option.no_instagram = '/kr/js/uiPinterest/images/common/insta_photo.gif';
 		this.option.no_name = 'GONET';
 		this.option.month_string = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 		this.option.styleSheet = [

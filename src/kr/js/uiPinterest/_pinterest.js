@@ -704,8 +704,8 @@ class main extends Config {
 				if (key == 'photo') {
 					// list.photo 비어 있으면 default
 					if (!list[i].photo.length) {
-						
-						list[i].photo = SCOPE.option.no_photo;
+
+						list[i].photo = list[i].category == 'category__'+2 ? SCOPE.option.no_instagram : SCOPE.option.no_photo;
 					}
 				}
 

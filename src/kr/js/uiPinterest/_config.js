@@ -6,9 +6,9 @@ export default class Config {
 
 		this.option = arg;
 
-		this.option.no_img = '/kr/js/uiPinterest/images/common/no_img.jpg';
-		this.option.no_photo = '/kr/js/uiPinterest/images/common/no_photo.gif';
-		this.option.no_instagram = '/kr/js/uiPinterest/images/common/insta_photo.gif';
+		this.option.no_img = 'http://gonet.acego.net/kr/js/uiPinterest/images/common/no_img.jpg';
+		this.option.no_photo = 'http://gonet.acego.net/kr/js/uiPinterest/images/common/no_photo.gif';
+		this.option.no_instagram = 'http://gonet.acego.net/kr/js/uiPinterest/images/common/insta_photo.gif';
 		this.option.no_name = 'GONET';
 		this.option.month_string = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 		this.option.styleSheet = [
@@ -18,14 +18,15 @@ export default class Config {
 
 		this.option.request = {
 			type: 'GET',
-			url: '/kr/js/uiPinterest/xhr/list.json',
-			data: {},
+			// url: '/kr/js/uiPinterest/xhr/list.json',
+			url: '/kr/html/story/GetJson_STORY.php',
+			data: { page: 1 },
 			dataType: 'json'
 		};
 
 		this.option.limit = 15;
 		this.option.data = { offset: [] };
-		this.option.status = { ani: true, index: 0, complete: [], completeGroup: [] };
+		this.option.status = { render:false, append: false, ani: false, index: 0, complete: [], completeGroup: [] };
 		this.option.page = 0;
 		this.option.count = 0;
 		this.option.process = {};

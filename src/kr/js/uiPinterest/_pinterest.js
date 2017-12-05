@@ -173,14 +173,14 @@ class main extends Config {
 			Event.def, Selector.pin_up, function(event) {
 				event.preventDefault();
 
-				if (Status.ani) {
+				if (Status.ani && Status.append) {
 
 					Status.barPos = 100;
 
 					SCOPE.option.page = Data.resLen-1;
 
 					// 다음 json 데이터 요청 메서드 여기서 실행
-					/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.before;
+					/* 데이터 리딩 방향 */ Status.touchDir = 'prev';
 					/* function */ SCOPE.next();
 				}
 			}
@@ -191,14 +191,14 @@ class main extends Config {
 			Event.def, Selector.pin_down, function(event) {
 				event.preventDefault();
 
-				if (Status.ani) {
+				if (Status.ani && Status.append) {
 
 					Status.barPos = 100;
 
 					SCOPE.option.page = Data.resLen-1;
 
 					// 다음 json 데이터 요청 메서드 여기서 실행
-					/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.after;
+					/* 데이터 리딩 방향 */ Status.touchDir = 'next';
 					/* function */ SCOPE.next();
 				}
 			}
@@ -209,14 +209,14 @@ class main extends Config {
 			Event.def, Selector.pin_top, function(event) {
 				event.preventDefault();
 
-				if (Status.ani) {
+				if (Status.ani && Status.append) {
 
 					Status.barPos = 100;
 
 					SCOPE.option.page = Data.resLen-1;
 
 					// 다음 json 데이터 요청 메서드 여기서 실행
-					/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.top;
+					/* 요쳥 url 변경 */ Status.touchDir = 'first';
 					/* function */ SCOPE.next();
 				}
 			}
@@ -227,90 +227,89 @@ class main extends Config {
 	    	Event.wheel, Selector.body, function(event) {
 	    		event.preventDefault();
 
-	    		if (!Status.ani) {
+	    		if (Status.ani && Status.append) {
 
-	    			return false;
-	    		}
+	    			console.log(SCOPE.option.page);
 
-		        let saveDir = null;
+			        let saveDir = null;
 
-		        if(event.originalEvent.wheelDelta != undefined) {
+			        if(event.originalEvent.wheelDelta != undefined) {
 
-		            saveDir = Process.dir(event.originalEvent.wheelDelta*-1); // IE
-		        }else{
+			            saveDir = Process.dir(event.originalEvent.wheelDelta*-1); // IE
+			        }else{
 
-		            saveDir = Process.dir(event.originalEvent.detail); // FF,CROME,SFARI
-		        }
+			            saveDir = Process.dir(event.originalEvent.detail); // FF,CROME,SFARI
+			        }
 
-		        Status.touchDir = saveDir > 0 ? 'prev' : 'next';
+			        Status.touchDir = saveDir > 0 ? 'prev' : 'next';
 
-		       	$(body).css({
-		       		'top': ((_val) => {
+			       	$(body).css({
+			       		'top': ((_val) => {
 
-						if (Status.touchDir === 'prev') {
+							if (Status.touchDir === 'prev') {
 
-							_val = '+='+100;
-						}
+								_val = '+='+200;
+							}
 
-						if (Status.touchDir === 'next') {
+							if (Status.touchDir === 'next') {
 
-							_val = '-='+100;
-						}
+								_val = '-='+200;
+							}
 
-						return _val;
+							return _val;
 
-					})()
-				});
-
-				SCOPE.move();
-	    	}
-	    );
-
-	    $DOCUMENT.on(
-	    	Event.touch, Selector.body, function(event) {
-
-	    		if (!Status.ani) {
-
-	    			return false;
-	    		}
-
-	    		if(event.type == "touchstart") {
-
-	    			SCOPE.select(Selector.body).style.transitionDuration = '0ms';
-
-	    			Status.start = Math.floor(event.originalEvent.changedTouches[0].clientY);
-					Status.half = Status.roomWorld[Status.index]/2;
-	    		}
-
-	    		if( event.type == "touchmove") {
-
-	    			Status.move = Math.floor(event.originalEvent.changedTouches[0].clientY) - Status.start;
-
-			    	Status.range = Status.move - Status.prev;
-
-					body.style.top = parseInt(body.style.top) + Status.range + 'px';
-
-					if(Status.range < 0){
-						Status.touchDir = 'prev';
-					}
-
-					if(Status.range > 0){
-						Status.touchDir = 'next';
-					}
-
-					Status.prev = Status.move;
-	    		}
-
-	    		if(event.type == "touchend") {
-
-	    			Status.prev = 0;
+						})()
+					});
 
 					SCOPE.move();
-
-					Status.touchDir = '';
-	    		}
+		    	}
 	    	}
 	    );
+
+	    // $DOCUMENT.on(
+	    // 	Event.touch, Selector.body, function(event) {
+
+	    // 		if (Status.append) {
+
+	    // 			return false;
+	    // 		}
+
+	    // 		if(event.type == "touchstart") {
+
+	    // 			SCOPE.select(Selector.body).style.transitionDuration = '0ms';
+
+	    // 			Status.start = Math.floor(event.originalEvent.changedTouches[0].clientY);
+					// Status.half = Status.roomWorld[Status.index]/2;
+	    // 		}
+
+	    // 		if( event.type == "touchmove") {
+
+	    // 			Status.move = Math.floor(event.originalEvent.changedTouches[0].clientY) - Status.start;
+
+			  //   	Status.range = Status.move - Status.prev;
+
+					// body.style.top = parseInt(body.style.top) + Status.range + 'px';
+
+					// if(Status.range < 0){
+					// 	Status.touchDir = 'prev';
+					// }
+
+					// if(Status.range > 0){
+					// 	Status.touchDir = 'next';
+					// }
+
+					// Status.prev = Status.move;
+	    // 		}
+
+	    // 		if(event.type == "touchend") {
+
+	    // 			Status.prev = 0;
+
+					// SCOPE.move();
+
+	    // 		}
+	    // 	}
+	    // );
 	}
 
 	resizebled (callback) {
@@ -413,6 +412,9 @@ class main extends Config {
 
 		if (SCOPE.option.page < Data.resLen-1) {
 
+			Status.append = false;
+			Status.ani = false;
+
 			if (SCOPE.option.count < Data.response[SCOPE.option.page].count) {
 
 				// 추가한 list 갯수가 모자랄 때 남은 목록 limit 만큼 또 추가
@@ -449,10 +451,9 @@ class main extends Config {
 			Status.barPos = 0;
 			Status.nextLimit = 0;
 			Status.index = 0;
-			Status.prev = 0;
 			Status.row = 0;
+			Status.prev = false;
 			Status.next = false;
-			Status.ani = false;
 
 			//  시각요소 초기화
 			let bar = SCOPE.select(Selector.story_bar);
@@ -508,7 +509,6 @@ class main extends Config {
 				Status.completeGroup = [];
 
 				// 다음 json 데이터 요청 메서드 여기서 실행
-				/* 요쳥 url 변경 */ SCOPE.option.request.url = Data.config.after;
 				/* function */ SCOPE.render([ 'bind', 'append', 'lithener', 'pull' ]);
 
 			}, 700);
@@ -760,12 +760,18 @@ class main extends Config {
 				})();
 
 				// 생성된 그룹 셀렉터 저장	
-				Selector.completeGroup = '#group'+(y+m);
-				Status.completeGroup[SCOPE.option.page] = Selector.completeGroup;
+				if (Status.completeGroup.length-1 != SCOPE.option.page) {
+					Selector.completeGroup = '#group'+(y+m);
+					Status.completeGroup[SCOPE.option.page] = Selector.completeGroup;
+
+				}
 
 				// 생성된 버튼 셀렉터 저장
-				Selector.completeMonth = '#month'+(y+m);
-				Status.complete[SCOPE.option.page] = Selector.completeMonth;
+				if (Status.complete.length-1 != SCOPE.option.page) {
+					Selector.completeMonth = '#month'+(y+m);
+					Status.complete[SCOPE.option.page] = Selector.completeMonth;
+
+				}
 			}
 
 			return 1;
@@ -780,6 +786,7 @@ class main extends Config {
 		const SCOPE = this;
 
 		let Data = SCOPE.option.data;
+		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
 		let select = '';
@@ -826,11 +833,16 @@ class main extends Config {
 
 					loop(_val);
 				},1);
+
 			} else {
+
+				Status.append = true;
+				Status.render = true;
 
 				// 재귀 종료 지점 콜백 리스트 실행
 				SCOPE.returnCall(SCOPE.option.completeFunctionList);
 			}
+
 		})(0);
 
 		return SCOPE;
@@ -840,13 +852,40 @@ class main extends Config {
 
 		const SCOPE = this;
 
+		let Status = SCOPE.option.status;
+		let Reuqest = SCOPE.option.request;
+
+		Status.render = false;
+
+		if (Reuqest.data.page < 1) {
+			Status.touchDir = 'first';
+		}
+
+		switch (Status.touchDir) {
+			case 'prev':
+				Reuqest.data.page--;
+					break;
+
+			case 'next':
+				Reuqest.data.page++;
+					break;
+
+			case 'first':
+				Reuqest.data.page = 1;
+					break;
+		}
+
+		Status.touchDir = '';
+
 		return SCOPE.request(res => {
 
-			SCOPE.option.data.response = res.data;
+			SCOPE.option.data.response = res;
 
-			SCOPE.option.data.resLen = res.data.length;
+			SCOPE.option.data.resLen = res.length;
 
 			SCOPE.option.data.config = res.config;
+
+
 
 			return SCOPE.returnCall(callback);
 		});

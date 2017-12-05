@@ -26,7 +26,17 @@ export default class Config {
 
 		this.option.limit = 15;
 		this.option.data = { offset: [] };
-		this.option.status = { render:false, append: false, ani: false, index: 0, complete: [], completeGroup: [] };
+		this.option.status = { 
+			moveLength: 0,
+			resizebled: false, 
+			render:false, 
+			append: false, 
+			ani: false, 
+			index: 0, 
+			complete: [], 
+			completeGroup: [] 
+		};
+
 		this.option.page = 0;
 		this.option.count = 0;
 		this.option.process = {};
@@ -75,7 +85,7 @@ export default class Config {
 				clearTimeout(rtime);
 
 				rtime = setTimeout(() => {
-					scope.resizebled([ 'sort' ]);
+					scope.resize([ 'sort', 'resizebled' ]);
 
 				}, 100);
 
@@ -144,6 +154,8 @@ export default class Config {
 			'\n</div>';
 
 		a.month = _val => {
+
+				console.log(_val);
 
 				_val.m = _val.m < 10 ? '0'+_val.m : _val.m;
 

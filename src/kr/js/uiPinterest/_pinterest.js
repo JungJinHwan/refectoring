@@ -30,7 +30,6 @@ class main extends Config {
 
 					body.style.transform = 'translateY(0px)';
 
-
 				}, 150);
 			}
 
@@ -760,8 +759,6 @@ class main extends Config {
 					return _Str.month;
 				})();
 
-				console.log(Data.completeMonth);
-
 				// 생성된 그룹 셀렉터 저장	
 				if (Status.completeGroup.length-1 != SCOPE.option.page) {
 					Selector.completeGroup = '#group'+(y + m);
@@ -892,8 +889,6 @@ class main extends Config {
 			SCOPE.option.data.resLen = res.length;
 
 			SCOPE.option.data.config = res.config;
-
-
 
 			return SCOPE.returnCall(callback);
 		});

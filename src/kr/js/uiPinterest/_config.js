@@ -106,7 +106,11 @@ export default class Config {
 			dataType: SCOPE.option.request.dataType,
 			success: callback,
 			error: res => {
+
+				let err = '$UI_PINTEREST Request Error, AJAX 요청이 실패하였습니다';
 				console.log('ERROR', res);
+				document.write(err);
+				throw err;
 			}
 		});
 	}
@@ -130,7 +134,7 @@ export default class Config {
 		a = {};
 		a.list = '\n'+
 			'\n<div class="grid__item {{category}}" style="'+listStyle+'">'+
-			'\n\t<a onclick="return newsView.showLayer(this.href);" class="grid__link" href="{{url}}">'+
+			'\n\t<a onclick="return newsView.showLayer(null, \'.grid__item\', this);" class="grid__link" href="{{url}}">'+
 			'\n\t\t<div class="grid__img layer_01"><div class="category"></div></div>'+
 			'\n\t\t<div class="grid__img layer_02"></div>'+
 			'\n\t\t<div class="grid__img layer_03">'+
@@ -154,8 +158,6 @@ export default class Config {
 			'\n</div>';
 
 		a.month = _val => {
-
-				console.log(_val);
 
 				_val.m = _val.m < 10 ? '0'+_val.m : _val.m;
 

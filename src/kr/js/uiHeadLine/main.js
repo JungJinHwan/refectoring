@@ -1,0 +1,1 @@
+import Pinterest from './_headline';

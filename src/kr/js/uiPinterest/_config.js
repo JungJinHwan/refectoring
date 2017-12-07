@@ -12,7 +12,6 @@ export default class Config {
 		this.option.no_name = 'GONET';
 		this.option.month_string = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 		this.option.styleSheet = [
-			'/kr/js/uiPinterest/css/style.css',
 			'/kr/js/uiPinterest/css/pinterest.css'
 		];
 

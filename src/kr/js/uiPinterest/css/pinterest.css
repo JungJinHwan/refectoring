@@ -1,7 +1,15 @@
-#wrap{overflow:hidden;background:#343841}
+html,body{height:100%;overflow:hidden}
 
+body{font-weight:400;color:#464646}
+
+button{display:inline-block;vertical-align:middle;background:none;border:0;cursor:pointer}
+
+div{line-height:1}
+
+#wrap{overflow:hidden;width:100%;height:100%;overflow-x:hidden;overflow:hidden;background:#343841}
 #uiPinterest{position:relative;height:100%;transform-origin:0% 0%}
 #uiPinterest:after{content:'';display:block;clear:both}
+#uiPinterest *{box-sizing:border-box}
 
 #uiPinterest .grid__item{position:absolute;top:0;left:0;padding:20px}
 #uiPinterest .grid__item .grid__link{position:relative;display:block;padding-top:130%;font-family:'nsr', sans-serif}
@@ -30,9 +38,9 @@
 #uiPinterest .grid__item .grid__img .grid__info .count .like{float:left;padding-left:13px;background:url(/kr/js/uiPinterest/images/common/like.png) no-repeat 0 1px}
 #uiPinterest .grid__item .grid__img .grid__info .count .comment{float:left;padding-left:15px;margin-left:15px;background:url(/kr/js/uiPinterest/images/common/comment.png) no-repeat 0 0}
 
-#uiPinterest .grid__item .grid__img .grid__thumb{position:absolute;top:0;left:0;width:300%;height:100%;margin-left:-100%;text-align:center}
+#uiPinterest .grid__item .grid__img .grid__thumb{display:flex;position:absolute;top:0;left:0;width:100%;height:100%;text-align:center}
 #uiPinterest .grid__item .grid__img .grid__thumb img{
-	max-width:none;height:100%;
+	display:block;max-width:100%;height:100%;margin:0 auto;
 	-ms-interpolation-mode:bicubic;
 	-webkit-tap-highlight-color:rgba(0,0,0,0);
 }
@@ -132,7 +140,7 @@
 
 #story_month_group #story_month_group_bar{height:100%;width:2px;left:14px}
 #story_month_group #story_month_group_bar #active_bar{position:absolute;top:-50px;left:0;width:100%;height:50px;background:#f00}
-#story_month_group #story_month_group_bar #rocks_bar{position:absolute;top:0;left:0;width:100%;background:#f00;transition:all 300ms}
+#story_month_group #story_month_group_bar #rocks_bar{position:absolute;top:0;left:0;width:100%;background:#f00}
 #story_month_group #story_month_group_button{height:100%;top:0;left:-30px}
 #story_month_group #story_month_group_button div{position:relative}
 #story_month_group #story_month_group_button button{position:absolute;top:0;left:0}

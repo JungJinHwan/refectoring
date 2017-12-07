@@ -12,14 +12,35 @@ class main extends Config {
 
 		let body = SCOPE.select(Selector.body);
 		let items = SCOPE.select(Status.completeGroup[SCOPE.option.page]+'\u0020'+Selector.item);
+
 		let bar = SCOPE.select(Selector.story_bar);
+
+	    body.style.transform = 'translateY('+(() => {
+
+			if (Status.touchDir === 'prev') {
+
+				Status.moveLength += 100;
+			}
+
+			if (Status.touchDir === 'next') {
+
+				Status.moveLength -= 100;
+			}
+
+			return Status.moveLength;
+
+		})()+'px)';
 
 		// 내용이 위로 올라갈 때 음수가 양수가 되는것이 생각하기 편하다
 		let pos = Status.moveLength*-1;
 
+		Status.barPos = pos/(Status.world)*100;
+
+		bar.style.height = Status.barPos + '%';
+
 		let shield = true;
 
-		if (pos < 0 ) {
+		if (Status.moveLength*-1 < 0 ) {
 			if (shield) {
 
 				setTimeout(() => {
@@ -37,10 +58,6 @@ class main extends Config {
 		}
 
 		let bodyHeight = SCOPE.select('body').clientHeight;
-
-		Status.barPos = pos/(Status.world)*100;
-
-		bar.style.height = Status.barPos + '%';
 
 		let roomLimit = Status.room[Status.touchDir == 'prev' ? Status.index-1 : Status.index];
 
@@ -116,7 +133,8 @@ class main extends Config {
 		let Event = SCOPE.option.event;
 		let Data = SCOPE.option.data;
 
-		let body = SCOPE.select(Selector.body); // jquery 메서드를 사용하기 위해
+		let body = SCOPE.select(Selector.body);
+		let bar = SCOPE.select(Selector.story_bar);
 
 		Status.touchDir = '';
 
@@ -125,40 +143,28 @@ class main extends Config {
 	        return (delta < 0) ? delta = 1 : delta = -1;
 	    }
 
-	    let handle = 0;
+		// // shift
+		// $DOCUMENT.on(
+		// 	Event.def, Selector.story_shift, function(event) {
+		// 		event.preventDefault();
 
-	    function renderLoop() {
+		// 		if (Status.render && Status.ani && Status.append) {
 
-	    	console.log(parseInt($bar[0].style.height));
+		// 	    	Status.next = true;
+			    	
+		// 	    	Status.moveLength = Status.roomWorld[Status.index]*-1;
 
-	    	handle = window.requestAnimationFrame(renderLoop);
-	    }
+		// 			let index = SCOPE.index(SCOPE.select(Selector.story_shift), this);
 
-		// shift
-		$DOCUMENT.on(
-			Event.def, Selector.story_shift, function(event) {
-				event.preventDefault();
+		// 			bar.style.height = ( index ? Status.room[index-1] : 0 ) + "%";
 
-				if (Status.render && Status.ani && Status.append) {
+		// 			Status.index = index;
 
-					renderLoop();
-
-					let index = SCOPE.index(SCOPE.select(Selector.story_shift), this);
-
-					$bar.stop(1, 0).animate({ 'height': ( index ? Status.room[index-1] : 0 ) + "%" }, 300, 'easeOutExpo', () => {
-
-						window.cancelAnimationFrame(handle);
-					});
-
-					Status.index = index;
-
-					SCOPE.pull();
-
-					// 다음 json 데이터 요청 메서드 여기서 실행
-					/* function ;*/ SCOPE.move()
-				}
-			}
-		);
+		// 			// 다음 json 데이터 요청 메서드 여기서 실행
+		// 			/* function*/ SCOPE.returnCall([ 'pull', 'move' ]);
+		// 		}
+		// 	}
+		// );
 
 	    // 클릭 up
 		$DOCUMENT.on(
@@ -215,6 +221,7 @@ class main extends Config {
 		);
 
 		// 마우스 휠
+		let timeout = null;
 	    $DOCUMENT.on(
 	    	Event.wheel, Selector.body, function(event) {
 	    		event.preventDefault();
@@ -233,23 +240,13 @@ class main extends Config {
 
 			        Status.touchDir = saveDir > 0 ? 'prev' : 'next';
 
-			        body.style.transform = 'translateY('+(() => {
+			        clearTimeout(timeout);
 
-						if (Status.touchDir === 'prev') {
+			        timeout = setTimeout(function(){
 
-							Status.moveLength += 100;
-						}
+						SCOPE.move();
 
-						if (Status.touchDir === 'next') {
-
-							Status.moveLength -= 100;
-						}
-
-						return Status.moveLength;
-
-					})()+'px)';
-
-					SCOPE.move();
+					}, 10);
 		    	}
 	    	}
 	    );

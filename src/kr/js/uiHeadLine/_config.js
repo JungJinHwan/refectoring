@@ -6,20 +6,20 @@ export default class Config {
 
 		this.option = arg;
 
+		this.option.request = {
+			type: 'GET',
+			url: '/kr/js/uiHeadline/xhr/list.json',
+			data: {},
+			dataType: 'json',
+		};
+
 		this.option.styleSheet = [
 			'/kr/js/uiHeadLine/css/style.css',
 			'/kr/js/uiHeadLine/css/uiHeadLine.css'
 		];
 
 		this.option.data = {
-			circle : [
-				{ title: 'CIRCLE 01', url: '#' },
-				{ title: 'CIRCLE 02', url: '#' },
-				{ title: 'CIRCLE 03', url: '#' },
-				{ title: 'CIRCLE 04', url: '#' },
-				{ title: 'CIRCLE 05', url: '#' },
-				{ title: 'CIRCLE 06', url: '#' }
-			]
+			circle : null
 		};
 		this.option.status = {};
 
@@ -100,8 +100,15 @@ export default class Config {
 
 		a.bg = '\n\t<div class="bg bg_{{i}}" '+bgStyle+'></div>';
 
+		a.title = '\n\t<div class="title">{{title}}</div>';
+
+		a.summary = '\n\t<div class="summary">{{summary}}</div>';
+
+		a.detail = '\n\t<div class="detail">{{detail}}</div>';
+
 		a.visual = '\n'+
 			'\n<div class="bg_group">{{bg}}\n</div>'+
+			'\n<div class="title_group">{{titleGroup}}</div>'+
 			'\n<div class="circle_group">\n<div class="circle_film"></div>\n{{circle}}\n</div>'+
 			'\n<div class="button_down">'+
 				'<a href="#" onclick="return screenDown(this)">'+

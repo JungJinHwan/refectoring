@@ -44,7 +44,7 @@ class main extends Config {
 		let Data = SCOPE.option.data;
 
 		let Str = SCOPE.storage();
-		let _Str = SCOPE._storage({ bg: '', circle: '', visual: Str.visual });
+		let _Str = SCOPE._storage({bg: '',circle: '', visual: Str.visual, title: Str.title, summary: Str.summary, detail: Str.detail });
 
 		let circles = Data.circle;
 		let circlesLen = Data.circle.length;
@@ -60,9 +60,12 @@ class main extends Config {
 			circle += '\n'+_Str.circle.replace(SCOPE.reg('i'), i);
 		}
 
-		Data.strings = _Str.visual
-			.replace(SCOPE.reg('bg'), bg)
-				.replace(SCOPE.reg('circle'), circle);
+		Data.strings = {
+			body: _Str.visual
+					.replace(SCOPE.reg('bg'), bg)
+						.replace(SCOPE.reg('circle'), circle),
+			title: ''
+		}
 
 		return this;
 	}
@@ -74,7 +77,7 @@ class main extends Config {
 		let Data = SCOPE.option.data;
 		let Selector = SCOPE.option.selector;
 
-		SCOPE.select(Selector.parent)[0].innerHTML = Data.strings;
+		SCOPE.select(Selector.parent)[0].innerHTML = Data.strings.body;
 
 		return this;
 	}
@@ -90,7 +93,12 @@ class main extends Config {
 
 		const SCOPE = this;
 
-		return SCOPE.returnCall(callback);
+		return SCOPE.request((res) => {
+
+			SCOPE.option.data.circle = res;
+
+			return SCOPE.returnCall(callback);	
+		});
 	}
 }
 

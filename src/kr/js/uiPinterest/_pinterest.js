@@ -19,12 +19,12 @@ class main extends Config {
 
 			if (Status.touchDir === 'prev') {
 
-				Status.moveLength += 100;
+				Status.moveLength += Status.vender ? 125 : 100;
 			}
 
 			if (Status.touchDir === 'next') {
 
-				Status.moveLength -= 100;
+				Status.moveLength -= Status.vender ? 125 : 100;
 			}
 
 			return Status.moveLength;
@@ -133,9 +133,6 @@ class main extends Config {
 		let Event = SCOPE.option.event;
 		let Data = SCOPE.option.data;
 
-		let body = SCOPE.select(Selector.body);
-		let bar = SCOPE.select(Selector.story_bar);
-
 		Status.touchDir = '';
 
 	    Process.dir = delta => {
@@ -233,20 +230,30 @@ class main extends Config {
 			        if(event.originalEvent.wheelDelta != undefined) {
 
 			            saveDir = Process.dir(event.originalEvent.wheelDelta*-1); // IE, CROME, SFARI
+			            console.log('IE, CROME, SFARI', saveDir);
+			            Status.vender = 0;
 			        }else{
 
 			            saveDir = Process.dir(event.originalEvent.detail); // FF
+			            console.log('FF', saveDir);
+			            Status.vender = 1;
 			        }
 
 			        Status.touchDir = saveDir > 0 ? 'prev' : 'next';
 
-			        clearTimeout(timeout);
+			        if (Status.vender) {
 
-			        timeout = setTimeout(function(){
+			        	SCOPE.move();
+					}
+					else{
+				        clearTimeout(timeout);
 
-						SCOPE.move();
+				        timeout = setTimeout(function(){
 
-					}, 10);
+							SCOPE.move();
+
+						}, 10);
+					}
 		    	}
 	    	}
 	    );

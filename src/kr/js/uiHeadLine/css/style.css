@@ -32,5 +32,3 @@ a:focus,a:hover,a:active{color:#333333}
 header,footer,section,article,nav,aside{display:block}
 
 #wrap{width:100%;height:100%;overflow-x:hidden;overflow-y:scroll}
-
-#txt{max-width:1200px;height:100%;margin:0 auto}

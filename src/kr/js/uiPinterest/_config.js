@@ -133,7 +133,7 @@ export default class Config {
 		a = {};
 		a.list = '\n'+
 			'\n<div class="grid__item {{category}}" style="'+listStyle+'">'+
-			'\n\t<a onclick="return newsView.showLayer(null, \'.grid__item\', this);" class="grid__link" href="{{url}}">'+
+			'\n\t<a onclick="return $STORYVIEW.render(this, [ \'control\' ]);" class="grid__link" href="{{url}}">'+
 			'\n\t\t<div class="grid__img layer_01"><div class="category"></div></div>'+
 			'\n\t\t<div class="grid__img layer_02"></div>'+
 			'\n\t\t<div class="grid__img layer_03">'+

@@ -21,7 +21,9 @@ export default class Config {
 		this.option.data = {
 			circle : null
 		};
-		this.option.status = {};
+		this.option.status = { index:0 };
+
+		this.option.interval = 5000;
 
 		this.option.page = 0;
 		this.option.count = 0;
@@ -32,6 +34,9 @@ export default class Config {
 			circle: '#uiHeadLine .circle',
 			circle_film: '#uiHeadLine .circle_film',
 			bg: '#uiHeadLine .bg',
+			item: '#uiHeadLine .item',
+			more: '#uiHeadLine .detail',
+			scroll: '#wrap'
 		};
 
 		this.option.event = {
@@ -43,7 +48,7 @@ export default class Config {
 		Style.addStyleSheet(this.option.styleSheet);
 
 		// 실행할 메서드 등록
-		this.render([ 'bind', 'append', 'listener' ]);
+		this.render([ 'bind', 'append', 'listener', 'next', 'auto' ]);
 
 		let rw = 0, rh = 0, rtime = null, scope = this;
 
@@ -89,31 +94,43 @@ export default class Config {
 		a = {};
 
 		let circleStyle = 'style="background-image:url(/kr/js/uiHeadLine/images/circle/{{i}}.jpg);"';
-
-		a.circle = ''+
-			'<div class="circle">'+
-				'<div class="circle_bg"></div>'+
-				'<div class="circle_inner"><div class="circle_mask" '+circleStyle+'></div></div>'+
-			'</div>';
-
 		let bgStyle = 'style="background-image:url(/kr/js/uiHeadLine/images/bg/{{i}}.jpg);"';
+
+		a.circle = '\n'+
+			'\n<div class="circle">'+
+			'\n\t<div class="circle_bg"></div>'+
+			'\n\t<div class="circle_inner"><div class="circle_mask" '+circleStyle+'></div></div>'+
+			'\n</div>';
 
 		a.bg = '\n\t<div class="bg bg_{{i}}" '+bgStyle+'></div>';
 
-		a.title = '\n\t<div class="title">{{title}}</div>';
-
-		a.summary = '\n\t<div class="summary">{{summary}}</div>';
-
-		a.detail = '\n\t<div class="detail">{{detail}}</div>';
+		a.titleGroup = '\n'+
+			'\n\t<div class="item">'+
+			'\n\t\t<div class="label">{{label}}</div>'+
+			'\n\t\t<div class="summary">{{summary}}</div>'+
+			'\n\t</div>';
 
 		a.visual = '\n'+
+			'\n<div class="subject">Portfolio</div>'+
 			'\n<div class="bg_group">{{bg}}\n</div>'+
-			'\n<div class="title_group">{{titleGroup}}</div>'+
+			'\n<div class="title_group">'+
+			'\n\t<div class="c8_animate_strong_focusing_shape"></div>'+
+			'\n\t<div class="grap">{{titleGroup}}</div>'+
+			'\n\t<div class="detail">'+
+					'<a href="#">Detail view '+
+						'<span class="transformer">'+
+							'<span class="line"></span>'+
+							'<span class="line"></span>'+
+							'<span class="line"></span>'+
+						'</span>'+
+					'</a>'+
+				'</div>'+
+			'\n</div>'+
 			'\n<div class="circle_group">\n<div class="circle_film"></div>\n{{circle}}\n</div>'+
 			'\n<div class="button_down">'+
-				'<a href="#" onclick="return screenDown(this)">'+
+				'<button type="button" onclick="return $UI_HEADLINE.screenDown(this)">'+
 					'<img src="/kr/js/uiHeadLine/images/arr_down.png" alt="콘텐츠 바로가기">'+
-				'</a>'+
+				'</button>'+
 			'</div>'+
 			'\n<div class="ci_gonet"><img src="/kr/js/uiHeadLine/images/gonet.png" alt="gonet"></div>';
 

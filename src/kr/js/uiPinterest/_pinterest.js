@@ -19,12 +19,12 @@ class main extends Config {
 
 			if (Status.touchDir === 'prev') {
 
-				Status.moveLength += Status.vender ? 125 : 100;
+				Status.moveLength += 100;
 			}
 
 			if (Status.touchDir === 'next') {
 
-				Status.moveLength -= Status.vender ? 125 : 100;
+				Status.moveLength -= 100;
 			}
 
 			return Status.moveLength;
@@ -302,6 +302,8 @@ class main extends Config {
 	    // 		}
 	    // 	}
 	    // );
+
+	    return this;
 	}
 
 	resizebled () {
@@ -334,7 +336,7 @@ class main extends Config {
 		return SCOPE.returnCall(callback);
 	}
 
-	transform (arg, callback) {
+	transform (arg, callback, _this) {
 
 		const SCOPE = this;
 
@@ -352,6 +354,21 @@ class main extends Config {
 					return null;
 				}
 			}
+
+			let button = SCOPE.select(Selector.button_wrap);
+			let index = SCOPE.index(button, _this);
+
+			for (let i=0; i<button.length; i++) {
+
+				if (index == i) {
+
+					continue;
+				}
+
+				button[i].setAttribute('class', String(button[i].classList).replace(/[\s]+(on)/g,''));
+			}
+
+			_this.setAttribute('class', String(_this.classList)+'\u0020on');
 
 			Status.ani = false;
 
@@ -507,7 +524,7 @@ class main extends Config {
 					SCOPE.option.count = 0;
 
 					// 다음달 리스트 가져오는 메서드 여기서 실행
-					/* function */ SCOPE.returnCall([ 'bind', 'append', 'lithener' ]);
+					/* function */ SCOPE.returnCall([ 'bind', 'append' ]);
 				}
 			}
 		}
@@ -565,7 +582,7 @@ class main extends Config {
 
 		for (let i=0; i<Status.completeGroup.length; i++) {
 
-			if ( Status.resizebled || i === SCOPE.option.page) {
+			if (Status.transform || Status.resizebled || i === SCOPE.option.page) {
 
 				let $items = $(Status.completeGroup[i]+'\u0020'+Selector.item);
 				let $itemsLen = $items.length;
@@ -818,27 +835,27 @@ class main extends Config {
 		let imgLen = img.length;
 
 		// 로드 완료 된 img 가 limit 보다 작을때 재귀 후 콜백 리스트 실행
-		(function loop(_val) {
+		// (function loop(_val) {
 
-			for (let i=_val; i<imgLen; i++) {
+		// 	for (let i=_val; i<imgLen; i++) {
 
-				if (img[i].complete) {
+		// 		if (img[i].complete) {
 
-					_val++;
-				}
-				else {
-					break;
-				}
-			}
+		// 			_val++;
+		// 		}
+		// 		else {
+		// 			break;
+		// 		}
+		// 	}
 
-			if (_val < imgLen) {
+		// 	if (_val < imgLen) {
 
-				return setTimeout(function () {
+		// 		return setTimeout(function () {
 
-					loop(_val);
-				},10);
+		// 			loop(_val);
+		// 		},10);
 
-			} else {
+		// 	} else {
 
 				Status.append = true;
 				Status.render = true;
@@ -850,9 +867,11 @@ class main extends Config {
 
 				// 재귀 종료 지점 콜백 리스트 실행
 				SCOPE.returnCall(SCOPE.option.completeFunctionList);
-			}
 
-		})(SCOPE.option.count ? SCOPE.option.count-1 : 0);
+
+		// 	}
+
+		// })(SCOPE.option.count ? SCOPE.option.count-1 : 0);
 
 		return SCOPE;
 	}
@@ -888,13 +907,17 @@ class main extends Config {
 
 		return SCOPE.request(res => {
 
-			SCOPE.option.data.response = res;
+			if (res.length) {
 
-			SCOPE.option.data.resLen = res.length;
+				SCOPE.option.data.response = res;
+				SCOPE.option.data.resLen = res.length;
 
-			SCOPE.option.data.config = res.config;
+				return SCOPE.returnCall(callback);
+			}
+			else{
 
-			return SCOPE.returnCall(callback);
+				SCOPE.select(SCOPE.option.selector.body).innerHTML = SCOPE.string().isEmpty;
+			}
 		});
 	}
 }

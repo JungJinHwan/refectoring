@@ -88,6 +88,7 @@ class main extends Config {
 		let Selector = SCOPE.option.selector;
 		let Status = SCOPE.option.status;
 		let Event = SCOPE.option.event;
+		let Process = SCOPE.option.process;
 
 		let circle = SCOPE.select(Selector.circle);
 		let circle_film = SCOPE.select(Selector.circle_film)[0];
@@ -121,6 +122,36 @@ class main extends Config {
 				return SCOPE.returnCall([ 'auto' ]);
 			}
 		});
+
+
+		// 마우스 휠
+	    Process.dir = delta => {
+	        // 휠 방향 [ 1:위, -1:아래 ]
+	        return (delta < 0) ? delta = 1 : delta = -1;
+	    }
+
+	    $DOCUMENT.on(
+	    	Event.wheel, Selector.parent, function(event) {
+	    		event.preventDefault();
+
+		        let dir = 0;
+
+		        if(event.originalEvent.wheelDelta != undefined) {
+
+		            dir = Process.dir(event.originalEvent.wheelDelta*-1); // IE, CROME, SFARI
+		            //console.log('IE, CROME, SFARI', saveDir);
+		        }else{
+
+		            dir = Process.dir(event.originalEvent.detail); // FF
+		            //console.log('FF', saveDir);
+		        }
+
+		        if (dir < 0) {
+
+		        	SCOPE.returnCall([ 'screenDown' ]);
+		        }
+	    	}
+	    );
 
 		return SCOPE;
 	}

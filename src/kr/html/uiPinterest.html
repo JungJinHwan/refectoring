@@ -24,9 +24,10 @@
 </head>
 <body>
 <div id="wrap">
-	
-	<button onclick="return $UI_PINTEREST.transform(0, [ 'sort', 'ani' ]);" class="testButtons" type="button">Rotate</button>
-	<button onclick="return $UI_PINTEREST.transform(1, [ 'sort', 'ani' ]);" class="testButtons" type="button">Honest</button>
+	<div class="button_wrap">
+		<button onclick="return $UI_PINTEREST.transform(0, [ 'sort', 'ani' ], this);" class="testButtons a b c" type="button">Rotate</button>
+		<button onclick="return $UI_PINTEREST.transform(1, [ 'sort', 'ani' ], this);" class="testButtons a b c" type="button">Honest</button>
+	</div>
 
 	<div id="uiPinterest" class="grid ver_1">
 		<div id="story_control">

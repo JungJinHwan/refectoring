@@ -56,6 +56,7 @@ export default class Config {
 			pin_up: "#pin_up",
 			pin_down: "#pin_down",
 			pin_top: "#pin_top",
+			button_wrap: '.button_wrap button'
 		};
 
 		this.option.event = {
@@ -131,6 +132,7 @@ export default class Config {
 		let listStyle = 'transform:translateY(100px);opacity:0';
 
 		a = {};
+
 		a.list = '\n'+
 			'\n<div class="grid__item {{category}}" style="'+listStyle+'">'+
 			'\n\t<a onclick="return $STORYVIEW.render(this, [ \'control\' ]);" class="grid__link" href="{{url}}">'+
@@ -163,6 +165,9 @@ export default class Config {
 				return '\n<div id="month'+(_val.y+_val.m)+'"><button type="button"><span>'+_val.m+'</span></button></div>';
 			}
 
+		a.isEmpty = '\n'+
+			'\n<div id="isEmpty"> \n더이상 목록이 없습니다. \n잠시후 처음으로 돌아갑니다 \n <div id="returnPrograssiveTimeBar"></div></div>';
+
 		return a;
 	}
 
@@ -177,10 +182,18 @@ export default class Config {
 	}
 
 	returnCall (a) {
-		
-		for (let i=0; i<a.length; i++) {
 
-			this[a[i]]();
+		let callResult = [];
+
+		let i = 0;
+
+		while (i<a.length) {
+
+			callResult[i] = Boolean(this[a[i]]());
+
+			console.log(a[i], callResult[i]);
+
+			i++;
 		}
 	}
 

@@ -8,13 +8,12 @@ export default class Config {
 
 		this.option.request = {
 			type: 'GET',
-			url: '/kr/js/uiHeadline/xhr/list.json',
+			url: '/kr/js/uiHeadLine/xhr/list.json',
 			data: {},
 			dataType: 'json',
 		};
 
 		this.option.styleSheet = [
-			'/kr/js/uiHeadLine/css/style.css',
 			'/kr/js/uiHeadLine/css/uiHeadLine.css'
 		];
 
@@ -36,12 +35,13 @@ export default class Config {
 			bg: '#uiHeadLine .bg',
 			item: '#uiHeadLine .item',
 			more: '#uiHeadLine .detail',
-			scroll: '#wrap'
+			scroll: 'html,body'
 		};
 
 		this.option.event = {
 			def: 'click.def',
-			mouse: 'mouseenter.mouse mouseleave.mouse'
+			mouse: 'mouseenter.mouse mouseleave.mouse',
+			wheel: 'mousewheel.wheel DOMMouseScroll.wheel'
 		};
 
 		// 스타일시트 리스트 추가
@@ -161,7 +161,7 @@ export default class Config {
 		
 		for (let i=0; i<a.length; i++) {
 
-			this[a[i]]();
+			this[a[i]].call(this);
 		}
 	}
 

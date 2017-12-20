@@ -33,7 +33,7 @@ export default class Config {
 			ani: false, 
 			index: 0, 
 			complete: [], 
-			completeGroup: [] 
+			completeGroup: []
 		};
 
 		this.option.page = 0;
@@ -42,6 +42,7 @@ export default class Config {
 
 		this.option.selector = {
 			parent: '#uiPinterest',
+			scroll: '#uiPinterest',
 			body: '#story_body',
 			group: '#story_body .group',
 			list: '#story_body .grid',
@@ -51,12 +52,15 @@ export default class Config {
 			honest: '#honest',
 			story: '#story',
 			story_month: '#story_month_group_button',
-			story_shift: "#story_month_group_button button",
+			story_shift: "#story_month_group_button>div",
 			story_bar: '#rocks_bar',
+			story_group_bar: '#story_month_group_bar',
 			pin_up: "#pin_up",
 			pin_down: "#pin_down",
 			pin_top: "#pin_top",
-			button_wrap: '.button_wrap button'
+			button_wrap: '.button_wrap button',
+			returnBar: '#returnPrograssiveTimeBar .bar',
+			returnButton: '#returnButton'
 		};
 
 		this.option.event = {
@@ -70,7 +74,10 @@ export default class Config {
 		Style.addStyleSheet(this.option.styleSheet);
 
 		// 실행할 메서드 등록
-		this.render([ 'bind', 'append', 'lithener', 'pull' ]);
+
+		this.option.renderList = [ 'bind', 'append', 'lithener', 'pull' ];
+
+		this.render(this.option.renderList);
 
 		// *[ append 에서 콜백 ] 준비 완료 후 실행할 목록
 		// next 는 반드시 마지막에 등장, 판단 기준으로 사용됨
@@ -135,7 +142,7 @@ export default class Config {
 
 		a.list = '\n'+
 			'\n<div class="grid__item {{category}}" style="'+listStyle+'">'+
-			'\n\t<a onclick="return $STORYVIEW.render(this, [ \'control\' ]);" class="grid__link" href="{{url}}">'+
+			'\n\t<a onclick="return $STORYVIEW.render(this, [ \'control\', \'viewScroll\' ]);" class="grid__link" href="{{url}}">'+
 			'\n\t\t<div class="grid__img layer_01"><div class="category"></div></div>'+
 			'\n\t\t<div class="grid__img layer_02"></div>'+
 			'\n\t\t<div class="grid__img layer_03">'+
@@ -160,13 +167,15 @@ export default class Config {
 
 		a.month = _val => {
 
-				_val.m = _val.m < 10 ? '0'+_val.m : _val.m;
-
 				return '\n<div id="month'+(_val.y+_val.m)+'"><button type="button"><span>'+_val.m+'</span></button></div>';
 			}
 
 		a.isEmpty = '\n'+
-			'\n<div id="isEmpty"> \n더이상 목록이 없습니다. \n잠시후 처음으로 돌아갑니다 \n <div id="returnPrograssiveTimeBar"></div></div>';
+			'\n<div id="isEmpty">'+
+			'\n\t더이상 목록이 없습니다.<br>처음부터 다시 가져올까요?'+
+			'\n\t<div id="returnPrograssiveTimeBar"><div class="bar"></div></div>'+
+			'\n\t<div id="returnButton"><button type="button"><img src="/kr/js/uiPinterest/images/common/return.png" alt="">처음 목록부터 다시 보기</button></div>'+
+			'\n</div>';
 
 		return a;
 	}
@@ -191,7 +200,7 @@ export default class Config {
 
 			callResult[i] = Boolean(this[a[i]]());
 
-			console.log(a[i], callResult[i]);
+			// console.log(a[i], callResult[i]);
 
 			i++;
 		}

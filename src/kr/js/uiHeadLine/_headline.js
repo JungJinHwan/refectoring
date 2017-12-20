@@ -72,11 +72,38 @@ class main extends Config {
 
 		const SCOPE = this;
 
+		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
-		let parent = SCOPE.select(Selector.parent)[0];
+		let parentHeight = SCOPE.select(Selector.parent)[0].clientHeight;
 
-		$(Selector.scroll).animate({ scrollTop: parent.clientHeight }, 1000, 'easeOutExpo');
+		$(Selector.parent)
+			.stop(1,0).animate({ 
+
+				marginTop: parentHeight*-1 
+
+			}, 1000, 'easeInOutCubic');
+
+		Status.screenDown = true;
+
+		return SCOPE;
+	}
+
+	screenUp (arg) {
+
+		const SCOPE = this;
+
+		let Status = SCOPE.option.status;
+		let Selector = SCOPE.option.selector;
+
+		$(Selector.parent)
+			.stop(1,0).animate({ 
+
+				marginTop: 0
+
+			}, 1000, 'easeOutCubic');
+
+		Status.screenDown = false;
 
 		return SCOPE;
 	}
@@ -134,6 +161,11 @@ class main extends Config {
 	    	Event.wheel, Selector.parent, function(event) {
 	    		event.preventDefault();
 
+				if ($(Selector.parent).is(':animated')) {
+
+					return false;
+				}
+
 		        let dir = 0;
 
 		        if(event.originalEvent.wheelDelta != undefined) {
@@ -148,8 +180,42 @@ class main extends Config {
 
 		        if (dir < 0) {
 
-		        	SCOPE.returnCall([ 'screenDown' ]);
+		        	return SCOPE.returnCall([ 'screenDown' ]);
 		        }
+	    	}
+	    );
+
+	    $DOCUMENT.on(
+	    	Event.wheel, Selector.contents, function(event) {
+	    		event.preventDefault();
+
+				if ($(Selector.contents).is(':animated')) {
+					
+					return false;
+				}
+
+		        let dir = 0;
+
+		        let translate = SCOPE.select('.grid')[0].style.transform.match(/[0-9]/g)[0];
+
+		        if(event.originalEvent.wheelDelta != undefined) {
+
+		            dir = Process.dir(event.originalEvent.wheelDelta*-1); // IE, CROME, SFARI
+		            //console.log('IE, CROME, SFARI', saveDir);
+		        }else{
+
+		            dir = Process.dir(event.originalEvent.detail); // FF
+		            //console.log('FF', saveDir);
+		        }
+
+				// 외부에서 option.status.screendUp = true; 했을 때
+				if (dir > 0) {
+
+		        	if (Status.screenUp) {
+
+		        		return SCOPE.returnCall([ 'screenUp' ]);
+		        	}
+	        	}
 	    	}
 	    );
 
@@ -175,9 +241,9 @@ class main extends Config {
 			_Str.circle = Str.circle;
 			_Str.titleGroup = Str.titleGroup;
 
-			bg += '\n'+_Str.bg.replace(SCOPE.reg('i'), i);
+			bg += '\n'+_Str.bg.replace(SCOPE.reg('img'), Data.circle[i].img);
 
-			circle += '\n'+_Str.circle.replace(SCOPE.reg('i'), i);
+			circle += '\n'+_Str.circle.replace(SCOPE.reg('img'), Data.circle[i].img);
 
 			titleGroup += '\n'+_Str.titleGroup
 				.replace(SCOPE.reg('label'), Data.circle[i].label)
@@ -208,6 +274,19 @@ class main extends Config {
 	resize (callback) {
 
 		const SCOPE = this;
+
+		let Status = SCOPE.option.status;
+
+		if (Status.screenDown) {
+
+			let Selector = SCOPE.option.selector;
+			let parent = SCOPE.select(Selector.parent)[0];
+
+			parent.style.marginTop = (parent.clientHeight*-1)+'px';
+
+			console.log(parent.clientHeight);
+
+		}
 
 		return SCOPE.returnCall(callback);
 	}

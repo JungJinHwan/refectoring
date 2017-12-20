@@ -20,7 +20,7 @@ export default class Config {
 		this.option.data = {
 			circle : null
 		};
-		this.option.status = { index:0 };
+		this.option.status = { index:0, screenUp: true };
 
 		this.option.interval = 5000;
 
@@ -30,6 +30,7 @@ export default class Config {
 
 		this.option.selector = {
 			parent: '#uiHeadLine',
+			contents: "#service_0102",
 			circle: '#uiHeadLine .circle',
 			circle_film: '#uiHeadLine .circle_film',
 			bg: '#uiHeadLine .bg',
@@ -54,7 +55,7 @@ export default class Config {
 
 		window.onresize = () => {
 
-			if(rw != scope.select('body').clientWidth || rh != scope.select('body').clientHeight) {
+			if(rw != scope.select('body')[0].clientWidth || rh != scope.select('body')[0].clientHeight) {
 
 				clearTimeout(rtime);
 
@@ -63,8 +64,8 @@ export default class Config {
 
 				}, 100);
 
-				rw = scope.select('body').clientWidth;
-				rh = scope.select('body').clientHeight;
+				rw = scope.select('body')[0].clientWidth;
+				rh = scope.select('body')[0].clientHeight;
 			}
 		}
 	}
@@ -93,8 +94,8 @@ export default class Config {
 
 		a = {};
 
-		let circleStyle = 'style="background-image:url(/kr/js/uiHeadLine/images/circle/{{i}}.jpg);"';
-		let bgStyle = 'style="background-image:url(/kr/js/uiHeadLine/images/bg/{{i}}.jpg);"';
+		let circleStyle = 'style="background-image:url({{img}});"';
+		let bgStyle = 'style="background-image:url({{img}});"';
 
 		a.circle = '\n'+
 			'\n<div class="circle">'+

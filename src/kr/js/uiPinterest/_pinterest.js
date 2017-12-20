@@ -15,21 +15,15 @@ class main extends Config {
 
 		let bar = SCOPE.select(Selector.story_bar);
 
-	    body.style.transform = 'translateY('+(() => {
+		if (Status.touchDir === 'prev') {
 
-			if (Status.touchDir === 'prev') {
+			Status.moveLength += 100;
+		}
 
-				Status.moveLength += 100;
-			}
+		if (Status.touchDir === 'next') {
 
-			if (Status.touchDir === 'next') {
-
-				Status.moveLength -= 100;
-			}
-
-			return Status.moveLength;
-
-		})()+'px)';
+			Status.moveLength -= 100;
+		}
 
 		// 내용이 위로 올라갈 때 음수가 양수가 되는것이 생각하기 편하다
 		let pos = Status.moveLength*-1;
@@ -37,6 +31,8 @@ class main extends Config {
 		Status.barPos = pos/(Status.world)*100;
 
 		bar.style.height = Status.barPos + '%';
+
+		body.style.transform = 'translateY(' + Status.moveLength + 'px)';
 
 		let shield = true;
 
@@ -107,9 +103,7 @@ class main extends Config {
 		let Status = SCOPE.option.status;
 		let Selector = SCOPE.option.selector;
 
-		let month = SCOPE.select(Selector.completeMonth);
-
-		let monthGroup = month.parentNode.children;
+		let monthGroup = SCOPE.select(Selector.story_shift);
 
 		for (let i=0; i<monthGroup.length; i++) {
 
@@ -139,29 +133,6 @@ class main extends Config {
 	        // 휠 방향 [ 1:위, -1:아래 ]
 	        return (delta < 0) ? delta = 1 : delta = -1;
 	    }
-
-		// // shift
-		// $DOCUMENT.on(
-		// 	Event.def, Selector.story_shift, function(event) {
-		// 		event.preventDefault();
-
-		// 		if (Status.render && Status.ani && Status.append) {
-
-		// 	    	Status.next = true;
-			    	
-		// 	    	Status.moveLength = Status.roomWorld[Status.index]*-1;
-
-		// 			let index = SCOPE.index(SCOPE.select(Selector.story_shift), this);
-
-		// 			bar.style.height = ( index ? Status.room[index-1] : 0 ) + "%";
-
-		// 			Status.index = index;
-
-		// 			// 다음 json 데이터 요청 메서드 여기서 실행
-		// 			/* function*/ SCOPE.returnCall([ 'pull', 'move' ]);
-		// 		}
-		// 	}
-		// );
 
 	    // 클릭 up
 		$DOCUMENT.on(
@@ -220,7 +191,7 @@ class main extends Config {
 		// 마우스 휠
 		let timeout = null;
 	    $DOCUMENT.on(
-	    	Event.wheel, Selector.body, function(event) {
+	    	Event.wheel, Selector.scroll, function(event) {
 	    		event.preventDefault();
 
 	    		if (Status.render && Status.ani && Status.append) {
@@ -230,12 +201,12 @@ class main extends Config {
 			        if(event.originalEvent.wheelDelta != undefined) {
 
 			            saveDir = Process.dir(event.originalEvent.wheelDelta*-1); // IE, CROME, SFARI
-			            console.log('IE, CROME, SFARI', saveDir);
+			            // console.log('IE, CROME, SFARI', saveDir);
 			            Status.vender = 0;
 			        }else{
 
 			            saveDir = Process.dir(event.originalEvent.detail); // FF
-			            console.log('FF', saveDir);
+			            // console.log('FF', saveDir);
 			            Status.vender = 1;
 			        }
 
@@ -257,51 +228,6 @@ class main extends Config {
 		    	}
 	    	}
 	    );
-
-	    // $DOCUMENT.on(
-	    // 	Event.touch, Selector.body, function(event) {
-
-	    // 		if (Status.append) {
-
-	    // 			return false;
-	    // 		}
-
-	    // 		if(event.type == "touchstart") {
-
-	    // 			SCOPE.select(Selector.body).style.transitionDuration = '0ms';
-
-	    // 			Status.start = Math.floor(event.originalEvent.changedTouches[0].clientY);
-					// Status.half = Status.roomWorld[Status.index]/2;
-	    // 		}
-
-	    // 		if( event.type == "touchmove") {
-
-	    // 			Status.move = Math.floor(event.originalEvent.changedTouches[0].clientY) - Status.start;
-
-			  //   	Status.range = Status.move - Status.prev;
-
-					// body.style.top = parseInt(body.style.top) + Status.range + 'px';
-
-					// if(Status.range < 0){
-					// 	Status.touchDir = 'prev';
-					// }
-
-					// if(Status.range > 0){
-					// 	Status.touchDir = 'next';
-					// }
-
-					// Status.prev = Status.move;
-	    // 		}
-
-	    // 		if(event.type == "touchend") {
-
-	    // 			Status.prev = 0;
-
-					// SCOPE.move();
-
-	    // 		}
-	    // 	}
-	    // );
 
 	    return this;
 	}
@@ -493,7 +419,7 @@ class main extends Config {
 				Status.completeGroup = [];
 
 				// 다음 json 데이터 요청 메서드 여기서 실행
-				/* function */ SCOPE.render([ 'bind', 'append', 'lithener', 'pull' ]);
+				/* function */ SCOPE.render(SCOPE.option.renderList);
 
 			}, 700);
 		}
@@ -647,7 +573,7 @@ class main extends Config {
 					count[i] = Data.response[i].count;
 				}
 
-				Status.world = countAll/grid[0].length*$items[0].offsetHeight;
+				Status.world = 0;
 				Status.roomWorld = [];
 				Status.room = [];
 
@@ -660,11 +586,13 @@ class main extends Config {
 					Status.room[i] = i ? Status.room[i-1] + room : room;
 					Status.roomWorld[i] = Math.ceil(count[i]/grid[0].length)*$items[0].offsetHeight;
 
+					Status.world += Status.roomWorld[i];
+
 					monthGroup[i].style.height = room + '%';
 				}
 
 				// 전체 행 갯수 * 아이템 하나의 높이 = 전체 높이, 모든 카드의 크키가 같으면 편하지 ^_^♡
-				parent.style.height = countAll * $items[0].offsetHeight + 'px';
+				parent.style.height = Status.world + 'px';
 
 				SCOPE.select(Status.completeGroup[i]).style.height = Status.roomWorld[i] + 'px';
 			}
@@ -737,13 +665,9 @@ class main extends Config {
 
 				if (key == 'date') {
 					// list.date 가공
-					let dateSplit = list[i].date.split('-');
+					let date = Data.dateList[SCOPE.option.page];
 
-					var y = dateSplit[0];
-					var m = dateSplit[1];
-					var d = dateSplit[2];
-
-					list[i].date = SCOPE.option.month_string[Number(m)-1]+'\u0020'+d+',\u0020'+y;
+					list[i].date = SCOPE.option.month_string[Number(date.m)-1]+'\u0020'+date.d+',\u0020'+date.y;
 				}
 
 				_Str.list[i] = _Str.list[i].replace( SCOPE.reg(key), list[i][key] );
@@ -771,25 +695,26 @@ class main extends Config {
 
 					for (let i=0; i<Data.resLen; i++) {
 
-						let _y = m-i ? y : y-1;
-						let _m = m-i ? m-i : 12;
+						let date = Data.dateList[i];
 
-						_Str.month += Str.month({ y: String(_y), m: String(_m) });
+						_Str.month += Str.month({ y: date.y, m: date.m });
 					}
 
 					return _Str.month;
 				})();
 
+				let dateList = Data.dateList[SCOPE.option.page];
+
 				// 생성된 그룹 셀렉터 저장	
 				if (Status.completeGroup.length-1 != SCOPE.option.page) {
-					Selector.completeGroup = '#group'+(y + m);
+					Selector.completeGroup = '#group'+(dateList.y + dateList.m);
 					Status.completeGroup[SCOPE.option.page] = Selector.completeGroup;
 
 				}
 
 				// 생성된 버튼 셀렉터 저장
 				if (Status.complete.length-1 != SCOPE.option.page) {
-					Selector.completeMonth = '#month'+(y + m);
+					Selector.completeMonth = '#month'+(dateList.y + dateList.m);
 					Status.complete[SCOPE.option.page] = Selector.completeMonth;
 
 				}
@@ -831,47 +756,17 @@ class main extends Config {
 		// 처리된 상태 HTML 에 반영
 		SCOPE.select(select).innerHTML += completeBind;
 
-		let img = $(Selector.completeGroup+'\u0020'+Selector.img);
-		let imgLen = img.length;
+		Status.append = true;
+		Status.render = true;
 
-		// 로드 완료 된 img 가 limit 보다 작을때 재귀 후 콜백 리스트 실행
-		// (function loop(_val) {
+		let body = SCOPE.select(Selector.body);
 
-		// 	for (let i=_val; i<imgLen; i++) {
-
-		// 		if (img[i].complete) {
-
-		// 			_val++;
-		// 		}
-		// 		else {
-		// 			break;
-		// 		}
-		// 	}
-
-		// 	if (_val < imgLen) {
-
-		// 		return setTimeout(function () {
-
-		// 			loop(_val);
-		// 		},10);
-
-		// 	} else {
-
-				Status.append = true;
-				Status.render = true;
-
-				let body = SCOPE.select(Selector.body);
-
-				body.style.transitionProperty = 'transform';
-				body.style.transitionDuration = '300ms';
+		body.style.transitionProperty = 'transform';
+		body.style.transitionDuration = '300ms';
 
 				// 재귀 종료 지점 콜백 리스트 실행
-				SCOPE.returnCall(SCOPE.option.completeFunctionList);
+		SCOPE.returnCall(SCOPE.option.completeFunctionList);
 
-
-		// 	}
-
-		// })(SCOPE.option.count ? SCOPE.option.count-1 : 0);
 
 		return SCOPE;
 	}
@@ -912,13 +807,80 @@ class main extends Config {
 				SCOPE.option.data.response = res;
 				SCOPE.option.data.resLen = res.length;
 
+				// 날짜 저장
+				SCOPE.option.data.dateList = [];
+
+				for (let i=0; i<SCOPE.option.data.resLen; i++) {
+
+					let date = SCOPE.option.data.response[i].list[0].date.split('-');
+
+					SCOPE.option.data.dateList[i] = { y: date[0], m: date[1], d: date[2] };
+				}
+
 				return SCOPE.returnCall(callback);
 			}
 			else{
 
-				SCOPE.select(SCOPE.option.selector.body).innerHTML = SCOPE.string().isEmpty;
+				SCOPE.select(SCOPE.option.selector.body).innerHTML = SCOPE.storage().isEmpty;
+
+				return SCOPE.returnCall([ 'returnBar' ]);
 			}
 		});
+	}
+
+	returnBar (arg) {
+
+		const SCOPE = this;
+
+		let Selector = SCOPE.option.selector;
+		let reBar = SCOPE.select(Selector.returnBar);
+
+		let start = null;
+		let barFrame = 0;
+
+		function step(timestamp) {
+
+			if (!start) start = timestamp;
+
+			let progress = timestamp - start;
+
+			reBar.style.width = Math.min(progress / 10, reBar.parentNode.clientWidth) + 'px';
+
+			if (parseInt(reBar.style.width) < reBar.parentNode.clientWidth) {
+
+				return window.requestAnimationFrame(step);
+			}
+			else {
+
+				window.cancelAnimationFrame(barFrame);
+
+				$('#isEmpty').fadeOut(300, () => {
+
+					SCOPE.option.request.data.page = 1;
+
+					SCOPE.render(SCOPE.option.renderList);
+				});
+
+				return SCOPE;
+			}
+		}
+
+		barFrame = window.requestAnimationFrame(step);
+
+		$DOCUMENT.off('.return').on(
+			'click.return', Selector.returnButton, function (event) {
+				event.preventDefault();
+
+				window.cancelAnimationFrame(barFrame);
+
+				$('#isEmpty').fadeOut(300, () => {
+
+					SCOPE.option.request.data.page = 1;
+
+					SCOPE.render(SCOPE.option.renderList);
+				});
+			}
+		);
 	}
 }
 

@@ -7,7 +7,7 @@ button{display:inline-block;vertical-align:middle;background:none;border:0;curso
 div{line-height:1}
 
 #wrap{overflow:hidden;width:100%;height:100%;overflow-x:hidden;overflow:hidden;background:#343841}
-#uiPinterest{position:relative;height:100%;transform-origin:0% 0%}
+#uiPinterest{position:relative;max-width:1500px;height:100%;transform-origin:0% 0%}
 #uiPinterest:after{content:'';display:block;clear:both}
 #uiPinterest *{box-sizing:border-box}
 
@@ -182,3 +182,15 @@ div{line-height:1}
 
 #uiPinterest.ver_1 .grid__item .layer_01 .category{bottom:10px}
 #uiPinterest.ver_2 .grid__item .layer_01 .category{bottom:5px}
+
+
+@media (min-width: 1700px) {
+	#uiPinterest.ver_1 .grid__item{width:24%}
+	#uiPinterest.ver_2 .grid__item{width:24%}
+}
+
+#isEmpty{padding:50px 0;margin:90px 50px 0;line-height:160%;font-size:24px;text-align:center;border:1px solid #fff;color:#fff}
+	#returnPrograssiveTimeBar{width:50%;margin:50px auto;border:3px solid #fff;background:#fff}
+	#returnButton{}
+	#returnButton button{width:48px;height:26px;background:url(/kr/js/uiPinterest/images/common/return.png)}
+

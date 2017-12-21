@@ -172,9 +172,9 @@ export default class Config {
 
 		a.isEmpty = '\n'+
 			'\n<div id="isEmpty">'+
-			'\n\t더이상 목록이 없습니다.<br>처음부터 다시 가져올까요?'+
+			// '\n\t더이상 목록이 없습니다.<br>처음부터 다시 가져올까요?'+
 			'\n\t<div id="returnPrograssiveTimeBar"><div class="bar"></div></div>'+
-			'\n\t<div id="returnButton"><button type="button"><img src="/kr/js/uiPinterest/images/common/return.png" alt="">처음 목록부터 다시 보기</button></div>'+
+			// '\n\t<div id="returnButton"><button type="button"><img src="/kr/js/uiPinterest/images/common/return.png" alt="">처음 목록부터 다시 보기</button></div>'+
 			'\n</div>';
 
 		return a;

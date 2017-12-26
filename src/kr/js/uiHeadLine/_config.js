@@ -35,7 +35,7 @@ export default class Config {
 			circle_film: '#uiHeadLine .circle_film',
 			bg: '#uiHeadLine .bg',
 			item: '#uiHeadLine .item',
-			more: '#uiHeadLine .detail',
+			more: '#uiHeadLine .detail a',
 			scroll: 'html,body'
 		};
 

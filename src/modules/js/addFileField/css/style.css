@@ -1,0 +1,60 @@
+*{box-sizing:border-box}
+
+html,body,h1,h2,h3,h4,h5,h6,div,ol,ul,li,p,a,span,strong,em,i,b,img,button,a{font-style:normal;line-height:1;margin:0;padding:0;font-size:100%}
+
+html,body{height:100%;overflow:hidden}
+
+body{font-weight:400;color:#464646}
+a:focus,button:focus{outline-width:1px;outline-style:dashed}
+
+/*
+h1{line-height:1.1}
+h2{line-height:1.2}
+h3{line-height:1.3}
+h4{line-height:1.4}
+h5{line-height:1.5}
+h6{line-height:1.6}
+*/
+
+li{list-style:none}
+
+img{max-width:100%;border:0}
+
+img,label,input,span{display:inline-block;vertical-align:middle}
+
+form{}
+label{}
+input{height:38px;padding:0;text-indent:10px;line-height:110%;border:1px solid #ddd;background:#fff}
+
+input[type="text"]{}
+input[type="search"]{}
+input[type="file"]{}
+input[type="submit"]{}
+input[type="button"]{}
+
+textarea{}
+button{display:inline-block;vertical-align:middle;background:none;border:0;cursor:pointer}
+
+a{text-decoration:none;color:#464646}
+a:link,a:visited{color:#464646}
+a:focus,a:hover,a:active{color:#333333} 
+
+header,footer,section,article,nav,aside{display:block}
+
+#wrap{width:100%;height:100%;overflow-x:hidden;overflow-y:scroll}
+
+#txt{max-width:1200px;margin:0 auto}
+
+
+#addFileField{padding:20px;border:1px solid #c8c8c8}
+#addFileFieldDrawArea{padding:10px;margin-bottom:20px;background:#f9f9f9}
+#addFileFieldDrawArea .addFileField{overflow:hidden;padding:20px;border-bottom:1px solid #c8c8c8}
+#addFileFieldDrawArea .addFileField label{width:120px}
+#addFileFieldDrawArea .addFileField .name,
+#addFileFieldDrawArea .addFileField .title,
+#addFileFieldDrawArea .addFileField .button{display:inline-block;vertical-align:middle;margin-left:15px}
+#addFileFieldDrawArea .addFileField .button button{padding:7px 15px;background:#646464;color:#fff}
+#addFileFieldDrawArea .addFileField .floatLeft>div:first-child{margin-left:0}
+#addFileFieldInsertButton{text-align:center}
+#addFileFieldInsertButton button{padding:10px 30px;border:1px solid #c8c8c8}
+

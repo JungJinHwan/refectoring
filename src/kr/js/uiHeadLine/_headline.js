@@ -196,16 +196,14 @@ class main extends Config {
 
 		        let dir = 0;
 
-		        let translate = SCOPE.select('.grid')[0].style.transform.match(/[0-9]/g)[0];
-
 		        if(event.originalEvent.wheelDelta != undefined) {
 
 		            dir = Process.dir(event.originalEvent.wheelDelta*-1); // IE, CROME, SFARI
-		            //console.log('IE, CROME, SFARI', saveDir);
+		            //console.log('IE, CROME, SFARI');
 		        }else{
 
 		            dir = Process.dir(event.originalEvent.detail); // FF
-		            //console.log('FF', saveDir);
+		            //console.log('FF');
 		        }
 
 				// 외부에서 option.status.screendUp = true; 했을 때
@@ -251,7 +249,7 @@ class main extends Config {
 
 		}
 
-		Data.strings =  _Str.visual
+		Data.strings = _Str.visual
 			.replace(SCOPE.reg('bg'), bg)
 				.replace(SCOPE.reg('circle'), circle)
 					.replace(SCOPE.reg('titleGroup'), titleGroup);
@@ -268,6 +266,42 @@ class main extends Config {
 
 		SCOPE.select(Selector.parent)[0].innerHTML = Data.strings;
 
+		let circle = SCOPE.select(Selector.circle);
+		let circleLen = circle.length;
+
+		if (circleLen%2 != 0) {
+
+			let err = '$UI_HEADLINE ERROR ( type append ) : 짝수만 등록 가능합니다. 홀수의 경우 좌·우의 분배가 동일하지 않게 됩니다.';
+
+			document.write('<h1>'+err+'</h1>');
+
+			throw err;
+		}
+
+		let cpnum = circleLen/2;
+		let defPos = 440;
+		let inc = 200;
+
+		for (let i=0; i<circleLen; i++) {
+
+			let circlePos = 0;
+
+			if (i < cpnum) {
+
+				circlePos = (defPos + inc * ((cpnum-1)-i))*-1;
+
+				//console.log('left', circlePos);
+			}
+			else {
+
+				circlePos = defPos + inc * (i-cpnum);
+
+				//console.log('right', circlePos);
+			}
+
+			circle[i].style.transform = 'translateX(' + circlePos + 'px)';
+		}
+
 		return SCOPE;
 	}
 
@@ -283,8 +317,6 @@ class main extends Config {
 			let parent = SCOPE.select(Selector.parent)[0];
 
 			parent.style.marginTop = (parent.clientHeight*-1)+'px';
-
-			console.log(parent.clientHeight);
 
 		}
 

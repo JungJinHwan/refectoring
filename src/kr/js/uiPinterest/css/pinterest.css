@@ -191,6 +191,8 @@ div{line-height:1}
 
 #isEmpty{padding:50px 0;margin:90px 50px 0;line-height:160%;font-size:24px;text-align:center;border:1px solid #fff;color:#fff}
 	#returnPrograssiveTimeBar{width:50%;margin:50px auto;border:3px solid #fff;background:#fff}
-	#returnButton{}
-	#returnButton button{width:48px;height:26px;background:url(/kr/js/uiPinterest/images/common/return.png)}
+	#returnPrograssiveTimeBar .bar{width:1%;height:10px;background:#f00}
+	#returnButton{font-size:18px}
+	#returnButton button{padding:15px 25px;border-style:solid;border-color:#aaa #fff #fff #aaa;border-width:1px 2px 2px 1px;color:#d1cfcf}
+	#returnButton button img{display:block;margin:0 auto 20px}
 

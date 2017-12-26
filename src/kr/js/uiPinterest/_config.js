@@ -33,8 +33,13 @@ export default class Config {
 			ani: false, 
 			index: 0, 
 			complete: [], 
-			completeGroup: []
+			completeGroup: [],
+			trident: navigator.userAgent.indexOf('Trident')
 		};
+
+		let trident = this.option.status.trident;
+
+		this.option.status.trident = trident < 0 ? false : true;
 
 		this.option.page = 0;
 		this.option.count = 0;
@@ -53,6 +58,7 @@ export default class Config {
 			story: '#story',
 			story_month: '#story_month_group_button',
 			story_shift: "#story_month_group_button>div",
+			story_shifter: "#story_month_group_button button",
 			story_bar: '#rocks_bar',
 			story_group_bar: '#story_month_group_bar',
 			pin_up: "#pin_up",
@@ -167,7 +173,7 @@ export default class Config {
 
 		a.month = _val => {
 
-				return '\n<div id="month'+(_val.y+_val.m)+'"><button type="button"><span>'+_val.m+'</span></button></div>';
+				return '\n<div id="month'+(_val.y+_val.m)+'"><button onclick="return $UI_PINTEREST.shift(this)" type="button"><span>'+_val.m+'</span></button></div>';
 			}
 
 		a.isEmpty = '\n'+

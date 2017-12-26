@@ -2,6 +2,67 @@ import Config from './_config';
 
 class main extends Config {
 
+	shift (arg) {
+
+		const SCOPE = this;
+
+		let Data = SCOPE.option.data;
+		let Status = SCOPE.option.status;
+		let Selector = SCOPE.option.selector;
+
+		let button = SCOPE.select(Selector.story_shifter);
+		let items = SCOPE.select(Selector.item);
+
+		let index = SCOPE.index(button, arg);
+
+		Status.touchDir = index < Status.index ? 'prev' : 'next';
+
+		let room = Status.room[index-1];
+			room = room ? room : 0;
+
+		Status.moveLength = Status.world*Math.ceil(room)/100*-1;
+
+		let $items = $(items.length ? items[Status.row] : items);
+
+		let sumCount = Data.response[index].count;
+
+		for (let i=0; i<index; i++) {
+
+			sumCount += Data.response[i].count;
+		}
+
+		let reloader = 0;
+		let idle = 0;
+		function reloaderCheckItems() {
+
+			let newItems = SCOPE.select(Selector.item);
+
+			if (newItems.length < sumCount) {
+				
+				SCOPE.move({ idx: index });
+
+				idle++;
+
+				if (idle > 10) {
+
+					// 아무것도 안하고 있는 상태가 10이상 반복되면
+					// 이런식으로 처리하면 안되는데 ㅠ.ㅠ
+					return window.cancelAnimationFrame(reloader);
+				}
+
+				return window.requestAnimationFrame(reloaderCheckItems);
+			}
+
+			SCOPE.move({ idx: index });
+
+			return window.cancelAnimationFrame(reloader);
+		}
+
+		reloader = window.requestAnimationFrame(reloaderCheckItems);
+
+		return SCOPE;
+	}
+
 	move (arg) {
 
 		const SCOPE = this;
@@ -15,20 +76,10 @@ class main extends Config {
 
 		let bar = SCOPE.select(Selector.story_bar);
 
-		if (Status.touchDir === 'prev') {
-
-			Status.moveLength += 100;
-		}
-
-		if (Status.touchDir === 'next') {
-
-			Status.moveLength -= 100;
-		}
-
 		// 내용이 위로 올라갈 때 음수가 양수가 되는것이 생각하기 편하다
 		let pos = Status.moveLength*-1;
 
-		Status.barPos = pos/(Status.world)*100;
+		Status.barPos = pos/Status.world*100;
 
 		bar.style.height = Status.barPos + '%';
 
@@ -55,40 +106,51 @@ class main extends Config {
 
 		let bodyHeight = SCOPE.select('body').clientHeight;
 
-		let roomLimit = Status.room[Status.touchDir == 'prev' ? Status.index-1 : Status.index];
+		if (arg) {
 
-		Status.prev = roomLimit >= Status.barPos;
-		Status.next = roomLimit <= Status.barPos;
+			Status.index = arg.idx;
 
-		if (Status.touchDir === 'prev') {
+			SCOPE.pull();
 
-			if (Status.prev) {
+		} else {
 
-				if (Status.index > 0) {
-					Status.index--;
-					SCOPE.pull();
+			let roomLimit = Status.room[Status.touchDir == 'prev' ? Status.index-1 : Status.index];
+
+			Status.prev = roomLimit >= Status.barPos;
+			Status.next = roomLimit <= Status.barPos;
+
+			if (Status.touchDir === 'prev') {
+
+				if (Status.prev) {
+
+					if (Status.index > 0) {
+
+						Status.index--;
+
+						SCOPE.pull();
+					}
 				}
 			}
-		}
 
-		if (Status.touchDir === 'next') {
+			if (Status.touchDir === 'next') {
 
-			if (Status.next) {
+				if (Status.next) {
 
-				if (Status.index < Data.resLen-1) {
+					if (Status.index < Data.resLen-1) {
 
-					Status.index++;
-					SCOPE.pull();
+						Status.index++;
+
+						SCOPE.pull();
+					}
 				}
 			}
-
 		}
 
 		let $items = $(items.length ? items[Status.row] : items);
 
 		Status.nextLimit = bodyHeight - $items.height();
 
-		if (Status.nextLimit > $items.offset().top) {
+		if (Status.nextLimit >= $items.offset().top) {
 
 			SCOPE.next();
 		}
@@ -189,7 +251,6 @@ class main extends Config {
 		);
 
 		// 마우스 휠
-		let timeout = null;
 	    $DOCUMENT.on(
 	    	Event.wheel, Selector.scroll, function(event) {
 	    		event.preventDefault();
@@ -200,31 +261,42 @@ class main extends Config {
 
 			        if(event.originalEvent.wheelDelta != undefined) {
 
+			        	let delta = event.originalEvent.wheelDelta;
+
 			            saveDir = Process.dir(event.originalEvent.wheelDelta*-1); // IE, CROME, SFARI
-			            // console.log('IE, CROME, SFARI', saveDir);
+			        	// console.log('IE, CROME, SFARI', event.originalEvent.wheelDelta);
+
+			            if ((delta < 0 ? delta*-1 : delta ) < 240) {
+
+							Status.moveLength += event.originalEvent.wheelDelta/1.5;
+			            }
+
 			            Status.vender = 0;
+
 			        }else{
 
 			            saveDir = Process.dir(event.originalEvent.detail); // FF
-			            // console.log('FF', saveDir);
+			            //console.log('FF', event.originalEvent.detail);
+
 			            Status.vender = 1;
 			        }
 
 			        Status.touchDir = saveDir > 0 ? 'prev' : 'next';
 
-			        if (Status.vender) {
+					if (Status.vender) {
 
-			        	SCOPE.move();
+						if (Status.touchDir === 'prev') {
+
+							Status.moveLength += 100;
+						}
+
+						if (Status.touchDir === 'next') {
+
+							Status.moveLength -= 100;
+						}
 					}
-					else{
-				        clearTimeout(timeout);
 
-				        timeout = setTimeout(function(){
-
-							SCOPE.move();
-
-						}, 10);
-					}
+			   		SCOPE.move();
 		    	}
 	    	}
 	    );
@@ -344,11 +416,6 @@ class main extends Config {
 		return this;
 	}
 
-	shift (arg) {
-
-		return this;
-	}
-
 	next (arg) {
 		// 이 메서드는 위치 계산 완료 후, 혹은 정렬 애니메이션 완료 후에 호출
 		// *완료 후 상태를 판단하고 처리한다
@@ -392,7 +459,9 @@ class main extends Config {
 
 			body.style.opacity = 0;
 			body.style.transitionProperty = 'opacity';
-			body.style.transitionDuration = '300ms';
+
+			// 트라이던트 체크
+			body.style.transitionDuration = Status.trident ? '0ms' : '300ms';
 
 			setTimeout(() => {
 
@@ -559,7 +628,7 @@ class main extends Config {
 					cnt.w++;
 				}
 
-				Status.row = $itemsLen-1;
+				Status.row = $itemsLen-grid[0].length;
 
 				let countAll = 0;
 				let count = [];
@@ -697,7 +766,7 @@ class main extends Config {
 
 						let date = Data.dateList[i];
 
-						_Str.month += Str.month({ y: date.y, m: date.m });
+						_Str.month += Str.month({ y: date.y, m: date.m, idx: i });
 					}
 
 					return _Str.month;
@@ -762,9 +831,11 @@ class main extends Config {
 		let body = SCOPE.select(Selector.body);
 
 		body.style.transitionProperty = 'transform';
-		body.style.transitionDuration = '300ms';
 
-				// 재귀 종료 지점 콜백 리스트 실행
+		// 트라이던트 체크
+		body.style.transitionDuration = Status.trident ? '0ms' : '300ms';
+
+		// 재귀 종료 지점 콜백 리스트 실행
 		SCOPE.returnCall(SCOPE.option.completeFunctionList);
 
 

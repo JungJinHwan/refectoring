@@ -15,6 +15,5 @@
 		<input type="text" id="field_{{i}}_title" name="field_{{i}}_title" value="">
 	</div>
 
-
 </div>
 

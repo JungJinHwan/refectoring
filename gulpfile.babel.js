@@ -154,8 +154,8 @@ gulp.task('start', ['babel'], () => {
 gulp.task('browser-sync', () => {
   browserSync.init(null, {
     proxy: "http://localhost:3000/"+config.dir+"/html/"+config.name+".html",
-    files: "dist/"+config.dir+"/**", // 전체 자동 새로고침
-    // files: "dist/"+config.dir+"/js/"+config.name+"/css/*.css", // 스타일만 겨체
+    // files: "dist/"+config.dir+"/**", // 전체 자동 새로고침
+    files: "dist/"+config.dir+"/js/"+config.name+"/css/*.css", // 스타일만 겨체
     port: 7000
   })
 });

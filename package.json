@@ -31,6 +31,8 @@
     "express-fileupload": "^0.3.0",
     "jquery": "^1.12.4",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0"
   }
 }

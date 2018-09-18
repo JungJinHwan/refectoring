@@ -68,7 +68,7 @@ function _social(args) {
 		type: 1,
 		url: 'https://graph.facebook.com/greenjp/',
 		fields: 'full_picture,created_time,message,link,from',
-		access_token: '1280169205428851|Ho3riqmJOseOfqX5_8Sjoqu3iv8',
+		access_token: '1636351156624023|mnTtZ1SmGAzagtMtoTA_SEBF28M',
 		limit: Social.data.limit
 	};
 

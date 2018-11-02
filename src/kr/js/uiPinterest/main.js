@@ -19,22 +19,21 @@
 
 		SCOPE.option.request = {
 			type: 'GET',
-			// url: '/kr/js/uiPinterest/xhr/list.json',
-			url: '/kr/html/story/GetJson_STORY.php',
+			url: '/kr/js/uiPinterest/xhr/list.json',
 			data: { page: 1 },
 			dataType: 'json'
 		};
 
 		SCOPE.option.limit = 15;
 		SCOPE.option.data = { offset: [] };
-		SCOPE.option.status = { 
+		SCOPE.option.status = {
 			moveLength: 0,
-			resizebled: false, 
-			render:false, 
-			append: false, 
-			ani: false, 
-			index: 0, 
-			complete: [], 
+			resizebled: false,
+			render:false,
+			append: false,
+			ani: false,
+			index: 0,
+			complete: [],
 			completeGroup: [],
 			trident: navigator.userAgent.indexOf('Trident')
 		};
@@ -212,7 +211,7 @@
 	main.prototype._storage = function (a) {
 
 		return a;
-	}	
+	}
 
 	main.prototype.hasAttr = function (a, b, c) {
 
@@ -240,7 +239,7 @@
 		var aLen = a.length;
 
 		for (var i=0; i<aLen; i++) {
-			
+
 			if (a[i] === b) {
 				break;
 			}
@@ -291,7 +290,7 @@
 			var newItems = SCOPE.select(Selector.item);
 
 			if (newItems.length < sumCount) {
-				
+
 				SCOPE.move({ idx: index });
 
 				idle++;
@@ -412,7 +411,7 @@
 	}
 
 	main.prototype.pull = function (arg) {
-		
+
 		var SCOPE = this;
 
 		var Status = SCOPE.option.status;
@@ -964,7 +963,7 @@
 				if (key == 'img') {
 					// list.img 비어 있으면 default
 					if (!list[i].img.length) {
-						
+
 						list[i].img = SCOPE.option.no_img;
 					}
 				}
@@ -980,7 +979,7 @@
 				if (key == 'name') {
 					// list.name 비어 있으면 default
 					if (!list[i].name.length) {
-						
+
 						list[i].name = SCOPE.option.no_name;
 					}
 				}
@@ -1004,7 +1003,7 @@
 			if (i < listLen) {
 
 				return keyBind(0);
-			} 
+			}
 			else {
 
 				Data.completeMonth = (function () {
@@ -1027,7 +1026,7 @@
 
 				var dateList = Data.dateList[SCOPE.option.page];
 
-				// 생성된 그룹 셀렉터 저장	
+				// 생성된 그룹 셀렉터 저장
 				if (Status.completeGroup.length-1 != SCOPE.option.page) {
 					Selector.completeGroup = '#group'+(dateList.y + dateList.m);
 					Status.completeGroup[SCOPE.option.page] = Selector.completeGroup;

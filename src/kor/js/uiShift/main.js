@@ -313,5 +313,3 @@ for(var arrayNumber in objectArray) {
 	new Function("window.SHIFT_CHILDREN_"+arrayNumber+" = new arguments[0](SHIFT)")(_shift_img_20170926);
 
 }
-
-SHIFT = null, delete SHIFT;

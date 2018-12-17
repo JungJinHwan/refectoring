@@ -109,6 +109,8 @@ pin.prototype.listCreateMap = function () {
 
 		// 이전 행의 카드와 현재 행의 각 카드의 높이를 더해 현재 카드의 위치를 만든다
 		Data.map[mapLen][colLen] = i >= Data.col ? Data.map[mapLen-1][colLen] + item.eq(i-Data.col).outerHeight() : 0;
+
+		console.log(item.eq(i).outerHeight());
 	}
 
 	return 1;

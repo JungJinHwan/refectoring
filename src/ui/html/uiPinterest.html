@@ -18,14 +18,22 @@
 
 <style>
 
-	#pin{position:relative;height:100%}
-	#pin .item{float:left;opacity:0;transition:background-color 300ms, box-shadow 300ms;width:10%;padding:10px;overflow:hidden}
+	#pin{position:relative;max-width:1200px;height:100%;margin:0 auto}
+	#pin .item{float:left;opacity:0;transition:background-color 300ms, box-shadow 300ms;width:25%;padding:10px;overflow:hidden}
 	#pin .item a{display:block;padding:20px;border:1px solid #ddd}
 	#pin .item .title{display:block;font-size:24px}
 	#pin .item .pt{margin:10px 0;padding-top:10px;font-size:16px;border-top:1px solid #ccc}
 	#pin .item .date{text-align:right}
 
 	.testItem{width:300px;height:400px;padding:20px;border:1px solid #ddd;}
+
+
+	@media (max-width:1000px) {
+
+	#pin{max-width:768px}
+	#pin .item{width:33.33%}
+
+	}
 </style>
 
 </head>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,width=device-width">
+	<meta name="author" content=""><!-- 작성자//메인은 사이트네임,서브는 각 컨텐츠 담당자  -->
+	<meta name="keywords" content=""><!-- 키워드 //SEO검색 관련으로 인하여 삽입 // 각 컨텐츠 별로 추가 또는 컨텐츠타이틀 게시판view는 게시글 제목 -->
+
+	<meta name="copyright" content="">
+
+	<title>SYMBOLE SWIPE</title>
+
+	<link rel="stylesheet" href="/ui/css/common/common.css" type="text/css" media="all">
+
+	<script src='/ui/js/jquery-1.12.4.min.js'></script>
+	<script src='/ui/js/jquery-ui.min.js'></script>
+
+	<style>
+		
+		html, body{overflow:hidden}
+
+		a{transition:background-color 100ms ease-in-out}
+
+		#wrap{height:100%;padding-bottom:80px;overflow-y:scroll}
+
+		.slide_parent_content{height:100%;max-width:1400px;margin:0 auto}
+		.slide_parent_content header,
+		.slide_parent_content footer{height:100px;text-align:center;border-bottom:1px solid #ddd}
+
+		.slide_parent_content .content_body:after{content:'';display:block;clear:both}
+		
+		.img_block{}
+		.img_block .img{float:left;margin-right:20px;background-color:#f9f9f9}
+		.img_block p{font-size:17px;line-height:27px}
+		.img_block p strong.large_text{display:block;font-size:25px;line-height:50px}
+
+		#symbole{position:fixed;bottom:0;left:0;width:100%;height:80px}
+
+		#symbole .symbole_bar{position:relative;width:100%;height:100%;background-color:#7db9e8}
+		#symbole .symbole_bar:after{content:'';display:block;clear:both}
+		#symbole .symbole_bar a{display:block;width:250px;height:100%;text-align:center;line-height:78px}
+		#symbole .symbole_bar a:hover{background-color:#fff}
+		#symbole .symbole_bar .control_left{float:left}
+		#symbole .symbole_bar .control_right{float:right}
+
+		#symbole .symbole_core{
+
+			cursor:pointer;position:absolute;top:-45px;left:50%;
+			width:96px;height:70px;
+			transform:translateX(-50%);
+			background:url(/ui/js/uiSymboleSwipe/images/symbole.png);border-radius:35px 35px 0 0;
+		}
+
+		#symbole .symbole_core .core_util{
+
+			overflow:hidden;
+			position:absolute;top:50%;left:50%;
+			width:250px;height:250px;
+			margin:-125px 0 0 -125px;
+			border-radius:100%;
+			background-color:#fff;
+			box-shadow:0 -3px 35px -15px rgba(0, 0, 0, .5);
+			transition:transform 200ms ease-in-out, opacity 100ms ease-out;
+
+			transform:scale(0) rotate(90deg);
+			opacity:0;
+		}
+
+		#symbole .symbole_core .core_util .util_core{
+
+			position:absolute;top:50%;left:50%;
+			transform:translateX(-50%) translateY(-50%);
+			width:70px;height:70px;
+			border-radius:100%;
+			background-color:#7db9e8;
+			box-shadow:0 2px 15px -5px rgba(0, 0, 0, .7);
+		}
+
+		#symbole .symbole_core .core_util .util_core:before{
+
+			content:'';position:absolute;top:50%;left:50%;
+			width:50px;height:50px;
+			transform:translateX(-50%) translateY(-50%);
+			border-radius:100%;
+			background-color:#fff;
+		}
+
+		#symbole .symbole_core .core_util a{
+
+			display:block;
+			position:absolute;top:50%;left:50%;
+			transform:translateX(-50%) translateY(-50%);
+			width:40px;height:40px;
+			border-radius:100%;
+			background-color:#f00;
+		}
+
+		#symbole .symbole_core .core_util a.util_1{margin:-33% 0 0 0}
+		#symbole .symbole_core .core_util a.util_2{margin:-24% 0 0 25%}
+		#symbole .symbole_core .core_util a.util_3{margin:0 0 0 33%}
+		#symbole .symbole_core .core_util a.util_4{margin:-24% 0 0 -25%}
+		#symbole .symbole_core .core_util a.util_5{margin:0 0 0 -33%}
+
+		/* 진입 액션 */
+		#symbole .symbole_core.in_active .core_util{
+
+			transform:scale(1) rotate(0deg);opacity:1;
+			transition:transform 200ms ease-in-out, opacity 300ms ease-out;
+		}
+
+	</style>
+
+</head>
+<body>
+
+	<div id="wrap">
+
+		<section class="slide_parent_content">
+
+			<header>
+				
+				<h1>HEADER</h1>
+			</header>
+
+			<div class="content_body">
+				
+				<h2>CONTENT 1</h2>
+
+				<div class="img_block">
+					<div class="img">
+						
+					</div>
+					<p>
+						<strong class="large_text">
+							Original. ‘본래의’ ‘독창적인’ ‘최초의’ ‘기발한’ 등의 뜻을 가진 이 단어가 누구보다 잘 어울리는 작가가 있다.
+							“현존하는 영어권 최고의 단편소설 작가” “영미문학계의 천재” “작가들의 작가” 라는 평을 듣는 조지 손더스가 바로 그다
+						</strong><br>
+						첫 단편집 『악화일로를 걷는 내전의 땅』을 발표한 이래, 손더스는 독창적이고 독보적인 스타일, 풍자적이고 위트 있는 목소리로 현대 영미문학을 대표해왔다.
+						“작가들 사이에서 손더스는 그냥 작가가 아니라 그 이상의 존재”(조슈아 페리스), “그와 같은 작가는 아무도 없다. 그는 유일무이하다”(로리 무어),
+						“손더스는 마치 소설이라는 것을 처음 읽는 듯 느끼게 만든다”(할레드 호세이니)는 작가들의 말은 손더스가 문학계에서 차지하는 위상을 분명하게 보여준다. 
+					</p>
+				</div>
+			</div>
+
+			<footer>
+
+				<h1>FOOTER</h1>
+			</footer>
+		</section>
+
+		<section class="slide_parent_content">
+			
+			<header>
+				
+				<h1>HEADER</h1>
+			</header>
+
+			<div class="content_body">
+				
+				<h2>CONTENT 2</h2>
+			</div>
+
+			<footer>
+
+				<h1>FOOTER</h1>
+			</footer>
+		</section>
+
+		<section class="slide_parent_content">
+			
+			<header>
+				
+				<h1>HEADER</h1>
+			</header>
+
+			<div class="content_body">
+				
+				<h2>CONTENT 3</h2>
+			</div>
+
+			<footer>
+
+				<h1>FOOTER</h1>
+			</footer>
+		</section>
+
+	</div>
+
+	<nav id="symbole">
+
+		<div class="symbole_bar">
+
+			<a class="control_left" href="#">좌 콘텐츠</a>
+			<a class="control_right" href="#">우 콘텐츠</a>
+		</div>
+
+		<div class="symbole_core">
+			<!-- 
+			<div class="core_util">
+
+				<div class="util_core"></div>
+
+				<a class="util_1" href="#">버튼 1</a>
+				<a class="util_2" href="#">버튼 2</a>
+				<a class="util_3" href="#">버튼 3</a>
+				<a class="util_4" href="#">버튼 4</a>
+				<a class="util_5" href="#">버튼 5</a>
+				
+			</div> -->
+		</div>
+	</nav>
+	
+	<script src="/ui/js/jquery.event.drag-2.2.js"></script>
+	<script src='/ui/js/uiSymboleSwipe/uiSymboleSwipe.min.js'></script>
+
+</body>
+</html>

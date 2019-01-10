@@ -7,6 +7,11 @@ function symbole (args) {
 	var Selector = SCOPE.option.selector;
 	var Data = SCOPE.option.data;
 
+	var resultEndFlag = function () {
+
+		return ((document.body.clientWidth/2) - (Data.map[Data.idx]*document.body.clientWidth/100))/$(Selector.gradientSymbole).width() *100 + '%';
+	}
+
 	$(Selector.gradientSymbole).on('dragstart drag dragend', function (event) {
 
 		var t = $(this);
@@ -47,8 +52,8 @@ function symbole (args) {
 			Data.rangePrev = Data.move;
 			Data.prev = Data.move;
 
+			SCOPE.moveMented();
 			SCOPE.createEndFlag();
-			
 		}
 
 		if(event.type == "dragend" ) {
@@ -56,9 +61,7 @@ function symbole (args) {
 			Data.rangePrev = 0;
 
 			SCOPE.moveEnded();
-			SCOPE.moveMented();
-
-			SCOPE.symboleCoreBar( ((document.body.clientWidth/2) - (Data.map[Data.idx]*document.body.clientWidth/100))/$(Selector.gradientSymbole).width() *100 + '%' );
+			SCOPE.symboleCoreBar( resultEndFlag );
 		}
 	});
 
@@ -72,9 +75,9 @@ function symbole (args) {
 		Data.idx = t.data('idx');
 
 		SCOPE.moveEnded();
-		SCOPE.moveMented();
+		SCOPE.moveMented(1);
 
-		SCOPE.symboleCoreBar( ((document.body.clientWidth/2) - (Data.map[Data.idx]*document.body.clientWidth/100))/$(Selector.gradientSymbole).width() *100 + '%' );
+		SCOPE.symboleCoreBar( resultEndFlag );
 	});
 
 	var rtime = 0;
@@ -88,7 +91,8 @@ function symbole (args) {
 			rtime = setTimeout(function () {
 
 				SCOPE.createEndFlag();
-				SCOPE.symboleCoreBar( ((document.body.clientWidth/2) - (Data.map[Data.idx]*document.body.clientWidth/100))/$(Selector.gradientSymbole).width() *100 + '%' );
+				SCOPE.moveMented(2);
+				SCOPE.symboleCoreBar( resultEndFlag );
 
 			}, 100);
 
@@ -97,6 +101,7 @@ function symbole (args) {
 	});
 
 	SCOPE.createScreenFlag();
+	SCOPE.symboleCoreBar();
 
 	return 1;
 }
@@ -106,7 +111,12 @@ symbole.prototype.symboleCoreBar = function (arg) {
 	var Selector = this.option.selector;
 
 	//core 그라데이션 셋
-	$(Selector.symboleCoreBar).css({ 'width': document.body.clientWidth, 'margin-left': arg});
+	$(Selector.symboleCoreBar)
+		.css({ 
+
+			'width': document.body.clientWidth,
+			'margin-left': arg
+		});
 
 	return 1;
 }
@@ -165,26 +175,57 @@ symbole.prototype.createEndFlag = function () {
 	return 1;
 };
 
-symbole.prototype.moveMented = function () {
+symbole.prototype.moveMented = function (arg) {
 
 	var Selector = this.option.selector;
 	var Data = this.option.data;
 
 	var groupWidth = $(sceneGroup).width();
 
+	var leftPos = 0;
+
 	if (Data.idx == 0) {
 
-		$(sceneGroup).stop(1, 0).animate({ left: groupWidth }, 1000, 'easeOutCubic');
+		leftPos = groupWidth;
 	}
 
 	if (Data.idx == 1) {
 
-		$(sceneGroup).stop(1, 0).animate({ left: 0 });
+		leftPos = 0;
 	}
 
 	if (Data.idx == 2) {
 
-		$(sceneGroup).stop(1, 0).animate({ left: groupWidth*-1 }, 1000, 'easeOutCubic');
+		leftPos = groupWidth*-1;
+	}
+
+	if (arg == 1) {
+
+		$(sceneGroup)
+			.css( 'transition', 'none')
+				.stop(1, 0).animate({
+
+						'left': leftPos
+					}, 1000, 'easeInOutCubic');
+	}
+
+	if (arg == 2) {
+
+		$(sceneGroup)
+			.css({
+				'transition': 'none',
+				'left': leftPos
+			}, 1000, 'easeInOutCubic');
+	}
+
+	if (arg == undefined) {
+
+		$(sceneGroup)
+			.css({ 
+
+				'transition': 'left 1000ms ease-out',
+				'left': leftPos
+			});
 	}
 
 	return 1;
@@ -195,7 +236,7 @@ symbole.prototype.moveEnded = function () {
 	var Selector = this.option.selector;
 	var Data = this.option.data;
 
-	$(Selector.gradientSymbole).stop(0, 1).animate({ 'left': Data.map[Data.idx] + '%' }, 300, 'easeOutCubic');
+	$(Selector.gradientSymbole).stop(1, 0).animate({ 'left': Data.map[Data.idx] + '%' }, 300, 'easeOutCubic');
 
 	return 1;
 }

@@ -17,21 +17,64 @@
 	<script src='/ui/js/jquery-ui.min.js'></script>
 
 	<style>
-		
-		html, body{overflow:hidden}
+
+		body{overflow-y:scroll}
 
 		a{transition:background-color 100ms ease-in-out}
-		
-		#header{}
 
-		#container{}
-		#container .section{}
-			#s_1{}
-			#s_1{}
-			#s_1{}
+		.layout{max-width:1400px;margin:0 auto}
+
+		#header{height:130px;border-bottom:1px solid #d2d2d2}
+
+		#main{
+			position:relative;padding-bottom:82px;
+			transition:height 300ms ease-out;
+			-webkit-transition:height 300ms ease-out;
+		}
+
+			#container{overflow:hidden;width:100%}
+				#slideWrap{
+					position:relative;
+					transition:height 300ms ease-out;
+					-webkit-transition:height 300ms ease-out;
+				}
+				#slideWrap .slide_section{position:absolute;top:0;left:0;width:100%}
+
+				#slideWrap #s_1{left:-100%}
+				#slideWrap #s_2{left:0}
+				#slideWrap #s_3{left:100%}
+
+			#footer{z-index:10;position:absolute;bottom:0;left:0;width:100%;height:82px;background-color:#3e3f4c;color:#fff}
+
+				#fBttBar{position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:540px;height:110px}
+				#fBttBar>*{float:left;height:100%}
+
+				#fBttBar .round{width:45px;background:url(/ui/js/uiFlowBottomBar/images/fbttbar_round.png) no-repeat}
+				#fBttBar .left_round{background-position:0 0}
+				#fBttBar .right_round{background-position:100% 0}
+
+				#fBttBar .button{padding-top:33px;width:450px;text-align:center;background:url(/ui/js/uiFlowBottomBar/images/fbttbar_linear.png) repeat-x}
+				#fBttBar .button span{height:30px;display:inline-block;vertical-align:middle;line-height:100%}
+				#fBttBar .button span a{display:inline-block;height:100%;padding-top:8px;line-height:inherit;font-weight:600;font-size:17px;background:no-repeat 0 50%;color:#666}
+
+				#fBttBar .button span.s_1{}
+				#fBttBar .button span.s_1 a{padding-left:30px;background-image:url(/ui/js/uiFlowBottomBar/images/fbttbar_icon_1.png)}
+				#fBttBar .button span.s_1 a.ov{background-image:url(/ui/js/uiFlowBottomBar/images/fbttbar_icon_1_ov.png)}
+
+				#fBttBar .button span.s_2{margin:0 15px}
+				#fBttBar .button span.s_2 a{padding-left:30px;background-image:url(/ui/js/uiFlowBottomBar/images/fbttbar_icon_2.png);background-position:0 4px}
+				#fBttBar .button span.s_2 a.ov{background-image:url(/ui/js/uiFlowBottomBar/images/fbttbar_icon_2_ov.png)}
+
+				#fBttBar .button span.s_3{}
+				#fBttBar .button span.s_3 a{padding-right:31px;background-image:url(/ui/js/uiFlowBottomBar/images/fbttbar_icon_3.png);background-position:100% 50%}
+				#fBttBar .button span.s_3 a.ov{background-image:url(/ui/js/uiFlowBottomBar/images/fbttbar_icon_3_ov.png)}
 
 
-		#footer{}
+				#fBttBar .button span.s_2{}
+				#fBttBar .button span.s_2 a{margin:0 20px}
+				#fBttBar .button span.s_2:before, #fBttBar .button span.s_2:after{content:'';display:inline-block;width:13px;height:100%;background:no-repeat 0 50%}
+				#fBttBar .button span.s_2:before{background-image:url(/ui/js/uiFlowBottomBar/images/fbttbar_left.png)}
+				#fBttBar .button span.s_2:after{background-image:url(/ui/js/uiFlowBottomBar/images/fbttbar_right.png)}
 
 	</style>
 
@@ -45,43 +88,76 @@
 			HEADER
 		</header>
 
-		<main id="container">
+		<div id="main">
 
-			<section class="section" id="s_1">
+			<main id="container">
 
-				<header>
+				<div id="slideWrap">
 
-					<h1>SECTION 1</h1>
-				</header>
-			</section>
+					<section id="s_1" class="slide_section">
+						<div class="layout">
 
-			<section class="section" id="s_2">
+						<header>
 
-				<header>
+							<h1>맞춤형 서비스</h1>
+						</header>
 
-					<h1>SECTION 2</h1>
-				</header>
-			</section>
 
-			<section class="section" id="s_3">
+						</div>
+					</section>
 
-				<header>
+					<section id="s_2" class="slide_section">
 
-					<h1>SECTION 3</h1>
-				</header>
-			</section>
-			
+						<div class="layout">
 
-		</main>
+						<header>
 
-		<footer id="footer">
+							<h1>인트로</h1>
+						</header>
 
-			FOOTER
-		</footer>
+
+						</div>
+					</section>
+
+					<section id="s_3" class="slide_section">
+
+						<div class="layout">
+
+						<header>
+
+							<h1>산림정책 서비스</h1>
+						</header>
+
+
+						</div>
+					</section>
+
+				</div>
+
+			</main>
+
+			<footer id="footer">
+
+				<aside id="fBttBar">
+					
+					<div class="round left_round"></div>
+					<div class="button">
+						<span class="s_1"><a data-idx="0" href="#">맞춤형 서비스</a></span>
+						<span class="s_2"><a data-idx="1" class="ov" href="#">인트로</a></span>
+						<span class="s_3"><a data-idx="2" href="#">산림정책 서비스</a></span>
+					</div>
+					<div class="round right_round"></div>
+
+				</aside>
+
+				FOOTER
+			</footer>
+
+		</div>
 	
 	</div>
-	<script src="/ui/js/jquery.event.drag-2.2.js"></script>
-	<script src='/ui/js/uiSymboleSwipe/uiFlowBottomBar.min.js'></script>
+	
+	<script src='/ui/js/uiFlowBottomBar/uiFlowBottomBar.min.js'></script>
 
 </body>
 </html>
